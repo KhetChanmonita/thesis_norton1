@@ -1,0 +1,627 @@
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #1a6bda;
+    --primary-dark: #0d4fa0;
+    --secondary: #ff9900;
+    --secondary-dark: #e68900;
+    --dark: #2a2e37;
+    --light: #f8f9fa;
+    --gray: #6c757d;
+    --gray-light: #e9ecef;
+    --success: #28a745;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.12);
+    --transition: all 0.3s ease;
+}
+
+/* ── Font System ──
+   Khmer  : Kantumruy Pro  (all Khmer characters)
+   Heading: Montserrat     (numbers, bold Latin titles)
+   Body   : Poppins        (English/Latin body copy)
+   Stack  : Kantumruy Pro → Poppins → sans-serif
+*/
+body {
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.85;          /* Khmer needs more line-height */
+    color: #333;
+    background-color: #f9fbfd;
+    overflow-x: hidden;
+}
+
+.why-choose-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    position: relative;
+}
+
+/* Background decorative elements */
+.bg-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.circle, .square {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.05;
+}
+
+.circle {
+    border-radius: 50%;
+}
+
+.circle-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--primary);
+    top: 5%;
+    left: -150px;
+}
+
+.circle-2 {
+    width: 200px;
+    height: 200px;
+    background: var(--secondary);
+    bottom: 15%;
+    right: -80px;
+}
+
+.circle-3 {
+    width: 150px;
+    height: 150px;
+    background: var(--dark);
+    top: 40%;
+    right: 10%;
+}
+
+.square {
+    border-radius: 10px;
+}
+
+.square-1 {
+    width: 120px;
+    height: 120px;
+    background: var(--primary);
+    bottom: 10%;
+    left: 5%;
+    transform: rotate(45deg);
+}
+
+.square-2 {
+    width: 80px;
+    height: 80px;
+    background: var(--secondary);
+    top: 20%;
+    right: 15%;
+    transform: rotate(30deg);
+}
+
+/* Main Title */
+.main-title {
+    text-align: center;
+    margin-bottom: 70px;
+    position: relative;
+}
+
+.section-subtitle {
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    display: inline-block;
+    position: relative;
+    padding-left: 20px;
+}
+
+.section-subtitle::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background: var(--secondary);
+    border-radius: 50%;
+}
+
+.title-text {
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 20px;
+    line-height: 1.45;
+}
+
+.highlight {
+    color: var(--primary);
+    position: relative;
+}
+
+.highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: rgba(26, 107, 218, 0.15);
+    z-index: -1;
+}
+
+.title-underline {
+    width: 80px;
+    height: 4px;
+    background: var(--secondary);
+    margin: 0 auto 25px;
+    border-radius: 2px;
+}
+
+.section-description {
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1rem;
+    color: var(--gray);
+    line-height: 1.9;
+}
+
+/* Content Section */
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 80px;
+    align-items: center;
+}
+
+/* Left Column - Image */
+.image-column {
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.image-container:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+}
+
+.asset-image {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    display: block;
+    transition: var(--transition);
+}
+
+.image-container:hover .asset-image {
+    transform: scale(1.05);
+}
+
+.image-badge {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.badge-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.badge-number {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.badge-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-top: 5px;
+    text-align: center;
+}
+
+.image-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+    z-index: 1;
+}
+
+/* Right Column - Reasons */
+.reasons-column {
+    display: flex;
+    align-items: center;
+}
+
+.reasons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.reason-item {
+    background: white;
+    border-radius: 15px;
+    padding: 30px 25px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.reason-item:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+}
+
+.reason-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--primary);
+    border-radius: 5px 0 0 5px;
+}
+
+.reason-icon-wrapper {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin-bottom: 20px;
+}
+
+.reason-icon-wrapper i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8rem;
+    color: white;
+    z-index: 2;
+}
+
+.icon-bg {
+    width: 70px;
+    height: 70px;
+    background: var(--primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.reason-icon-wrapper::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 80px;
+    height: 80px;
+    background: rgba(26, 107, 218, 0.1);
+    border-radius: 50%;
+}
+
+.reason-title {
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.reason-description {
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    color: var(--gray);
+    font-size: 0.9rem;
+    line-height: 1.85;
+    margin-bottom: 16px;
+}
+
+.reason-stat {
+    display: flex;
+    align-items: center;
+    background: var(--gray-light);
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-top: 15px;
+}
+
+.stat-number {
+    font-family: 'Montserrat', sans-serif;   /* numbers always Montserrat */
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    margin-right: 10px;
+}
+
+.stat-text {
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Stats Bar */
+.stats-section {
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    border-radius: 15px;
+    padding: 50px 30px;
+    margin-bottom: 80px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTI4MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjEiPjxjaXJjbGUgY3g9IjEwMCIgY3k9IjEwIiByPSIxMCIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjMwIiByPSIxNSIvPjxjaXJjbGUgY3g9IjUwMCIgY3k9IjIwIiByPSIxMiIvPjxjaXJjbGUgY3g9IjcwMCIgY3k9IjQwIiByPSI4Ii8+PGNpcmNsZSBjeD0iOTAwIiBjeT0iMjUiIHI9IjEwIi8+PGNpcmNsZSBjeD0iMTEwMCIgY3k9IjM1IiByPSI3Ii8+PC9nPjwvc3ZnPg==');
+    background-size: cover;
+    opacity: 0.1;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    transition: var(--transition);
+}
+
+.stat-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: var(--secondary);
+}
+
+.stat-content h3 {
+    font-family: 'Montserrat', sans-serif;   /* numbers = Montserrat */
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.stat-content p {
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    font-size: 0.92rem;
+    opacity: 0.92;
+    line-height: 1.6;
+}
+
+/* Call to Action */
+.cta-section {
+    background: white;
+    border-radius: 15px;
+    padding: 60px 40px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+}
+
+.cta-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-title {
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.cta-description {
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    font-size: 1rem;
+    color: var(--gray);
+    margin-bottom: 32px;
+    line-height: 1.9;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+    gap: 10px;
+}
+
+.primary-btn {
+    background: var(--primary);
+    color: white;
+}
+
+.primary-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(26, 107, 218, 0.3);
+}
+
+.secondary-btn {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+.secondary-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .content-wrapper {
+        gap: 40px;
+    }
+
+    .reasons-grid {
+        gap: 25px;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .why-choose-container {
+        padding: 40px 20px;
+    }
+
+    .title-text {
+        font-size: 2.2rem;
+    }
+
+    .content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .image-column {
+        order: 2;
+    }
+
+    .reasons-column {
+        order: 1;
+    }
+
+    .reasons-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cta-button {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title-text {
+        font-size: 1.8rem;
+    }
+
+    .reason-item {
+        padding: 25px 20px;
+    }
+
+    .stats-section {
+        padding: 40px 20px;
+    }
+
+    .cta-section {
+        padding: 40px 20px;
+    }
+
+    .cta-title {
+        font-size: 1.8rem;
+    }
+}
+
+/* Animation Classes */
+.animate__animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}

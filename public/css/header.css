@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Kantumruy+Pro:wght@400;500;600&display=swap');
+
+:root {
+    --header-primary-orange: #FF6B00;
+    --header-primary-orange-dark: #E55A00;
+    --header-dark-text: #1E293B;
+    --header-white: #FFFFFF;
+    --header-gradient-orange: linear-gradient(135deg, #FF6B00 0%, #FF8A3D 100%);
+    --header-height: 80px;
+}
+
+/* ===== HEADER WRAPPER ===== */
+.header {
+    position: fixed !important;
+    width: 100% !important;
+    height: var(--header-height) !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: var(--header-white) !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08) !important;
+    z-index: 9999 !important;
+    box-sizing: border-box !important;
+}
+
+/* ===== CONTAINER INSIDE HEADER ===== */
+.header .container {
+    width: 100% !important;
+    max-width: 1200px !important;
+    height: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 30px !important;
+    box-sizing: border-box !important;
+}
+
+/* ===== HEADER CONTENT ROW ===== */
+.header .header-content {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 100% !important;
+    width: 100% !important;
+}
+
+/* ===== LOGO ===== */
+.header .logo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
+}
+
+.header .logo-icon {
+    width: 46px !important;
+    height: 46px !important;
+    background: var(--header-gradient-orange) !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: 800 !important;
+    font-size: 20px !important;
+    color: var(--header-white) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+}
+
+.header .logo-text {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    color: var(--header-dark-text) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+}
+
+/* ===== NAV CONTAINER ===== */
+.header .nav-container {
+    display: flex !important;
+    align-items: center !important;
+    gap: 30px !important;
+    height: 100% !important;
+}
+
+/* ===== NAV MENU ===== */
+.header .nav-menu {
+    list-style: none !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 32px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 100% !important;
+}
+
+.header .nav-menu li {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.header .nav-menu li a {
+    display: flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+    color: var(--header-dark-text) !important;
+    font-family: 'Kantumruy Pro', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    position: relative !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    transition: color 0.3s ease !important;
+    background: none !important;
+    border: none !important;
+    line-height: 1 !important;
+}
+
+.header .nav-menu li a:hover,
+.header .nav-menu li a.active {
+    color: var(--header-primary-orange) !important;
+}
+
+.header .nav-menu li a::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    bottom: -8px !important;
+    width: 0 !important;
+    height: 2px !important;
+    background: var(--header-primary-orange) !important;
+    transition: width 0.3s ease !important;
+}
+
+.header .nav-menu li a:hover::after,
+.header .nav-menu li a.active::after {
+    width: 100% !important;
+}
+
+/* ===== HEADER BUTTONS ===== */
+.header .header-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex-shrink: 0 !important;
+}
+
+.header .header-actions .btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 9px 20px !important;
+    border-radius: 6px !important;
+    font-family: 'Kantumruy Pro', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-decoration: none !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+    transition: all 0.3s ease !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+}
+
+.header .header-actions .btn:not(.btn-login) {
+    background: var(--header-gradient-orange) !important;
+    color: var(--header-white) !important;
+    border: 2px solid transparent !important;
+}
+
+.header .header-actions .btn:not(.btn-login):hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.35) !important;
+}
+
+.header .header-actions .btn-login {
+    background: transparent !important;
+    border: 2px solid var(--header-primary-orange) !important;
+    color: var(--header-primary-orange) !important;
+}
+
+.header .header-actions .btn-login:hover {
+    background: var(--header-gradient-orange) !important;
+    color: var(--header-white) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ===== User Dropdown ===== */
+.user-dropdown {
+    position: relative;
+}
+
+.user-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    background: transparent;
+    border: 2px solid var(--header-primary-orange);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--header-primary-orange);
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.user-toggle:hover {
+    background: var(--header-gradient-orange);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
+}
+
+.user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FF6B00, #FF8A3D);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.user-toggle:hover .user-avatar {
+    background: rgba(255,255,255,0.25);
+}
+
+.user-name {
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chevron-icon {
+    font-size: 11px;
+    transition: transform 0.3s ease;
+}

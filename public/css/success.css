@@ -1,0 +1,210 @@
+.success-wrapper {
+    padding: 120px 0 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+.success-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+
+.success-icon {
+    margin-bottom: 30px;
+}
+
+.success-icon i {
+    font-size: 80px;
+    color: #27ae60;
+    animation: scaleIn 0.5s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.success-container h1 {
+    color: #2c3e50;
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.success-message {
+    color: #7f8c8d;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.booking-details {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.booking-details h2 {
+    color: #2c3e50;
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.detail-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row span:first-child {
+    color: #7f8c8d;
+}
+
+.detail-row span:last-child {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.booking-number {
+    color: #e74c3c !important;
+    font-weight: 600;
+}
+
+.amount-paid {
+    color: #27ae60 !important;
+    font-weight: 600;
+}
+
+.status-success {
+    background: #d4edda;
+    color: #155724 !important;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.next-steps {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.next-steps h3 {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.next-steps ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.next-steps li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.btn {
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+    transform: translateY(-2px);
+}
+
+.support-info {
+    padding-top: 30px;
+    border-top: 1px solid #e9ecef;
+}
+
+.support-info p {
+    color: #7f8c8d;
+    margin-bottom: 15px;
+}
+
+.support-info a {
+    color: #e74c3c;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.support-info a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .success-container {
+        padding: 30px 20px;
+    }
+
+    .success-container h1 {
+        font-size: 28px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
