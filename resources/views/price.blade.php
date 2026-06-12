@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>តម្លៃសេវា | Trucking System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Kantumruy+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/price.css') }}">
@@ -14,16 +14,34 @@
 
 <!-- Hero Section -->
 <section class="pricing-hero">
+    {{-- Decorative background shapes --}}
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="hero-shape hero-shape-3"></div>
+    <div class="hero-shape hero-shape-4"></div>
+
+    {{-- Floating icons --}}
+    <i class="fas fa-truck      hero-float-icon" style="top:18%;left:6%;font-size:5rem;transform:rotate(-15deg);"></i>
+    <i class="fas fa-box-open   hero-float-icon" style="top:55%;right:5%;font-size:3.5rem;transform:rotate(12deg);"></i>
+    <i class="fas fa-shipping-fast hero-float-icon" style="bottom:15%;left:18%;font-size:2.8rem;transform:rotate(-8deg);"></i>
+    <i class="fas fa-map-marker-alt hero-float-icon" style="top:20%;right:18%;font-size:2.2rem;"></i>
+
     <div class="hero-container">
-        <h1>តម្លៃសេវាដឹកជញ្ជូន</h1>
-        <p>តម្លៃសមរម្យ និងមានការប្រៀបធៀបគ្នានៅលើទីផ្សារ</p>
-        
-        <div class="pricing-toggle">
-            <span class="toggle-label">ការគណនាតម្លៃ</span>
-            <div class="toggle-switch">
-                <button class="toggle-btn active" data-type="distance">តាមចម្ងាយ</button>
-                <button class="toggle-btn" data-type="weight">តាមទំងន់</button>
-                <button class="toggle-btn" data-type="truck">តាមប្រភេទរថយន្ត</button>
+        <div class="hero-badge">
+            <i class="fas fa-tag"></i> តម្លៃល្អបំផុតនៅលើទីផ្សារ
+        </div>
+        <h1>តម្លៃសេវា<span class="hero-text-highlight">ដឹកជញ្ជូន</span></h1>
+        <p>ប្រព័ន្ធគណនាតម្លៃដឹកជញ្ជូនពីច្រកផ្លូវ ២ ទៅគ្រប់ខេត្ត-រាជធានី ២៥ ក្នុងព្រះរាជាណាចក្រកម្ពុជា</p>
+
+        <div class="hero-stats-bar">
+            <div class="hero-stat">
+                <span class="hero-stat-num">25</span>
+                <span class="hero-stat-lbl">ខេត្ត / រាជធានី</span>
+            </div>
+            <div class="hero-stat-sep"></div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">2</span>
+                <span class="hero-stat-lbl">ច្រកផ្លូវចេញ</span>
             </div>
         </div>
     </div>
@@ -34,72 +52,64 @@
     <div class="container">
         <div class="calculator-card">
             <h2><i class="fas fa-calculator"></i> គណនាតម្លៃដឹកជញ្ជូន</h2>
-            <p>បំពេញព័ត៌មានខាងក្រោមដើម្បីទទួលបានតម្លៃប៉ាន់ស្មាន</p>
-            
+            <p>ជ្រើសរើសប្រភេទសេវា កំពង់ផែ និងខេត្តគោលដៅ ដើម្បីមើលតម្លៃ</p>
+
             <div class="calculator-form">
+
+                {{-- Step 1: Import / Export --}}
+                <div class="type-selector-wrap">
+                    <div class="type-selector">
+                        <button type="button" id="btn-import" class="type-btn active" onclick="selectServiceType('import')">
+                            <i class="fas fa-ship"></i>
+                            <span class="type-btn-title">Import</span>
+                            <span class="type-btn-sub">ទំនិញចូល</span>
+                        </button>
+                        <button type="button" id="btn-export" class="type-btn" onclick="selectServiceType('export')">
+                            <i class="fas fa-truck-loading"></i>
+                            <span class="type-btn-title">Export</span>
+                            <span class="type-btn-sub">ទំនិញចេញ</span>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="form-grid">
+
+                    {{-- Step 2: Port --}}
                     <div class="form-group">
-                        <label for="from-location"><i class="fas fa-map-marker-alt"></i> ទីតាំងចាប់ផ្តើម</label>
-                        <input type="text" id="from-location" placeholder="ឧ. ភ្នំពេញ">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="to-location"><i class="fas fa-map-marker"></i> ទីតាំងគោលដៅ</label>
-                        <input type="text" id="to-location" placeholder="ឧ. ក្រុងសៀមរាប">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="truck-type"><i class="fas fa-truck"></i> ប្រភេទរថយន្ត</label>
-                        <select id="truck-type">
-                            <option value="small">រថយន្តតូច (១-៣តោន)</option>
-                            <option value="medium" selected>រថយន្តមធ្យម (៣-១០តោន)</option>
-                            <option value="large">រថយន្តធំ (១០-២០តោន)</option>
-                            <option value="container">រថយន្តផ្ទុកគម្រប (២០តោន+)</option>
+                        <label id="port-label">
+                            <i class="fas fa-anchor"></i>
+                            <span id="port-label-text">មាត់ច្រកកំពង់ផែ</span>
+                            <span style="color:#ef4444;">*</span>
+                        </label>
+                        <select id="origin-port">
+                            <option value="">-- ជ្រើសរើសកំពង់ផែ --</option>
+                            <option value="sihanoukville">មាត់ច្រកកំពង់ផែព្រះសីហនុ</option>
+                            <option value="phnom_penh">មាត់ច្រកកំពង់ផែភ្នំពេញ</option>
                         </select>
                     </div>
-                    
+
+                    {{-- Step 3: Province --}}
                     <div class="form-group">
-                        <label for="weight"><i class="fas fa-weight-hanging"></i> ទំងន់ទំនិញ (តោន)</label>
-                        <input type="range" id="weight" min="1" max="20" value="5">
-                        <div class="range-value">
-                            <span id="weight-value">5 តោន</span>
-                            <span class="range-min">1ត</span>
-                            <span class="range-max">20ត</span>
-                        </div>
+                        <label>
+                            <i class="fas fa-map-marker-alt"></i>
+                            ខេត្ត/រាជធានីគោលដៅ
+                            <span style="color:#ef4444;">*</span>
+                        </label>
+                        <select id="destination-province">
+                            <option value="">-- ជ្រើសរើសខេត្ត --</option>
+                            @foreach($provinces as $p)
+                            <option value="{{ $p['en'] }}">{{ $p['km'] }} ({{ $p['en'] }})</option>
+                            @endforeach
+                        </select>
                     </div>
+
                 </div>
-                
-                <div class="form-group">
-                    <label><i class="fas fa-calendar-alt"></i> បន្ថែមសេវាកម្ម</label>
-                    <div class="services-checkbox">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="loading" checked>
-                            <span class="checkmark"></span>
-                            សេវាផ្ទុកទំនិញ
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="unloading" checked>
-                            <span class="checkmark"></span>
-                            សេវាទំលាក់ទំនិញ
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="insurance">
-                            <span class="checkmark"></span>
-                            ធានារ៉ាប់រងទំនិញ
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="storage">
-                            <span class="checkmark"></span>
-                            សេវាក្រោដ៍ទុកបណ្តោះអាសន្ន
-                        </label>
-                    </div>
-                </div>
-                
+
                 <button class="calculate-btn" id="calculate-price">
                     <i class="fas fa-calculator"></i> គណនាតម្លៃ
                 </button>
             </div>
-            
+
             <div class="result-card" id="price-result">
                 <div class="result-header">
                     <h3><i class="fas fa-receipt"></i> តម្លៃប៉ាន់ស្មាន</h3>
@@ -108,35 +118,25 @@
                         <span class="currency">ដុល្លារ</span>
                     </div>
                 </div>
-                
                 <div class="result-details">
                     <div class="detail-item">
-                        <span>ថ្លៃដឹកជញ្ជូនមូលដ្ឋាន</span>
-                        <span>$0.00</span>
+                        <span id="lbl-type-badge">Import</span>
+                        <span id="lbl-route">—</span>
                     </div>
                     <div class="detail-item">
-                        <span>សេវាបន្ថែម</span>
-                        <span>$0.00</span>
-                    </div>
-                    <div class="detail-item">
-                        <span>ពន្ធនិងថ្លៃសេវា</span>
-                        <span>$0.00</span>
-                    </div>
-                    <div class="detail-item discount">
-                        <span>ការបញ្ចុះតម្លៃ (១០%)</span>
-                        <span>-$0.00</span>
+                        <span>ថ្លៃដឹកជញ្ជូន</span>
+                        <span id="val-base">$0.00</span>
                     </div>
                     <div class="detail-item total">
                         <span>តម្លៃសរុប</span>
-                        <span>$0.00</span>
+                        <span id="val-total">$0.00</span>
                     </div>
                 </div>
-                
                 <div class="result-actions">
                     <a href="{{ route('login') }}" class="btn-book">
                         <i class="fas fa-calendar-check"></i> ចូលគណនីដើម្បីកក់
                     </a>
-                    <a href="/contact" class="btn-contact">
+                    <a href="{{ route('contact') }}" class="btn-contact">
                         <i class="fas fa-phone-alt"></i> ទំនាក់ទំនងយើង
                     </a>
                 </div>
@@ -145,219 +145,114 @@
     </div>
 </section>
 
-<!-- Pricing Plans -->
-<section class="pricing-plans">
+<!-- How Pricing Works -->
+<section class="how-pricing-section">
     <div class="container">
         <div class="section-header">
-            <h2>កញ្ចប់<span class="highlight">តម្លៃសេវា</span></h2>
-            <p>ជ្រើសរើសកញ្ចប់សេវាដែលសមនឹងតម្រូវការរបស់អ្នក</p>
+            <h2>របៀប<span class="highlight">គណនាតម្លៃ</span></h2>
+            <p>គ្រាន់តែ ៣ជំហាន ដើម្បីទទួលបានតម្លៃដឹកជញ្ជូនភ្លាមៗ</p>
         </div>
-        
-        <div class="plans-grid">
-            <!-- Basic Plan -->
-            <div class="plan-card">
-                <div class="plan-header">
-                    <div class="plan-icon">
-                        <i class="fas fa-truck-pickup"></i>
-                    </div>
-                    <h3>កញ្ចប់មូលដ្ឋាន</h3>
-                    <div class="plan-price">
-                        <span class="amount">$150</span>
-                        <span class="period">/ ខែ</span>
-                    </div>
-                    <p>សម្រាប់ការដឹកជញ្ជូនតាមតំបន់</p>
-                </div>
-                
-                <div class="plan-features">
-                    <h4>អ្វីដែលរួមបញ្ចូល:</h4>
-                    <ul>
-                        <li><i class="fas fa-check"></i> ដឹកជញ្ជូនក្នុងទីក្រុង</li>
-                        <li><i class="fas fa-check"></i> រថយន្ត ៣តោន</li>
-                        <li><i class="fas fa-check"></i> ចម្ងាយរហូតដល់ ៥០គីឡូម៉ែត្រ</li>
-                        <li><i class="fas fa-check"></i> សេវាផ្ទុក/ទំលាក់</li>
-                        <li><i class="fas fa-check"></i> ថ្លៃប្រេងឥន្ធនៈរួម</li>
-                    </ul>
-                </div>
-                
-                <div class="plan-limitations">
-                    <h4>កំហិត:</h4>
-                    <ul>
-                        <li><i class="fas fa-times"></i> មិនរួមធានារ៉ាប់រង</li>
-                        <li><i class="fas fa-times"></i> មិនរួមសេវាសន្តិសុខ</li>
-                        <li><i class="fas fa-times"></i> មិនរួមក្រោដ៍ទុក</li>
-                    </ul>
-                </div>
-                
-                <button class="plan-select-btn">
-                    <i class="fas fa-shopping-cart"></i> ជ្រើសរើសកញ្ចប់
-                </button>
+
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-num">01</div>
+                <div class="step-icon-wrap"><i class="fas fa-ship"></i></div>
+                <h3>ជ្រើសរើសច្រកផ្លូវ</h3>
+                <p>ជ្រើសរើសច្រកផ្លូវចេញ — កំពង់ផែព្រះសីហនុ ឬ កំពង់ផែភ្នំពេញ</p>
             </div>
-            
-            <!-- Standard Plan (Featured) -->
-            <div class="plan-card featured">
-                <div class="plan-badge">ពេញនិយម</div>
-                <div class="plan-header">
-                    <div class="plan-icon">
-                        <i class="fas fa-truck-moving"></i>
-                    </div>
-                    <h3>កញ្ចប់ស្តង់ដារ</h3>
-                    <div class="plan-price">
-                        <span class="amount">$450</span>
-                        <span class="period">/ ខែ</span>
-                    </div>
-                    <p>សម្រាប់ការដឹកជញ្ជូនតាមផ្លូវជាតិ</p>
-                </div>
-                
-                <div class="plan-features">
-                    <h4>អ្វីដែលរួមបញ្ចូល:</h4>
-                    <ul>
-                        <li><i class="fas fa-check"></i> ដឹកជញ្ជូនពាសពេញប្រទេស</li>
-                        <li><i class="fas fa-check"></i> រថយន្ត ១០តោន</li>
-                        <li><i class="fas fa-check"></i> ចម្ងាយគ្មានកំណត់ក្នុងប្រទេស</li>
-                        <li><i class="fas fa-check"></i> សេវាផ្ទុក/ទំលាក់</li>
-                        <li><i class="fas fa-check"></i> ធានារ៉ាប់រងទំនិញ ៨០%</li>
-                        <li><i class="fas fa-check"></i> ថ្លៃប្រេងឥន្ធនៈរួម</li>
-                        <li><i class="fas fa-check"></i> សេវាតាមដានទំនិញ</li>
-                    </ul>
-                </div>
-                
-                <div class="plan-limitations">
-                    <h4>កំហិត:</h4>
-                    <ul>
-                        <li><i class="fas fa-times"></i> មិនរួមដឹកជញ្ជូនអន្តរជាតិ</li>
-                        <li><i class="fas fa-times"></i> កំហិតទំងន់ ១០តោន</li>
-                    </ul>
-                </div>
-                
-                <button class="plan-select-btn featured-btn">
-                    <i class="fas fa-star"></i> ជ្រើសរើសកញ្ចប់
-                </button>
+
+            <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+
+            <div class="step-card">
+                <div class="step-num">02</div>
+                <div class="step-icon-wrap"><i class="fas fa-map-marker-alt"></i></div>
+                <h3>ជ្រើសរើសខេត្ត</h3>
+                <p>ជ្រើសរើសខេត្ត ឬ រាជធានីគោលដៅ ក្នុងចំណោម ២៥ ខេត្ត-រាជធានី</p>
             </div>
-            
-            <!-- Premium Plan -->
-            <div class="plan-card">
-                <div class="plan-header">
-                    <div class="plan-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>កញ្ចប់ពិសេស</h3>
-                    <div class="plan-price">
-                        <span class="amount">$900</span>
-                        <span class="period">/ ខែ</span>
-                    </div>
-                    <p>សម្រាប់ការដឹកជញ្ជូនពេញលេញ</p>
-                </div>
-                
-                <div class="plan-features">
-                    <h4>អ្វីដែលរួមបញ្ចូល:</h4>
-                    <ul>
-                        <li><i class="fas fa-check"></i> ដឹកជញ្ជូនពាសពេញប្រទេស</li>
-                        <li><i class="fas fa-check"></i> រថយន្ត ២០តោន</li>
-                        <li><i class="fas fa-check"></i> ដឹកជញ្ជូនអន្តរជាតិ (តែកម្ពុជា-ថៃ-វៀតណាម)</li>
-                        <li><i class="fas fa-check"></i> សេវាផ្ទុក/ទំលាក់</li>
-                        <li><i class="fas fa-check"></i> ធានារ៉ាប់រងទំនិញ ១០០%</li>
-                        <li><i class="fas fa-check"></i> ថ្លៃប្រេងឥន្ធនៈរួម</li>
-                        <li><i class="fas fa-check"></i> សេវាតាមដានទំនិញតាមពេលពិត</li>
-                        <li><i class="fas fa-check"></i> ក្រោដ៍ទុកបណ្តោះអាសន្ន ៣០ថ្ងៃ</li>
-                    </ul>
-                </div>
-                
-                <div class="plan-limitations">
-                    <h4>កំហិត:</h4>
-                    <ul>
-                        <li><i class="fas fa-times"></i> មិនរួមដឹកជញ្ជូនទៅចិន</li>
-                    </ul>
-                </div>
-                
-                <button class="plan-select-btn">
-                    <i class="fas fa-crown"></i> ជ្រើសរើសកញ្ចប់
-                </button>
+
+            <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+
+            <div class="step-card">
+                <div class="step-num">03</div>
+                <div class="step-icon-wrap"><i class="fas fa-dollar-sign"></i></div>
+                <h3>មើលតម្លៃ</h3>
+                <p>ចុចគណនា ដើម្បីទទួលបានតម្លៃដឹកជញ្ជូនសម្រាប់ខេត្ត-រាជធានីដែលអ្នកជ្រើសរើស</p>
             </div>
         </div>
-        
-        <div class="custom-plan">
-            <div class="custom-content">
-                <h3><i class="fas fa-cogs"></i> មិនឃើញកញ្ចប់ដែលត្រូវនឹងតម្រូវការរបស់អ្នក?</h3>
-                <p>ទំនាក់ទំនងយើងឥឡូវនេះដើម្បីទទួលបានកញ្ចប់តម្លៃតាមតម្រូវការផ្ទាល់ខ្លួនរបស់អ្នក។</p>
-                <a href="/contact" class="custom-btn">
-                    <i class="fas fa-phone-alt"></i> ស្នើសុំកញ្ចប់តាមតម្រូវការ
-                </a>
+
+        {{-- Included & Surcharges --}}
+        <div class="price-info-grid">
+
+            <div class="price-info-card">
+                <div class="price-info-header">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>អ្វីដែលរួមបញ្ចូលក្នុងតម្លៃ</h3>
+                </div>
+                <ul class="price-check-list">
+                    <li><i class="fas fa-check"></i> ថ្លៃដឹកជញ្ជូនមូលដ្ឋានតាមខេត្ត</li>
+                    <li><i class="fas fa-check"></i> ថ្លៃប្រេងឥន្ធនៈ</li>
+                    <li><i class="fas fa-check"></i> ប្រាក់ខែអ្នកបើកបរ</li>
+                    <li><i class="fas fa-check"></i> ការត្រួតពិនិត្យទំនិញ</li>
+                    <li><i class="fas fa-check"></i> សេវាតាមដានស្ថានភាព</li>
+                    <li><i class="fas fa-check"></i> ការទំនាក់ទំនងជាមួយអ្នកបើក</li>
+                </ul>
+            </div>
+
+            <div class="price-info-card surcharge-card">
+                <div class="price-info-header">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>ថ្លៃបន្ថែម</h3>
+                </div>
+                <div class="surcharge-item">
+                    <div class="surcharge-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div>
+                        <div class="surcharge-title">ទំនិញមានគ្រោះថ្នាក់</div>
+                        <div class="surcharge-desc">ទំនិញប្រភេទផ្ទុះ ឬគីមី ត្រូវការការស្នើសុំបន្ថែម</div>
+                    </div>
+                    <div class="surcharge-badge" style="background:#fff3cd;color:#92400e;font-family:'Kantumruy Pro',sans-serif;">ស្នើសុំ</div>
+                </div>
+                <div class="surcharge-item">
+                    <div class="surcharge-icon"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <div class="surcharge-title">ការដឹកបន្ទាន់</div>
+                        <div class="surcharge-desc">ការដឹកជញ្ជូនក្នុងរយៈពេលខ្លី ត្រូវការការចរចា</div>
+                    </div>
+                    <div class="surcharge-badge" style="background:#e0f2fe;color:#0369a1;font-family:'Kantumruy Pro',sans-serif;">ចរចា</div>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- Payment Terms Banner --}}
+        <div class="payment-terms-banner">
+            <div class="payment-term-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <div>
+                    <strong>ការបង់ប្រាក់ ៥០%</strong>
+                    <span>នៅពេលបញ្ជាក់ការកក់</span>
+                </div>
+            </div>
+            <div class="payment-term-sep"></div>
+            <div class="payment-term-item">
+                <i class="fas fa-truck-loading"></i>
+                <div>
+                    <strong>ដឹកជញ្ជូនទំនិញ</strong>
+                    <span>ក្រោយអ្នកគ្រប់គ្រងបានអនុម័ត</span>
+                </div>
+            </div>
+            <div class="payment-term-sep"></div>
+            <div class="payment-term-item">
+                <i class="fas fa-handshake"></i>
+                <div>
+                    <strong>ការបង់ប្រាក់ ៥០% ចុងក្រោយ</strong>
+                    <span>នៅពេលដឹកទំនិញបានជោគជ័យ</span>
+                </div>
             </div>
         </div>
+
     </div>
 </section>
 
-<!-- Price Comparison Table -->
-<section class="comparison-section">
-    <div class="container">
-        <div class="section-header">
-            <h2>តារាង<span class="highlight">ប្រៀបធៀបតម្លៃ</span></h2>
-            <p>ព័ត៌មានលម្អិតអំពីតម្លៃដឹកជញ្ជូនតាមចម្ងាយ</p>
-        </div>
-        
-        <div class="comparison-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ចម្ងាយ (គីឡូម៉ែត្រ)</th>
-                        <th>រថយន្តតូច<br><small>(១-៣តោន)</small></th>
-                        <th>រថយន្តមធ្យម<br><small>(៣-១០តោន)</small></th>
-                        <th>រថយន្តធំ<br><small>(១០-២០តោន)</small></th>
-                        <th>រថយន្តផ្ទុកគម្រប<br><small>(២០តោន+)</small></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>០-៥០គីឡូម៉ែត្រ</td>
-                        <td>$៥០ - $៨០</td>
-                        <td>$៨០ - $១២០</td>
-                        <td>$១២០ - $២០០</td>
-                        <td>$២០០ - $៣០០</td>
-                    </tr>
-                    <tr>
-                        <td>៥១-១០០គីឡូម៉ែត្រ</td>
-                        <td>$៨០ - $១២០</td>
-                        <td>$១២០ - $១៨០</td>
-                        <td>$១៨០ - $២៨០</td>
-                        <td>$២៨០ - $៤២០</td>
-                    </tr>
-                    <tr>
-                        <td>១០១-២០០គីឡូម៉ែត្រ</td>
-                        <td>$១២០ - $១៨០</td>
-                        <td>$១៨០ - $២៦០</td>
-                        <td>$២៦០ - $៤០០</td>
-                        <td>$៤០០ - $៦០០</td>
-                    </tr>
-                    <tr>
-                        <td>២០១-៥០០គីឡូម៉ែត្រ</td>
-                        <td>$១៨០ - $៣០០</td>
-                        <td>$៣០០ - $៥០០</td>
-                        <td>$៥០០ - $៨០០</td>
-                        <td>$៨០០ - $១,២០០</td>
-                    </tr>
-                    <tr>
-                        <td>៥០១គីឡូម៉ែត្រ+</td>
-                        <td>$០.៤/គ.ម</td>
-                        <td>$០.៦/គ.ម</td>
-                        <td>$១.០/គ.ម</td>
-                        <td>$១.៥/គ.ម</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <div class="table-notes">
-            <div class="note">
-                <i class="fas fa-info-circle"></i>
-                <p>តម្លៃខាងលើគឺសម្រាប់តែដឹកជញ្ជូនប៉ុណ្ណោះ។ ថ្លៃបន្ថែមសម្រាប់សេវាផ្ទុក/ទំលាក់ និងធានារ៉ាប់រង។</p>
-            </div>
-            <div class="note">
-                <i class="fas fa-percentage"></i>
-                <p>ការបញ្ចុះតម្លៃ ១០% សម្រាប់ការកក់ជាមុន ៣ថ្ងៃ។</p>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- FAQ Section -->
 <section class="faq-section">
@@ -366,47 +261,88 @@
             <h2>សំណួរ<span class="highlight">ដែលគេសួរញឹកញាប់</span></h2>
             <p>ស្វែងរកចម្លើយសម្រាប់សំណួររបស់អ្នក</p>
         </div>
-        
-        <div class="faq-grid">
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>តើតម្លៃដឹកជញ្ជូនត្រូវបានគណនាយ៉ាងដូចម្តេច?</h3>
-                    <i class="fas fa-chevron-down"></i>
+
+        <div class="faq-layout">
+
+            {{-- Left: support card --}}
+            <div class="faq-side-card">
+                <div class="faq-side-icon"><i class="fas fa-headset"></i></div>
+                <h3>នៅតែមានសំណួរ?</h3>
+                <p>ក្រុមការងាររបស់យើងរួចរាល់ជាទូទៅ ២៤/៧ ដើម្បីជួយដល់អ្នក</p>
+                <div class="faq-contact-list">
+                    <div class="faq-contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>+855 12 345 678</span>
+                    </div>
+                    <div class="faq-contact-item">
+                        <i class="fab fa-telegram-plane"></i>
+                        <span>@lstrucking</span>
+                    </div>
+                    <div class="faq-contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>info@lstrucking.com</span>
+                    </div>
                 </div>
-                <div class="faq-answer">
-                    <p>តម្លៃដឹកជញ្ជូនត្រូវបានគណនាដោយផ្អែកលើចម្ងាយដឹកជញ្ជូន ប្រភេទរថយន្ត ទំងន់ទំនិញ និងសេវាកម្មបន្ថែមដូចជាការផ្ទុក ទំលាក់ និងធានារ៉ាប់រង។</p>
+                <a href="{{ route('contact') }}" class="faq-contact-btn">
+                    <i class="fas fa-comment-dots"></i> ទំនាក់ទំនងយើង
+                </a>
+            </div>
+
+            {{-- Right: FAQ accordion --}}
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <div class="faq-q-left">
+                            <span class="faq-num">01</span>
+                            <h3>តើតម្លៃដឹកជញ្ជូនត្រូវបានគណនាយ៉ាងដូចម្តេច?</h3>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>តម្លៃដឹកជញ្ជូនត្រូវបានគណនាដោយផ្អែកលើ ច្រកផ្លូវចេញ (ព្រះសីហនុ ឬ ភ្នំពេញ) ខេត្តគោលដៅ និងទំងន់ទំនិញ។ ប្រសិនបើទំងន់លើស ២៣ តោន ថ្លៃបន្ថែម $30 ក្នុងមួយតោននឹងត្រូវបន្ថែម។</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <div class="faq-q-left">
+                            <span class="faq-num">02</span>
+                            <h3>តើមានការបញ្ចុះតម្លៃសម្រាប់ការដឹកជញ្ជូនច្រើនដងទេ?</h3>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>បាទ/ចាស យើងមានការបញ្ចុះតម្លៃពិសេសសម្រាប់អតិថិជនដែលប្រើប្រាស់សេវាកម្មរបស់យើងជាប្រចាំ។ ការបញ្ចុះតម្លៃអាចឡើងដល់ ២០% សម្រាប់កិច្ចសន្យាប្រចាំ១ឆ្នាំ។</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <div class="faq-q-left">
+                            <span class="faq-num">03</span>
+                            <h3>តើអាចទូទាត់តាមរបៀបណាខ្លះ?</h3>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>យើងទទួលការទូទាត់តាមរយៈ សាច់ប្រាក់ KHQR និងការផ្ទេរប្រាក់តាម ABA Pay ។ ការទូទាត់ ៥០% ជាមុន និង ៥០% ទៀតនៅពេលបញ្ចប់ការដឹក។</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <div class="faq-q-left">
+                            <span class="faq-num">04</span>
+                            <h3>តើត្រូវការកក់សេវាជាមុនយ៉ាងដូចម្តេច?</h3>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>គ្រាន់តែជ្រើសរើសរថយន្ត បំពេញព័ត៌មានការដឹក និងបង់ប្រាក់ ៥០% ជាប្រាក់កក់ ។ ក្រោយពីអ្នកគ្រប់គ្រងបានអនុម័ត ការដឹកជញ្ជូននឹងចាប់ផ្តើម។</p>
+                    </div>
                 </div>
             </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>តើមានការបញ្ចុះតម្លៃសម្រាប់ការដឹកជញ្ជូនច្រើនដងទេ?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>បាទ/ចាស យើងមានការបញ្ចុះតម្លៃពិសេសសម្រាប់អតិថិជនដែលប្រើប្រាស់សេវាកម្មរបស់យើងជាប្រចាំ។ ការបញ្ចុះតម្លៃអាចឡើងដល់ ២០% សម្រាប់កិច្ចសន្យាប្រចាំ១ឆ្នាំ។</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>តើអាចទូទាត់តាមរបៀបណាខ្លះ?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>យើងទទួលការទូទាត់តាមរយៈ សាច់ប្រាក់ ប័ណ្ណធនាគារ ប្រាក់អន្តរការណ៍ និងទូទាត់អនឡាញតាមរយៈ ABA Pay និង Pi Pay។</p>
-                </div>
-            </div>
-            
-            <div class="faq-item">
-                <div class="faq-question">
-                    <h3>តើត្រូវការកក់សេវាជាមុនយ៉ាងដូចម្តេច?</h3>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>ការកក់សេវា ៣០% ត្រូវបានទាមទារជាមុនដើម្បីបញ្ជាក់ការកក់ និង ៧០% ទៀតនៅពេលបញ្ចប់សេវា។</p>
-                </div>
-            </div>
+
         </div>
     </div>
 </section>
@@ -431,7 +367,7 @@
                     <p>សេវាគាំទ្រ</p>
                 </div>
             </div>
-            <a href="/contact" class="cta-button">
+            <a href="{{ route('contact') }}" class="cta-button">
                 <i class="fas fa-headset"></i> ទំនាក់ទំនងយើងឥឡូវនេះ
             </a>
         </div>
@@ -450,16 +386,6 @@
                 if (navMenu) {
                     navMenu.classList.toggle('show');
                 }
-            });
-        }
-        
-        // Weight slider
-        const weightSlider = document.getElementById('weight');
-        const weightValue = document.getElementById('weight-value');
-        
-        if (weightSlider && weightValue) {
-            weightSlider.addEventListener('input', function() {
-                weightValue.textContent = this.value + ' តោន';
             });
         }
         
@@ -513,93 +439,84 @@
             });
         });
         
-        // Initial calculation
-        calculatePrice();
+        // Hide result card initially
+        const rc = document.getElementById('price-result');
+        if (rc) rc.style.display = 'none';
     });
     
+    // All shipping rates: [type][origin][province_en]
+    const shippingRates = @json($ratesJson ?? []);
+    let currentType = 'import';
+
+    function selectServiceType(type) {
+        currentType = type;
+        // Toggle button styles
+        const imp = document.getElementById('btn-import');
+        const exp = document.getElementById('btn-export');
+        imp.classList.toggle('active', type === 'import');
+        exp.classList.toggle('active', type === 'export');
+        // Update port label direction
+        const portLabelText = document.getElementById('port-label-text');
+        if (portLabelText) {
+            portLabelText.textContent = type === 'import'
+                ? 'មាត់ច្រកកំពង់ផែ (ទំនិញចូល)'
+                : 'មាត់ច្រកកំពង់ផែ (ទំនិញចេញ)';
+        }
+        // Hide result card when type changes
+        const rc = document.getElementById('price-result');
+        if (rc) rc.style.display = 'none';
+    }
+
     function calculatePrice() {
-        // Get values from form
-        const truckType = document.getElementById('truck-type');
-        const weight = document.getElementById('weight');
-        
-        if (!truckType || !weight) return;
-        
-        const truckTypeValue = truckType.value;
-        const weightValue = parseInt(weight.value) || 5;
-        
-        // Base prices per truck type
-        const basePrices = {
-            'small': 50,
-            'medium': 80,
-            'large': 120,
-            'container': 200
-        };
-        
-        // Calculate base price
-        let basePrice = (basePrices[truckTypeValue] || 80) * weightValue;
-        
-        // Additional services
-        let additionalPrice = 0;
-        const loading = document.getElementById('loading');
-        const unloading = document.getElementById('unloading');
-        const insurance = document.getElementById('insurance');
-        const storage = document.getElementById('storage');
-        
-        if (loading && loading.checked) additionalPrice += 20;
-        if (unloading && unloading.checked) additionalPrice += 20;
-        if (insurance && insurance.checked) additionalPrice += basePrice * 0.1;
-        if (storage && storage.checked) additionalPrice += 50;
-        
-        // Taxes and fees (10%)
-        const taxes = (basePrice + additionalPrice) * 0.1;
-        
-        // Discount (10% if all services selected)
-        let discount = 0;
-        if (loading && loading.checked && unloading && unloading.checked && insurance && insurance.checked) {
-            discount = (basePrice + additionalPrice) * 0.1;
+        const origin = document.getElementById('origin-port').value;
+        const dest   = document.getElementById('destination-province').value;
+
+        if (!origin || !dest) {
+            alert('សូមជ្រើសរើសប្រភេទ កំពង់ផែ និងខេត្ត-រាជធានី');
+            return;
         }
-        
-        // Total price
-        const totalPrice = basePrice + additionalPrice + taxes - discount;
-        
-        // Format currency
-        const formatter = new Intl.NumberFormat('en-US', {
-            style: 'decimal',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-        
-        // Update results
-        const resultTotal = document.querySelector('.result-total .amount');
-        const detailItems = document.querySelectorAll('.detail-item');
-        
-        if (resultTotal) {
-            resultTotal.textContent = '$' + formatter.format(totalPrice);
+
+        const rateData = shippingRates[currentType]
+                      && shippingRates[currentType][origin]
+                      && shippingRates[currentType][origin][dest];
+        if (!rateData) {
+            alert('មិនមានតម្លៃសម្រាប់ជម្រើសដែលអ្នកបានជ្រើសរើស');
+            return;
         }
-        
-        if (detailItems.length >= 5) {
-            const basePriceElement = detailItems[0]?.querySelector('span:last-child');
-            const additionalElement = detailItems[1]?.querySelector('span:last-child');
-            const taxesElement = detailItems[2]?.querySelector('span:last-child');
-            const discountElement = detailItems[3]?.querySelector('span:last-child');
-            const totalElement = detailItems[4]?.querySelector('span:last-child');
-            
-            if (basePriceElement) basePriceElement.textContent = '$' + formatter.format(basePrice);
-            if (additionalElement) additionalElement.textContent = '$' + formatter.format(additionalPrice);
-            if (taxesElement) taxesElement.textContent = '$' + formatter.format(taxes);
-            if (discountElement) discountElement.textContent = '-$' + formatter.format(discount);
-            if (totalElement) totalElement.textContent = '$' + formatter.format(totalPrice);
-        }
-        
-        // Show result card
+
+        const basePrice = parseFloat(rateData.base_price);
+        const fmt = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        const portLabel = origin === 'sihanoukville' ? 'ព្រះសីហនុ' : 'ភ្នំពេញ';
+        const routeText = currentType === 'import'
+            ? portLabel + ' → ' + rateData.km
+            : rateData.km + ' → ' + portLabel;
+
+        document.getElementById('lbl-type-badge').textContent = currentType === 'import' ? 'Import' : 'Export';
+        document.getElementById('lbl-route').textContent      = routeText;
+        document.getElementById('val-base').textContent       = '$' + fmt.format(basePrice);
+        document.getElementById('val-total').textContent      = '$' + fmt.format(basePrice);
+        document.querySelector('.result-total .amount').textContent = '$' + fmt.format(basePrice);
+
         const resultCard = document.getElementById('price-result');
         if (resultCard) {
             resultCard.style.display = 'block';
             setTimeout(() => {
-                resultCard.style.opacity = '1';
+                resultCard.style.opacity   = '1';
                 resultCard.style.transform = 'translateY(0)';
             }, 100);
         }
+    }
+
+    function switchTable(type) {
+        document.getElementById('tbl-import').style.display = type === 'import' ? 'block' : 'none';
+        document.getElementById('tbl-export').style.display = type === 'export' ? 'block' : 'none';
+        const impBtn = document.getElementById('tbl-btn-import');
+        const expBtn = document.getElementById('tbl-btn-export');
+        impBtn.style.color            = type === 'import' ? '#ff6b00' : '#64748b';
+        impBtn.style.borderBottomColor= type === 'import' ? '#ff6b00' : 'transparent';
+        expBtn.style.color            = type === 'export' ? '#ff6b00' : '#64748b';
+        expBtn.style.borderBottomColor= type === 'export' ? '#ff6b00' : 'transparent';
     }
 </script>
 

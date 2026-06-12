@@ -103,9 +103,14 @@
 /* Enhanced Truck Grid with Masonry-like effect */
 .trucks-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 30px;
     margin-top: 30px;
+}
+
+/* Hide trucks beyond the first 6 until "See more" is clicked */
+.truck-card.truck-extra {
+    display: none;
 }
 
 /* Enhanced Truck Card */

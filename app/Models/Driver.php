@@ -18,6 +18,7 @@ class Driver extends Model
         'hire_date',
         'status',
         'assigned_truck',
+        'driver_picture',
     ];
 
     protected $casts = [

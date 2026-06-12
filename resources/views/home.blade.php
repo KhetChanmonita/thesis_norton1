@@ -26,7 +26,7 @@
             </div>
 
             <div class="hero-buttons">
-                <a href="{{ route('trucks_section') }}" class="btn-primary">
+                <a href="{{ auth()->check() ? route('trucks_section') : route('login') }}" class="btn-primary">
                     <i class="fas fa-calendar-check"></i>
                     កក់សេវា
                 </a>
@@ -39,8 +39,9 @@
         </div>
     </section>
 
-    <!-- Include Service -->
-    @include('service')
+    <!-- Service & Why Choose Us sections -->
+    @include('partials.services_section')
+    @include('partials.whychooseus_section', ['truckCount' => \App\Models\Truck::count()])
 
     {{-- ===== SUCCESS ALERTS ===== --}}
     @if(session('contact_success'))

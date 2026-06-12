@@ -42,6 +42,22 @@
                                 តម្លៃ
                             </a>
                         </li>
+                        @if(session('my_booking_ids'))
+                        <li>
+                            <a href="{{ route('my.bookings') }}"
+                               class="{{ request()->routeIs('my.bookings') ? 'active' : '' }}"
+                               style="position:relative;">
+                                <i class="fas fa-receipt" style="margin-right:4px;font-size:0.78rem;"></i>
+                                ការកក់
+                                <span style="position:absolute;top:-7px;right:-10px;background:#FF6B00;color:#fff;
+                                              font-size:0.6rem;font-family:'Montserrat',sans-serif;font-weight:800;
+                                              width:16px;height:16px;border-radius:50%;display:flex;
+                                              align-items:center;justify-content:center;line-height:1;">
+                                    {{ count(session('my_booking_ids', [])) }}
+                                </span>
+                            </a>
+                        </li>
+                        @endif
                     </ul>
                 </nav>
 
@@ -51,7 +67,12 @@
                         <div class="user-dropdown" id="userDropdownWrap">
                             <button class="user-toggle" id="userToggle" type="button">
                                 <div class="user-avatar">
-                                    <i class="fas fa-user"></i>
+                                    @if(Auth::user()->profile_picture)
+                                        <img src="{{ asset(Auth::user()->profile_picture) }}" alt="avatar"
+                                             style="width:32px;height:32px;border-radius:50%;object-fit:cover;display:block;">
+                                    @else
+                                        <i class="fas fa-user"></i>
+                                    @endif
                                 </div>
                                 <span class="user-name">{{ Auth::user()->user_name }}</span>
                                 <i class="fas fa-chevron-down chevron-icon" id="chevronIcon"></i>
@@ -60,7 +81,12 @@
                             <div class="ud-menu" id="udMenu">
                                 <div class="ud-header">
                                     <div class="ud-avatar">
-                                        <i class="fas fa-user-circle"></i>
+                                        @if(Auth::user()->profile_picture)
+                                            <img src="{{ asset(Auth::user()->profile_picture) }}" alt="avatar"
+                                                 style="width:44px;height:44px;border-radius:50%;object-fit:cover;">
+                                        @else
+                                            <i class="fas fa-user-circle"></i>
+                                        @endif
                                     </div>
                                     <div class="ud-info">
                                         <span class="ud-name">{{ Auth::user()->user_name }}</span>
@@ -69,6 +95,25 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="ud-divider"></div>
+                                <a href="{{ route('profile') }}" class="ud-menu-link">
+                                    <i class="fas fa-user-edit"></i>
+                                    <span>កែប្រែគណនី</span>
+                                </a>
+                                <a href="{{ route('my.bookings') }}" class="ud-menu-link">
+                                    <i class="fas fa-receipt"></i>
+                                    <span>ការកក់របស់ខ្ញុំ</span>
+                                </a>
+                                <a href="{{ route('history') }}" class="ud-menu-link {{ request()->routeIs('history') ? 'ud-menu-link-active' : '' }}">
+                                    <i class="fas fa-history"></i>
+                                    <span>ប្រវត្តិការកក់</span>
+                                </a>
+                                @if(Auth::user()->role === 'admin')
+                                <a href="{{ route('admin.dashboard') }}" class="ud-menu-link">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span>Admin Panel</span>
+                                </a>
+                                @endif
                                 <div class="ud-divider"></div>
                                 <button type="button" class="ud-logout-btn" id="logoutBtn">
                                     <i class="fas fa-sign-out-alt"></i>
@@ -81,11 +126,50 @@
                         <form id="headerLogoutForm" method="POST" action="{{ route('logout') }}" style="display:none;">
                             @csrf
                         </form>
+
+                        {{-- Logout confirm modal --}}
+                        <div id="logoutModal"
+                             style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999999;
+                                    align-items:center;justify-content:center;padding:20px;">
+                            <div style="background:#fff;border-radius:20px;width:100%;max-width:380px;
+                                        box-shadow:0 20px 60px rgba(0,0,0,0.25);overflow:hidden;text-align:center;">
+                                <div style="padding:32px 24px 20px;">
+                                    <div style="width:64px;height:64px;border-radius:50%;background:#fff3e8;
+                                                display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                                        <i class="fas fa-sign-out-alt" style="font-size:1.6rem;color:#ff6b00;"></i>
+                                    </div>
+                                    <div style="font-family:'Kantumruy Pro',sans-serif;font-size:1.05rem;font-weight:700;color:#1e293b;margin-bottom:8px;">
+                                        ចាកចេញពីគណនី?
+                                    </div>
+                                    <p style="font-family:'Kantumruy Pro',sans-serif;font-size:0.88rem;color:#64748b;margin:0;">
+                                        តើអ្នកពិតជាចង់ចាកចេញពីគណនីនេះមែនទេ?
+                                    </p>
+                                </div>
+                                <div style="display:flex;gap:10px;padding:0 24px 24px;">
+                                    <button type="button" id="logoutCancelBtn"
+                                            style="flex:1;padding:12px;background:transparent;border:2px solid #e2e8f0;
+                                                   border-radius:10px;font-family:'Kantumruy Pro',sans-serif;font-size:0.87rem;
+                                                   font-weight:600;color:#64748b;cursor:pointer;">
+                                        <i class="fas fa-times" style="margin-right:5px;"></i>បោះបង់
+                                    </button>
+                                    <button type="button" id="logoutConfirmBtn"
+                                            style="flex:1;padding:12px;background:linear-gradient(135deg,#ff6b00,#e55a00);
+                                                   border:none;border-radius:10px;font-family:'Kantumruy Pro',sans-serif;
+                                                   font-size:0.87rem;font-weight:700;color:#fff;cursor:pointer;
+                                                   display:flex;align-items:center;justify-content:center;gap:8px;
+                                                   box-shadow:0 4px 14px rgba(255,107,0,0.35);">
+                                        <i class="fas fa-sign-out-alt"></i>ចាកចេញ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-login">
+                        <a href="{{ route('login') }}"
+                           class="btn {{ request()->routeIs('register') ? 'btn-outline' : 'btn-filled' }}">
                             <i class="fas fa-sign-in-alt"></i> ចូលគណនី
                         </a>
-                        <a href="{{ route('register') }}" class="btn">
+                        <a href="{{ route('register') }}"
+                           class="btn {{ request()->routeIs('register') ? 'btn-filled' : 'btn-outline' }}">
                             <i class="fas fa-user-plus"></i> ចុះឈ្មោះ
                         </a>
                     @endauth
@@ -96,11 +180,7 @@
 </header>
 
 <style>
-/* ===== User dropdown — scoped styles, no Bootstrap conflict ===== */
-#userDropdownWrap {
-    position: relative;
-    display: inline-block;
-}
+#userDropdownWrap { position: relative; display: inline-block; }
 #udMenu {
     display: none;
     position: absolute;
@@ -114,61 +194,30 @@
     z-index: 99999;
     overflow: hidden;
 }
-#udMenu.show {
-    display: block;
+#udMenu.show { display: block; }
+.ud-header { display: flex; align-items: center; gap: 12px; padding: 16px; }
+.ud-avatar { font-size: 36px; color: #FF6B00; line-height: 1; }
+.ud-info { display: flex; flex-direction: column; gap: 3px; }
+.ud-name { font-weight: 700; font-size: 14px; color: #1a1a1a; font-family: 'Kantumruy Pro', sans-serif; }
+.ud-role { font-size: 12px; color: #888; font-family: 'Kantumruy Pro', sans-serif; }
+.ud-divider { height: 1px; background: #f0f0f0; margin: 0; }
+.ud-menu-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; text-decoration: none;
+    font-family: 'Kantumruy Pro', sans-serif; font-size: 14px;
+    font-weight: 600; color: #334155; transition: background 0.15s;
 }
-.ud-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-}
-.ud-avatar {
-    font-size: 36px;
-    color: #FF6B00;
-    line-height: 1;
-}
-.ud-info {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
-.ud-name {
-    font-weight: 700;
-    font-size: 14px;
-    color: #1a1a1a;
-    font-family: 'Kantumruy Pro', sans-serif;
-}
-.ud-role {
-    font-size: 12px;
-    color: #888;
-    font-family: 'Kantumruy Pro', sans-serif;
-}
-.ud-divider {
-    height: 1px;
-    background: #f0f0f0;
-    margin: 0;
-}
+.ud-menu-link:hover { background: #f8fafc; color: #FF6B00; }
+.ud-menu-link-active { background: #fff6ef; color: #FF6B00 !important; }
+.ud-menu-link i { color: #FF6B00; width: 16px; text-align: center; }
 .ud-logout-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 13px 16px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: 'Kantumruy Pro', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    color: #e53e3e;
-    text-align: left;
-    transition: background 0.15s;
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 13px 16px;
+    background: none; border: none; cursor: pointer;
+    font-family: 'Kantumruy Pro', sans-serif; font-size: 14px;
+    font-weight: 600; color: #e53e3e; text-align: left; transition: background 0.15s;
 }
-.ud-logout-btn:hover {
-    background: #fff5f5;
-    color: #c53030;
-}
+.ud-logout-btn:hover { background: #fff5f5; color: #c53030; }
 </style>
 
 <script>
@@ -181,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!toggle || !menu) return;
 
-    /* Open / close dropdown */
     toggle.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -189,7 +237,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (chevron) chevron.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
     });
 
-    /* Close when clicking anywhere outside */
     document.addEventListener('click', function (e) {
         if (!toggle.contains(e.target) && !menu.contains(e.target)) {
             menu.classList.remove('show');
@@ -197,11 +244,28 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    /* Logout */
-    if (logoutBtn && logoutForm) {
+    var logoutModal      = document.getElementById('logoutModal');
+    var logoutCancelBtn  = document.getElementById('logoutCancelBtn');
+    var logoutConfirmBtn = document.getElementById('logoutConfirmBtn');
+
+    if (logoutBtn && logoutForm && logoutModal) {
         logoutBtn.addEventListener('click', function (e) {
             e.stopPropagation();
+            menu.classList.remove('show');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+            logoutModal.style.display = 'flex';
+        });
+
+        logoutCancelBtn.addEventListener('click', function () {
+            logoutModal.style.display = 'none';
+        });
+
+        logoutConfirmBtn.addEventListener('click', function () {
             logoutForm.submit();
+        });
+
+        logoutModal.addEventListener('click', function (e) {
+            if (e.target === this) this.style.display = 'none';
         });
     }
 });

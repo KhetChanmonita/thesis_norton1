@@ -21,11 +21,11 @@
         <div class="footer-col">
             <h4>តំណរភ្ជាប់</h4>
             <ul>
-                <li><a href="/home"><i class="fas fa-chevron-right"></i> ទំព័រដើម</a></li>
-                <li><a href="/services"><i class="fas fa-chevron-right"></i> សេវាកម្ម</a></li>
-                <li><a href="/about_us"><i class="fas fa-chevron-right"></i> អំពីរពួកយើង</a></li>
-                <li><a href="/about_truck"><i class="fas fa-chevron-right"></i> អំពីរថយន្ត</a></li>
-                <li><a href="/contact"><i class="fas fa-chevron-right"></i> តម្លៃ</a></li>
+                <li><a href="{{ route('home') }}"><i class="fas fa-chevron-right"></i> ទំព័រដើម</a></li>
+                <li><a href="{{ route('services_header') }}"><i class="fas fa-chevron-right"></i> សេវាកម្ម</a></li>
+                <li><a href="{{ route('about_us') }}"><i class="fas fa-chevron-right"></i> អំពីរពួកយើង</a></li>
+                <li><a href="{{ route('trucks_section') }}"><i class="fas fa-chevron-right"></i> អំពីរថយន្ត</a></li>
+                <li><a href="{{ route('price') }}"><i class="fas fa-chevron-right"></i> តម្លៃ</a></li>
             </ul>
         </div>
         

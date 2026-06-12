@@ -167,24 +167,24 @@
     cursor: pointer !important;
 }
 
-.header .header-actions .btn:not(.btn-login) {
+.header .header-actions .btn-filled {
     background: var(--header-gradient-orange) !important;
     color: var(--header-white) !important;
     border: 2px solid transparent !important;
 }
 
-.header .header-actions .btn:not(.btn-login):hover {
+.header .header-actions .btn-filled:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 12px rgba(255, 107, 0, 0.35) !important;
 }
 
-.header .header-actions .btn-login {
+.header .header-actions .btn-outline {
     background: transparent !important;
     border: 2px solid var(--header-primary-orange) !important;
     color: var(--header-primary-orange) !important;
 }
 
-.header .header-actions .btn-login:hover {
+.header .header-actions .btn-outline:hover {
     background: var(--header-gradient-orange) !important;
     color: var(--header-white) !important;
     transform: translateY(-2px) !important;

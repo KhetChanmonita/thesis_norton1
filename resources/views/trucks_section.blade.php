@@ -22,6 +22,26 @@
 <script>setTimeout(()=>{ const a=document.getElementById('bookingSuccessAlert'); if(a) a.remove(); }, 5000);</script>
 @endif
 
+@if($errors->any())
+<div id="bookingErrorAlert" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);z-index:99999;
+     background:{{ $errors->has('container_number') ? 'linear-gradient(135deg,#f97316,#ea580c)' : 'linear-gradient(135deg,#ef4444,#dc2626)' }};
+     color:#fff;padding:14px 24px;border-radius:12px;
+     box-shadow:0 6px 20px {{ $errors->has('container_number') ? 'rgba(249,115,22,0.45)' : 'rgba(239,68,68,0.4)' }};
+     font-family:'Kantumruy Pro',sans-serif;font-size:0.9rem;font-weight:600;max-width:92vw;text-align:center;
+     display:flex;align-items:center;gap:10px;">
+    <i class="fas {{ $errors->has('container_number') ? 'fa-barcode' : 'fa-exclamation-circle' }}" style="font-size:1.2rem;flex-shrink:0;"></i>
+    <span>@foreach($errors->all() as $e) {{ $e }} @endforeach</span>
+</div>
+<script>
+    // Reopen booking modal so user can fix the error
+    document.addEventListener('DOMContentLoaded', function(){
+        document.getElementById('bookingModalOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+        setTimeout(()=>{ const a=document.getElementById('bookingErrorAlert'); if(a){ a.style.transition='opacity .4s'; a.style.opacity='0'; setTimeout(()=>a.remove(),400); } }, 10000);
+    });
+</script>
+@endif
+
 <!-- Trucks Section -->
 <section class="trucks_section">
     <div class="container">
@@ -41,19 +61,19 @@
         <!-- Statistics Bar -->
         <div class="trucks-stats">
             <div class="stat-item">
-                <span class="stat-number" id="totalTrucks">0</span>
+                <span class="stat-number" id="totalTrucks">{{ $trucks->count() }}</span>
                 <span class="stat-label">រថយន្តសរុប</span>
             </div>
             <div class="stat-item">
-                <span class="stat-number" id="availableTrucks">0</span>
-                <span class="stat-label">រថយន្តដែលអាចប្រើប្រាស់បាន</span>
+                <span class="stat-number" id="availableTrucks">{{ $availableCount }}</span>
+                <span class="stat-label">រថយន្តអាចប្រើប្រាស់</span>
             </div>
             <div class="stat-item">
-                <span class="stat-number" id="statesCovered">25</span>
+                <span class="stat-number">25</span>
                 <span class="stat-label">ខេត្តនានា</span>
             </div>
             <div class="stat-item">
-                <span class="stat-number" id="successfulDeliveries">98%</span>
+                <span class="stat-number">98%</span>
                 <span class="stat-label">ការដឹកជញ្ជូនជោគជ័យ</span>
             </div>
         </div>
@@ -69,7 +89,7 @@
                     </select>
                 </div>
                 <div class="filter-group">
-                    <label for="truckSize"><i class="fas fa-weight-hanging"></i> ទំហំ</label>
+                    <label for="truckSize"><i class="fas fa-weight-hanging"></i> ទម្ងន់</label>
                     <select id="truckSize" class="filter-select">
                         <option value="all">ទាំងអស់</option>
                         <option value="small">តូច (១០-១២តោន)</option>
@@ -94,79 +114,135 @@
             </div>
         </div>
 
-        <!-- Trucks Grid -->
-        <div class="trucks-grid">
+        <!-- Trucks Grid — dynamic from database, random order -->
+        <div class="trucks-grid" id="trucksGrid">
+            @forelse($trucks as $index => $truck)
             @php
-                $truckData = [
-                    ['id' => '4618.png', 'name' => 'Mitsubishi FUSO', 'size' => '13660Kg', 'color' => 'ពណ៌បៃតង', 'status' => 'available'],
-                    ['id' => '5464.png', 'name' => 'Mitsubishi FUSO', 'size' => '12490Kg', 'color' => 'ពណ៌បៃតង', 'status' => 'available'],
-                    ['id' => '5356.png', 'name' => 'Mitsubishi FUSO', 'size' => '12970Kg', 'color' => 'ពណ៌បៃតង', 'status' => 'busy'],
-                    ['id' => '6426.png', 'name' => 'Mitsubishi FUSO', 'size' => '12880Kg', 'color' => 'ពណ៌បៃតង', 'status' => 'available'],
-                    ['id' => '8792.png', 'name' => 'Mitsubishi FUSO', 'size' => '14840Kg', 'color' => 'ពណ៌បៃតង', 'status' => 'available'],
-                    ['id' => '9115.png', 'name' => 'Mitsubishi FUSO', 'size' => '12310Kg', 'color' => 'ពណ៌បៃតង', 'status' => 'maintenance'],
-                    ['id' => '8338.png', 'name' => 'Mitsubishi FUSO', 'size' => '13660Kg', 'color' => 'ពណ៌បៃតង', 'status' => 'available'],
-                    ['id' => '6728.png', 'name' => 'Mitsubishi FUSO', 'size' => '15200Kg', 'color' => 'ពណ៌ស', 'status' => 'available'],
-                    ['id' => '6299.png', 'name' => 'Mitsubishi FUSO', 'size' => '13080Kg', 'color' => 'ពណ៌ស', 'status' => 'available'],
-                    ['id' => '8380.png', 'name' => 'Mitsubishi FUSO', 'size' => '13730Kg', 'color' => 'ពណ៌ប្រផេះ', 'status' => 'busy'],
-                    ['id' => '3891.png', 'name' => 'Mitsubishi FUSO', 'size' => '13080Kg', 'color' => 'ពណ៌ប្រផេះ', 'status' => 'available'],
-                ];
+                $nameLower  = strtolower($truck->truck_name ?? '');
+                $typeKey    = str_contains($nameLower, 'fuso')  ? 'fuso'  :
+                              (str_contains($nameLower, 'isuzu') ? 'isuzu' :
+                              (str_contains($nameLower, 'hino')  ? 'hino'  : 'other'));
+                $cap        = (float)($truck->capacity_ton ?? 0);
+                $sizeKey    = $cap >= 15 ? 'large' : ($cap >= 12 ? 'medium' : 'small');
+                $isExtra    = $index >= 6;
+                $truckStatus    = $truck->status ?? 'available';
+                $hasActiveDriver = $truck->drivers->where('status', 'active')->count() > 0;
+                $canBook        = $truckStatus === 'available' && $hasActiveDriver;
+                $statusLabel    = match($truckStatus) {
+                    'in_progress' => 'កំពុងដំណើរការ',
+                    'delivering'  => 'កំពុងដឹកទំនិញ',
+                    'maintenance' => 'កំពុងជួសជុល',
+                    default       => 'ទំនេរ',
+                };
+                $blockReason = !$canBook ? (
+                    $truckStatus === 'in_progress' ? 'រថយន្តកំពុងដំណើរការលើការកក់មួយ' :
+                    ($truckStatus === 'delivering'  ? 'រថយន្តកំពុងដឹកទំនិញ' :
+                    ($truckStatus === 'maintenance' ? 'រថយន្តកំពុងជួសជុល' :
+                                                     'អ្នកបើកបរមិនអាចប្រើប្រាស់'))
+                ) : null;
             @endphp
+            <div class="truck-card{{ $isExtra ? ' truck-extra' : '' }}"
+                 style="{{ $isExtra ? 'display:none;' : '' }}"
+                 data-type="{{ $typeKey }}"
+                 data-size="{{ $sizeKey }}"
+                 data-status="{{ $truckStatus }}">
 
-            @foreach($truckData as $index => $truck)
-            <div class="truck-card" 
-                 data-type="{{ str_contains(strtolower($truck['name']), 'fuso') ? 'fuso' : 
-                              (str_contains(strtolower($truck['name']), 'isuzu') ? 'isuzu' :
-                              (str_contains(strtolower($truck['name']), 'hino') ? 'hino' : 'volvo')) }}"
-                 data-size="{{ $truck['size'] > 14000 ? 'large' : ($truck['size'] > 13000 ? 'medium' : 'small') }}"
-                 data-status="{{ $truck['status'] }}">
                 <div class="truck-image">
-                    <img src="{{ asset('images/' . $truck['id']) }}" alt="{{ $truck['name'] }}" loading="lazy">
-                    <span class="truck-status status-{{ $truck['status'] }}">
-                        @if($truck['status'] == 'available')
-                            អាចប្រើប្រាស់បាន
-                        @elseif($truck['status'] == 'busy')
-                            កំពុងដឹកជញ្ជូន
-                        @else
-                            កំពុងថែទាំ
-                        @endif
-                    </span>
+                    @if($truck->truck_picture && file_exists(public_path($truck->truck_picture)))
+                        <img src="{{ asset($truck->truck_picture) }}"
+                             alt="{{ $truck->truck_name }}" loading="lazy">
+                    @else
+                        <img src="{{ asset('images/truck-bg.jpg') }}"
+                             alt="{{ $truck->truck_name }}" loading="lazy">
+                    @endif
+                    <span class="truck-status status-{{ $truckStatus }}">{{ $statusLabel }}</span>
                     <button class="truck-favorite" onclick="toggleFavorite(this)">
                         <i class="far fa-heart"></i>
                     </button>
                 </div>
-                
+
                 <div class="truck-content">
                     <div class="truck-info">
                         <div class="info-row">
-                            <span class="info-label">លេខកូដ</span>
-                            <span class="info-value">TRK-{{ str_pad($index + 1, 3, '0', STR_PAD_LEFT) }}</span>
+                            <span class="info-label">ស្លាកលេខរថយន្ត</span>
+                            <span class="info-value">{{ $truck->plate_number ?? '—' }}</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">ឈ្មោះរថយន្ត</span>
-                            <span class="info-value">{{ $truck['name'] }}</span>
+                            <span class="info-value">{{ $truck->truck_name }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">ទំហំ</span>
-                            <span class="info-value">{{ $truck['size'] }}</span>
+                            <span class="info-label">ចំនួនភ្លៅរថយន្ត</span>
+                            <span class="info-value">{{ $truck->truck_size ?? '—' }}</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">ពណ៌</span>
-                            <span class="info-value">{{ $truck['color'] }}</span>
+                            <span class="info-label">ពណ៌រថយន្ត</span>
+                            <span class="info-value">{{ $truck->truck_color ?? '—' }}</span>
                         </div>
+                        @if($truck->capacity_ton)
+                        <div class="info-row">
+                            <span class="info-label">ទម្ងន់រថយន្ត</span>
+                            <span class="info-value">{{ $truck->capacity_ton }} តោន</span>
+                        </div>
+                        @endif
                     </div>
-                    
+
+                    @if(!$canBook)
+                    <div style="display:flex;align-items:center;gap:6px;padding:5px 10px;
+                                background:#fee2e2;border-radius:8px;margin-bottom:8px;">
+                        <i class="fas fa-ban" style="color:#dc2626;font-size:0.75rem;"></i>
+                        <span style="font-size:0.75rem;color:#991b1b;font-weight:600;">
+                            {{ $blockReason }}
+                        </span>
+                    </div>
+                    @endif
+
                     <div class="truck-actions">
                         <button class="view-details" onclick="showTruckDetails({{ $index }})">
                             <i class="fas fa-eye"></i> មើលលម្អិត
                         </button>
-                        <button class="quick-book" title="កក់រថយន្ត" onclick="quickBook('TRK-{{ str_pad($index + 1, 3, '0', STR_PAD_LEFT) }}')">
+                        @if($canBook)
+                        <button class="quick-book" title="កក់រថយន្ត"
+                                onclick="quickBook('{{ $truck->plate_number }}')">
                             <i class="fas fa-calendar-check"></i>
                         </button>
+                        @else
+                        <button class="quick-book"
+                                style="opacity:0.4;cursor:not-allowed;background:#e2e8f0;
+                                       color:#94a3b8;border-color:#e2e8f0;"
+                                title="{{ $blockReason }}" disabled>
+                            <i class="fas fa-ban"></i>
+                        </button>
+                        @endif
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div style="grid-column:1/-1;text-align:center;padding:60px;color:#94a3b8;">
+                <i class="fas fa-truck" style="font-size:3rem;display:block;margin-bottom:12px;opacity:0.3;"></i>
+                <p>មិនទាន់មានរថយន្ត</p>
+            </div>
+            @endforelse
         </div>
+
+        {{-- See More button — only shown when there are more than 6 trucks --}}
+        @if($trucks->count() > 6)
+        <div style="text-align:center;margin-top:28px;" id="seeMoreWrap">
+            <button onclick="showMoreTrucks()" class="see-more-btn"
+                    style="display:inline-flex;align-items:center;gap:10px;
+                           padding:13px 32px;background:linear-gradient(135deg,#FF6B00,#e55a00);
+                           color:#fff;border:none;border-radius:12px;cursor:pointer;
+                           font-family:'Kantumruy Pro',sans-serif;font-size:0.95rem;font-weight:700;
+                           box-shadow:0 4px 16px rgba(255,107,0,0.35);transition:all 0.2s;">
+                <i class="fas fa-plus-circle"></i>
+                មើលបន្ថែម &nbsp;
+                <span style="background:rgba(255,255,255,0.25);padding:2px 10px;border-radius:20px;
+                              font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:800;">
+                    {{ $trucks->count() - 6 }} ទៀត
+                </span>
+            </button>
+        </div>
+        @endif
 
         <!-- CTA Section -->
             <div class="trucks-cta">
@@ -217,7 +293,7 @@
         </div>
 
         <div class="booking-modal-body">
-            <form id="bookingForm" method="POST" action="{{ route('trucks.book') }}">
+            <form id="bookingForm" method="POST" action="{{ route('trucks.book') }}" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="truck_code" id="formTruckId">
                 <input type="hidden" name="booking_date" value="{{ date('Y-m-d') }}">
@@ -266,32 +342,52 @@
                     <div class="booking-grid">
                         <div class="booking-field">
                             <label>ប្រភេទការដឹកជញ្ជូន <span class="required">*</span></label>
-                            <select name="booking_type" required>
+                            <select name="booking_type" id="bookingTypeSelect" required onchange="toggleDateLabels(this.value)">
                                 <option value="">-- ជ្រើសរើស --</option>
                                 <option value="import">នាំចូល (Import)</option>
                                 <option value="export">នាំចេញ (Export)</option>
                             </select>
                         </div>
                         <div class="booking-field">
-                            <label>លេខកុងតឺន័រ</label>
-                            <input type="text" name="container_number" placeholder="ឧ. MSCU1234567">
+                            <label>លេខកុងតឺន័រ <span style="font-size:0.75em;color:#e53e3e;">(មិនអាចដូចគ្នា — អក្សរ ៤ តួ ចុងត្រូវជា U + លេខ ៧ខ្ទង់)</span></label>
+                            <input type="text" name="container_number" placeholder="ឧ. TIIU1234567"
+                                   pattern="[A-Za-z]{3}[Uu][0-9]{7}"
+                                   title="ទម្រង់ត្រឹមត្រូវ៖ អក្សរ ៤ តួ ដែលតួចុងជា U បន្តដោយលេខ ៧ ខ្ទង់ (ឧ. TIIU1234567)"
+                                   maxlength="11"
+                                   style="text-transform:uppercase;">
+                            <small style="color:#718096;font-size:0.75rem;">ឧទាហរណ៍៖ TIIU1234567 (អក្សរ TII + U + លេខ ៧ខ្ទង់)</small>
                         </div>
-                        <div class="booking-field">
+                        <div class="booking-field" id="pickupLocationField">
                             <label>ទីតាំងទទួល <span class="required">*</span></label>
                             <input type="text" name="pickup_location" placeholder="ឧ. កំពង់ផែស្វ័យយ័តភ្នំពេញ" required>
                         </div>
-                        <div class="booking-field">
+                        <div class="booking-field" id="dropoffLocationField">
                             <label>ទីតាំងដឹកទៅ <span class="required">*</span></label>
-                            <input type="text" name="dropoff_location" placeholder="ឧ. រោងចក្រ ខេត្តកណ្តាល" required>
+                            <select name="dropoff_location" required>
+                                <option value="">-- ជ្រើសរើសខេត្ត/ក្រុង --</option>
+                                @foreach($provinces as $p)
+                                <option value="{{ $p['km'] }}">{{ $p['km'] }} ({{ $p['en'] }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="booking-field booking-field-full">
+                            <label>
+                                តំណទីតាំងដឹកទៅ (Google Maps)
+                                <span style="font-size:0.75em;color:#718096;font-weight:400;"> (ជម្រើស — ចម្លងតំណពី Google Maps)</span>
+                            </label>
+                            <input type="url" name="dropoff_location_link"
+                                   placeholder="https://maps.google.com/?q=..."
+                                   value="{{ old('dropoff_location_link') }}">
                         </div>
                         <div class="booking-field">
-                            <label>កាលបរិច្ឆេទទទួល <span class="required">*</span></label>
-                            <input type="date" name="pick_up_date" required
-                                   min="{{ date('Y-m-d') }}">
+                            <label><span id="pickUpDateLabel">កាលបរិច្ឆេទថ្ងៃដឹក</span> <span class="required">*</span></label>
+                            <input type="date" name="pick_up_date" id="pickUpDateInput" required
+                                   min="{{ date('Y-m-d') }}"
+                                   onchange="document.getElementById('dropOffDateInput').min = this.value;">
                         </div>
                         <div class="booking-field">
-                            <label>កាលបរិច្ឆេទដឹកទៅ <span class="required">*</span></label>
-                            <input type="date" name="drop_off_date" required
+                            <label><span id="dropOffDateLabel">កាលបរិច្ឆេទថ្ងៃទម្លាក់</span> <span class="required">*</span></label>
+                            <input type="date" name="drop_off_date" id="dropOffDateInput" required
                                    min="{{ date('Y-m-d') }}">
                         </div>
                         <div class="booking-field">
@@ -301,6 +397,38 @@
                         <div class="booking-field">
                             <label>តម្លៃដឹកជញ្ជូន (ដុល្លារ)</label>
                             <input type="number" name="total_price" placeholder="ឧ. 500" min="0" step="0.01">
+                        </div>
+                    </div>
+                </div>
+
+                {{-- ===== SECTION 3: Cargo Document Upload ===== --}}
+                <div class="booking-section">
+                    <div class="booking-section-title">
+                        <i class="fas fa-file-upload"></i> ឯកសារ / បញ្ជីទំនិញ
+                    </div>
+                    <div class="booking-grid">
+                        <div class="booking-field booking-field-full">
+                            <label>
+                                ឯកសារបញ្ជីទំនិញ
+                                <span style="font-size:0.75em;color:#718096;font-weight:400;"> (PDF, JPG, PNG — អតិបរមា 5MB)</span>
+                            </label>
+                            <label for="cargoFileInput" id="cargoFileLabel"
+                                   style="display:flex;align-items:center;gap:12px;padding:12px 16px;
+                                          border:2px dashed #CBD5E0;border-radius:10px;cursor:pointer;
+                                          background:#F7FAFC;transition:border-color 0.2s;width:100%;">
+                                <i class="fas fa-cloud-upload-alt" style="font-size:1.4rem;color:#a0aec0;"></i>
+                                <div>
+                                    <div id="cargoFileName" style="font-size:0.88rem;color:#4a5568;font-weight:600;">
+                                        ចុចដើម្បីជ្រើសរើសឯកសារ
+                                    </div>
+                                    <div style="font-size:0.75rem;color:#a0aec0;margin-top:2px;">
+                                        ឧ. Contract Release, Packing List
+                                    </div>
+                                </div>
+                            </label>
+                            <input type="file" name="cargo_list_file" id="cargoFileInput"
+                                   accept=".pdf,.jpg,.jpeg,.png" style="display:none;"
+                                   onchange="updateCargoFileName(this)">
                         </div>
                     </div>
                 </div>
@@ -335,6 +463,9 @@
 
 <!-- JavaScript -->
 <script>
+    const isAuthenticated = @json(auth()->check());
+    const loginUrl = "{{ route('login') }}";
+
     // Animate stats counter
     function animateCounter(element, target) {
         let current = 0;
@@ -352,24 +483,13 @@
 
     // Initialize counters when page loads
     document.addEventListener('DOMContentLoaded', function() {
-        // Count total trucks
-        const truckCards = document.querySelectorAll('.truck-card');
-        document.getElementById('totalTrucks').textContent = truckCards.length;
-        
-        // Count available trucks
-        const availableTrucks = Array.from(truckCards).filter(card => 
-            card.getAttribute('data-status') === 'available'
-        ).length;
-        
-        animateCounter(document.getElementById('availableTrucks'), availableTrucks);
-        
-        // Add CSS for status colors
+        // Animate total trucks counter from DB count
+        animateCounter(document.getElementById('totalTrucks'), {{ $trucks->count() }});
+        animateCounter(document.getElementById('availableTrucks'), {{ $availableCount }});
+
+        // Status badge colours
         const style = document.createElement('style');
-        style.textContent = `
-            .status-available { background: linear-gradient(135deg, #10b981, #059669); }
-            .status-busy { background: linear-gradient(135deg, #f59e0b, #d97706); }
-            .status-maintenance { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        `;
+        style.textContent = '.status-available{background:linear-gradient(135deg,#10b981,#059669);}';
         document.head.appendChild(style);
     });
 
@@ -439,65 +559,142 @@
         }
     }
 
-    // Show truck details modal
-    const truckDetails = @json($truckData);
+    // Truck details from DB — prepared in PHP, passed as JSON
+    const truckDetails = @json($trucksJson);
+
+    // Show/hide extra trucks
+    function showMoreTrucks() {
+        document.querySelectorAll('.truck-extra').forEach(function(c) {
+            c.style.display = 'flex';
+            c.style.animation = 'fadeIn 0.5s ease';
+        });
+        var wrap = document.getElementById('seeMoreWrap');
+        if (wrap) wrap.style.display = 'none';
+        // Update counter to full count
+        document.getElementById('totalTrucks').textContent =
+            document.querySelectorAll('.truck-card').length;
+    }
 
     function showTruckDetails(index) {
         const truck = truckDetails[index];
+        if (!truck) return;
         const modal = document.getElementById('modalContent');
-        
+
+        const imgSrc = truck.truck_picture
+            ? '{{ asset("") }}' + truck.truck_picture
+            : '{{ asset("images/truck-bg.jpg") }}';
+
+        // Status badge
+        const statusInfo = {
+            available:   { label: 'ទំនេរ',             color: '#065f46', bg: '#d1fae5' },
+            delivering:  { label: 'កំពុងដឹកទំនិញ',   color: '#92400e', bg: '#fef3c7' },
+            maintenance: { label: 'កំពុងជួសជុល',     color: '#991b1b', bg: '#fee2e2' },
+        };
+        const st    = statusInfo[truck.status] || statusInfo.available;
+        const badge = `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 14px;
+                         border-radius:20px;font-size:0.78rem;font-weight:700;
+                         background:${st.bg};color:${st.color};">
+                         <i class="fas fa-circle" style="font-size:0.4rem;"></i>${st.label}</span>`;
+
+        // Driver rows
+        let driversHtml = '';
+        if (truck.drivers && truck.drivers.length > 0) {
+            truck.drivers.forEach(function(d) {
+                const avatar = d.driver_picture
+                    ? `<img src="{{ asset("") }}${d.driver_picture}"
+                            style="width:38px;height:38px;border-radius:50%;object-fit:cover;
+                                   border:2px solid #e2e8f0;flex-shrink:0;">`
+                    : `<div style="width:38px;height:38px;border-radius:50%;
+                                   background:linear-gradient(135deg,#667eea,#764ba2);
+                                   display:flex;align-items:center;justify-content:center;
+                                   font-weight:800;font-size:0.85rem;color:#fff;flex-shrink:0;">
+                           ${d.full_name ? d.full_name.charAt(0).toUpperCase() : '?'}
+                       </div>`;
+                const dStatus = d.status === 'active' ? 'កំពុងធ្វើការ' :
+                                d.status === 'on_leave' ? 'ឈប់សម្រាក' : 'មិនសកម្ម';
+                driversHtml += `
+                    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;
+                                border-bottom:1px solid #f1f5f9;">
+                        ${avatar}
+                        <div>
+                            <div style="font-weight:700;color:#1e293b;font-size:0.88rem;">
+                                ${d.full_name || '—'}
+                            </div>
+                            <div style="font-size:0.75rem;color:#64748b;margin-top:2px;">
+                                ${d.phone ? '<i class="fas fa-phone" style="margin-right:4px;font-size:0.65rem;"></i>' + d.phone : ''}
+                                &nbsp;·&nbsp; ${dStatus}
+                            </div>
+                        </div>
+                    </div>`;
+            });
+        } else {
+            driversHtml = `<div style="color:#94a3b8;font-size:0.83rem;padding:8px 0;">
+                               មិនទាន់មានអ្នកបើកបរ
+                           </div>`;
+        }
+
         modal.innerHTML = `
             <div class="modal-truck-details">
                 <div class="modal-image">
-                    <img src="{{ asset('images/') }}/${truck.id}" alt="${truck.name}">
+                    <img src="${imgSrc}" alt="${truck.truck_name}"
+                         style="object-fit:contain;background:#1e293b;">
                     <button class="image-zoom" onclick="zoomImage(this)">
                         <i class="fas fa-search-plus"></i>
                     </button>
                 </div>
                 <div class="modal-info">
-                    <h3>${truck.name}</h3>
+                    <div style="display:flex;align-items:center;justify-content:space-between;
+                                flex-wrap:wrap;gap:8px;margin-bottom:14px;">
+                        <h3 style="margin:0;">${truck.truck_name}</h3>
+                        ${badge}
+                    </div>
+
                     <div class="modal-info-grid">
                         <div class="modal-info-row">
-                            <span class="modal-label">
-                                <i class="fas fa-id-card"></i> លេខកូដ
-                            </span>
-                            <span class="modal-value">TRK-${String(index + 1).padStart(3, '0')}</span>
+                            <span class="modal-label"><i class="fas fa-id-card"></i> ស្លាកលេខរថយន្ត</span>
+                            <span class="modal-value">${truck.plate_number || '—'}</span>
                         </div>
                         <div class="modal-info-row">
-                            <span class="modal-label">
-                                <i class="fas fa-weight-hanging"></i> ទំហំ
-                            </span>
-                            <span class="modal-value">${truck.size}</span>
+                            <span class="modal-label"><i class="fas fa-weight-hanging"></i> ចំនួនភ្លៅរថយន្ត</span>
+                            <span class="modal-value">${truck.truck_size || '—'}</span>
                         </div>
                         <div class="modal-info-row">
-                            <span class="modal-label">
-                                <i class="fas fa-palette"></i> ពណ៌
-                            </span>
-                            <span class="modal-value">${truck.color}</span>
+                            <span class="modal-label"><i class="fas fa-palette"></i> ពណ៌រថយន្ត</span>
+                            <span class="modal-value">${truck.truck_color || '—'}</span>
+                        </div>
+
+                        <div class="modal-info-row">
+                            <span class="modal-label"><i class="fas fa-box"></i>ទម្ងន់រថយន្ត</span>
+                            <span class="modal-value">${truck.capacity_ton ? truck.capacity_ton + ' តោន' : '—'}</span>
                         </div>
                         <div class="modal-info-row">
-                            <span class="modal-label">
-                                <i class="fas fa-gas-pump"></i> ប្រភេទសាំង
+                            <span class="modal-label"><i class="fas fa-map-marker-alt" style="color:#FF6B00;"></i> ទីតាំងបច្ចុប្បន្ន</span>
+                            <span class="modal-value" style="${truck.location ? 'color:#FF6B00;font-weight:700;' : 'color:#94a3b8;'}">
+                                ${truck.location || 'មិនទាន់បានកំណត់'}
                             </span>
-                            <span class="modal-value">ឌីសែល</span>
-                        </div>
-                        <div class="modal-info-row">
-                            <span class="modal-label">
-                                <i class="fas fa-tachometer-alt"></i> កម្លាំងម៉ាស៊ីន
-                            </span>
-                            <span class="modal-value">៣០០ សេក</span>
-                        </div>
-                        <div class="modal-info-row">
-                            <span class="modal-label">
-                                <i class="fas fa-box"></i> សមត្ថភាព
-                            </span>
-                            <span class="modal-value">${parseInt(truck.size) / 1000} តោន</span>
                         </div>
                     </div>
+
+                    <div style="margin-top:16px;">
+                        <div style="font-weight:700;color:#1e293b;font-size:0.85rem;margin-bottom:8px;">
+                            <i class="fas fa-user-tie" style="color:#FF6B00;margin-right:6px;"></i>
+                            អ្នកបើកបររថយន្ត
+                        </div>
+                        ${driversHtml}
+                    </div>
+
                     <div class="modal-actions">
-                        <button class="book-now" onclick="bookTruck('TRK-${String(index + 1).padStart(3, '0')}')">
-                            <i class="fas fa-calendar-check"></i> កក់រថយន្តនេះ
-                        </button>
+                        ${truck.can_book
+                            ? `<button class="book-now" onclick="bookTruck('${truck.plate_number}')">
+                                   <i class="fas fa-calendar-check"></i> កក់រថយន្តនេះ
+                               </button>`
+                            : `<div style="display:flex;align-items:center;gap:8px;padding:10px 16px;
+                                           background:#fee2e2;border-radius:10px;
+                                           color:#991b1b;font-size:0.83rem;font-weight:700;">
+                                   <i class="fas fa-ban"></i>
+                                   ${truck.block_reason || 'មិនអាចកក់'}
+                               </div>`
+                        }
                         <button class="modal-close-btn" onclick="closeModal()">
                             <i class="fas fa-times"></i> បិទ
                         </button>
@@ -505,7 +702,7 @@
                 </div>
             </div>
         `;
-        
+
         document.getElementById('truckModal').style.display = 'block';
         document.body.style.overflow = 'hidden';
     }
@@ -526,6 +723,10 @@
 
     // Open booking modal
     function openBookingModal(truckId) {
+        if (!isAuthenticated) {
+            window.location.href = loginUrl;
+            return;
+        }
         document.getElementById('bookingTruckId').textContent = truckId;
         document.getElementById('formTruckId').value = truckId;
         document.getElementById('bookingModalOverlay').classList.add('open');
@@ -537,10 +738,42 @@
         document.body.style.overflow = 'auto';
     }
 
+    function updateCargoFileName(input) {
+        var label = document.getElementById('cargoFileName');
+        if (input.files && input.files[0]) {
+            label.textContent = input.files[0].name;
+            label.style.color = '#38a169';
+            document.getElementById('cargoFileLabel').style.borderColor = '#38a169';
+        } else {
+            label.textContent = 'ចុចដើម្បីជ្រើសរើសឯកសារ';
+            label.style.color = '#4a5568';
+            document.getElementById('cargoFileLabel').style.borderColor = '#CBD5E0';
+        }
+    }
+
     // Close booking modal on overlay click
     document.getElementById('bookingModalOverlay').addEventListener('click', function(e) {
         if (e.target === this) closeBookingModal();
     });
+
+    // Switch date field labels based on booking type (import / export)
+    function toggleDateLabels(type) {
+        var pickUpLabel  = document.getElementById('pickUpDateLabel');
+        var dropOffLabel = document.getElementById('dropOffDateLabel');
+        var pickupField  = document.getElementById('pickupLocationField');
+        var dropoffField = document.getElementById('dropoffLocationField');
+        if (type === 'export') {
+            pickUpLabel.textContent  = 'ថ្ងៃលើកទូរ';
+            dropOffLabel.textContent = 'ថ្ងៃឡើងទំនិញ';
+            pickupField.style.order  = '2';
+            dropoffField.style.order = '1';
+        } else {
+            pickUpLabel.textContent  = 'កាលបរិច្ឆេទថ្ងៃដឹក';
+            dropOffLabel.textContent = 'កាលបរិច្ឆេទថ្ងៃទម្លាក់';
+            pickupField.style.order  = '';
+            dropoffField.style.order = '';
+        }
+    }
 
     // Quick book function (calendar icon on card)
     function quickBook(truckId) {

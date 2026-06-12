@@ -37,39 +37,79 @@ body {
     background: white;
 }
 
-/* ===== LEFT ORANGE PANEL ===== */
+/* ===== LEFT PANEL ===== */
 .login-left {
     flex: 1;
-    background: linear-gradient(135deg, #FF6B00 0%, #FF8A3D 100%);
     color: white;
-    padding: 50px 40px;
+    padding: 36px 36px 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     position: relative;
     overflow: hidden;
 }
 
-.login-left::before {
-    content: '';
+/* Full-panel background image */
+.ll-bg-img {
     position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
 }
 
-.login-left::after {
-    content: '';
+/* Dark gradient overlay */
+.ll-overlay {
     position: absolute;
-    bottom: -80px;
-    left: -40px;
-    width: 250px;
-    height: 250px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 50%;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(200,70,0,0.82) 0%, rgba(255,107,0,0.70) 50%, rgba(0,0,0,0.55) 100%);
+    z-index: 1;
+}
+
+.ll-content {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Stats bar */
+.ll-stats {
+    display: flex;
+    background: rgba(0,0,0,0.35);
+    border-top: 1px solid rgba(255,255,255,0.15);
+    position: relative;
+    z-index: 2;
+    margin: 0 -36px;
+}
+
+.ll-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 8px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.ll-stat:last-child { border-right: none; }
+
+.ll-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.ll-lbl {
+    font-size: 0.68rem;
+    opacity: 0.8;
+    text-align: center;
+    font-family: 'Kantumruy Pro', sans-serif;
 }
 
 /* Brand */
@@ -77,9 +117,9 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 40px;
+    margin-bottom: 28px;
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 .brand-icon {
@@ -105,19 +145,20 @@ body {
 }
 
 .login-left h1 {
-    font-size: 2rem;
+    font-size: 1.9rem;
     font-weight: 700;
-    line-height: 1.4;
-    margin-bottom: 16px;
+    line-height: 1.35;
+    margin-bottom: 14px;
     position: relative;
     z-index: 1;
 }
 
-.login-left > p {
-    font-size: 0.95rem;
+.login-left > p,
+.ll-content > p {
+    font-size: 0.88rem;
     opacity: 0.9;
     line-height: 1.7;
-    margin-bottom: 35px;
+    margin-bottom: 22px;
     position: relative;
     z-index: 1;
 }
@@ -125,7 +166,7 @@ body {
 /* Features list */
 .features-list {
     list-style: none;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     position: relative;
     z-index: 1;
 }
@@ -134,30 +175,20 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 14px;
-    font-size: 0.92rem;
+    margin-bottom: 12px;
+    font-size: 0.88rem;
     opacity: 0.95;
 }
 
 .features-list li i {
-    font-size: 16px;
+    font-size: 14px;
     opacity: 0.85;
     flex-shrink: 0;
+    width: 16px;
 }
 
-/* Truck illustration box */
-.login-illustration {
-    height: 140px;
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    opacity: 0.85;
-    position: relative;
-    z-index: 1;
-}
+/* legacy illustration — hidden now that real image is used */
+.login-illustration { display: none; }
 
 /* ===== RIGHT FORM PANEL ===== */
 .login-right {
@@ -414,16 +445,16 @@ body {
     }
 
     .login-left {
-        padding: 35px 30px;
+        padding: 30px 28px 0;
     }
+
+    .ll-stats { margin: 0 -28px; }
 
     .login-left h1 {
         font-size: 1.6rem;
     }
 
-    .login-illustration {
-        display: none;
-    }
+    .ll-truck-img { height: 120px; }
 
     .login-right {
         padding: 35px 25px;

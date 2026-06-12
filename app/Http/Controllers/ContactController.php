@@ -7,6 +7,11 @@ use App\Models\Contact;
 
 class ContactController extends Controller
 {
+    public function show()
+    {
+        return view('contact');
+    }
+
     public function store(Request $request)
     {
         $request->validate([

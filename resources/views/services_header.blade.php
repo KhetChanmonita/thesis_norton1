@@ -34,7 +34,7 @@
                     យើងផ្តល់ជូននូវដំណោះស្រាយដឹកជញ្ជូនពេញលេញ ពីការដឹកជញ្ជូនពីកំពង់ផែទៅរោងចក្រ
                     និងពីរោងចក្រទៅកំពង់ផែតាមគ្រប់ខេត្តក្រុង។
                 </p>
-                <div class="hero-stats">
+                {{-- <div class="hero-stats">
                     <div class="stat-item">
                         <span class="stat-number">98%</span>
                         <span class="stat-label">អតិថិជនពេញចិត្ត</span>
@@ -47,7 +47,7 @@
                         <span class="stat-number">24/7</span>
                         <span class="stat-label">សេវាកម្មគាំទ្រ</span>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
 
@@ -401,6 +401,17 @@
 
                 <div class="process-step">
                     <div class="step-number">06</div>
+                    <div class="step-content">
+                        <div class="step-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <h3>ដល់រោងចក្រ ឬឃ្លាំង និងបញ្ចុះទំនិញ</h3>
+                        <p>នៅពេលរថយន្តមកដល់រោងចក្រ ឬឃ្លាំងគោលដៅ អ្នកបើកបរនឹងសហការជាមួយអ្នកគ្រប់គ្រងទីតាំង ដើម្បីបញ្ចុះ និងផ្ទៀងផ្ទាត់ទំនិញឲ្យត្រូវតាមបញ្ជី មុននឹងប្រគល់ជូនអតិថិជនដោយផ្ទាល់</p>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">07</div>
                     <div class="step-content">
                         <div class="step-icon">
                             <i class="fas fa-clipboard-check"></i>

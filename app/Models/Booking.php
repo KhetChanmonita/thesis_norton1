@@ -14,17 +14,22 @@ class Booking extends Model
 
     protected $fillable = [
         'schedule_id',
+        'truck_id',
         'customer_id',
         'booking_type',
         'container_number',
         'pickup_location',
         'dropoff_location',
+        'dropoff_location_link',
         'pick_up_date',
         'drop_off_date',
         'cargo_weight',
         'booking_date',
         'status',
         'total_price',
+        'cargo_list_file',
+        'payment_status',
+        'access_token',
     ];
 
     protected $casts = [
@@ -36,6 +41,11 @@ class Booking extends Model
     public function schedule()
     {
         return $this->belongsTo(Schedule::class, 'schedule_id', 'schedule_id');
+    }
+
+    public function truck()
+    {
+        return $this->belongsTo(Truck::class, 'truck_id', 'truck_id');
     }
 
     public function customer()

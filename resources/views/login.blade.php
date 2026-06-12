@@ -17,21 +17,24 @@
 
             <!-- Left Panel -->
             <div class="login-left">
-                <div class="brand">
-                    <div class="brand-icon">LS</div>
-                    <div class="brand-name">TRUCKING<br>SERVICE</div>
+                <img src="{{ asset('images/login_and_register_img.jpg') }}" alt="LS Trucking" class="ll-bg-img">
+                <!-- <div class="ll-overlay"></div> -->
+                <div class="ll-content">
+                    <div class="brand">
+                        {{-- <div class="brand-icon">LS</div> --}}
+                        {{-- <div class="brand-name">TRUCKING<br>SERVICE</div> --}}
+                    </div>
+                    
+                    <h1 style="color: white;margin-bottom: 30px;"> <br> សូមស្វាគមន៍<br>មកកាន់ប្រព័ន្ធ</h1>
+                    <p>ប្រព័ន្ធគ្រប់គ្រងសេវាកម្មដឹកជញ្ជូនដែលជឿជាក់បំផុតនៅកម្ពុជា</p>
+                    <ul class="features-list">
+                        <li><i class="fas fa-shield-alt"></i> គណនីដែលមានសុវត្ថិភាពខ្ពស់</li>
+                        <li><i class="fas fa-map-marker-alt"></i> តាមដានការដឹកជញ្ជូនជាពេលវេលាពិត</li>
+                        <li><i class="fas fa-truck"></i> គ្រប់គ្រងរបស់អ្នកដោយងាយស្រួល</li>
+                        <li><i class="fas fa-headset"></i> ការគាំទ្រអតិថិជន 24/7</li>
+                    </ul>
                 </div>
-                <h1>សូមស្វាគមន៍<br>មកកាន់ប្រព័ន្ធ</h1>
-                <p>ប្រព័ន្ធគ្រប់គ្រងសេវាកម្មដឹកជញ្ជូនដែលជឿជាក់បំផុតនៅកម្ពុជា</p>
-                <ul class="features-list">
-                    <li><i class="fas fa-check-circle"></i> គណនីដែលមានសុវត្ថិភាពខ្ពស់</li>
-                    <li><i class="fas fa-check-circle"></i> តាមដានការដឹកជញ្ជូនជាពេលវេលាពិត</li>
-                    <li><i class="fas fa-check-circle"></i> គ្រប់គ្រងរបស់អ្នកដោយងាយស្រួល</li>
-                    <li><i class="fas fa-check-circle"></i> ការគាំទ្រអតិថិជន 24/7</li>
-                </ul>
-                <div class="login-illustration">
-                    <i class="fas fa-truck"></i>
-                </div>
+               
             </div>
 
             <!-- Right Panel -->
@@ -61,13 +64,13 @@
 
                         <div class="input-group">
                             <label>
-                                <i class="fas fa-user"></i>
-                                ឈ្មោះអ្នកប្រើប្រាស់ ឬអ៊ីមែល
+                                <i class="fas fa-envelope"></i>
+                                អ៊ីមែល
                             </label>
                             <div class="input-wrapper">
-                                <input type="text" id="login" name="login" value="{{ old('login') }}"
-                                       placeholder="បញ្ចូលឈ្មោះ ឬអ៊ីមែល"
-                                       autocomplete="off" required>
+                                <input type="email" id="email" name="email" value="{{ old('email') }}"
+                                       placeholder="បញ្ចូលអ៊ីមែលរបស់អ្នក"
+                                       autocomplete="email" required>
                                 <span class="icon"><i class="fas fa-envelope"></i></span>
                             </div>
                         </div>
@@ -93,7 +96,7 @@
                                 <input type="checkbox" id="remember" name="remember">
                                 <label for="remember">ចងចាំគណនី</label>
                             </div>
-                            <a href="#" class="forgot-password">ភ្លេចពាក្យសម្ងាត់?</a>
+                            <a href="{{ route('password.request') }}" class="forgot-password">ភ្លេចពាក្យសម្ងាត់?</a>
                         </div>
 
                         <button type="submit" class="login-submit-btn">
@@ -102,18 +105,8 @@
                         </button>
                     </form>
 
-                    <div class="divider">ឬចូលដោយប្រើ</div>
-
-                    <div class="social-buttons">
-                        <button class="social-btn">
-                            <i class="fab fa-facebook" style="color:#1877f2"></i> Facebook
-                        </button>
-                        <button class="social-btn">
-                            <i class="fab fa-google" style="color:#db4437"></i> Google
-                        </button>
-                    </div>
-
-                    <div class="register-link">
+                    <div class="register-link" style
+                    ="margin-top: 20px; text-align: center; font-size: 14px; color: #555;">
                         មិនទាន់មានគណនីទេ? <a href="{{ route('register') }}">ចុះឈ្មោះឥឡូវនេះ</a>
                     </div>
                 </div>
@@ -132,5 +125,7 @@
                 : '<i class="fas fa-eye-slash"></i>';
         });
     </script>
+
+    @include('partials.footer')
 </body>
 </html>

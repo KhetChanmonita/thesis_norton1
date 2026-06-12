@@ -302,9 +302,9 @@ body {
 }
 
 .import-badge { background: #dbeafe; color: #1d4ed8; }
-.export-badge { background: #dcfce7; color: #15803d; }
-.shv-badge    { background: #fff3e8; color: var(--orange); }
-.pp-badge     { background: #f3e8ff; color: #7c3aed; }
+.export-badge { background: #dbeafe; color: #1d4ed8; }
+.shv-badge    { background: #dbeafe; color: #1d4ed8 }
+.pp-badge     { background: #dbeafe; color: #1d4ed8 }
 
 .category-card > p {
     font-family: var(--font-kh);
@@ -340,7 +340,13 @@ body {
     background: var(--white);
 }
 
-.services-tabs { display: flex; flex-direction: column; gap: 28px; }
+.services-tabs { 
+    display: flex;
+    flex-direction: column;
+    gap: 28px; 
+    background:var(--gray-light); 
+    border-radius: var(--radius-md);
+}
 
 .tab-buttons {
     display: flex; gap: 8px; flex-wrap: wrap;
@@ -381,7 +387,7 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 40px;
     align-items: center;
-    background: var(--white);
+    background: var(--gray-light);
     border-radius: var(--radius-lg);
     border: 1.5px solid var(--border);
     overflow: hidden;
@@ -438,11 +444,12 @@ body {
     border-radius: var(--radius-sm);
     padding: 16px;
     transition: var(--transition);
+    border: 3px solid var(--border);
 }
 
 .feature-item:hover {
     background: var(--orange-soft);
-    box-shadow: 0 4px 14px rgba(255,107,0,0.12);
+    box-shadow: 0 4px 14px rgba(46, 42, 40, 0.12);
 }
 
 .feature-icon {

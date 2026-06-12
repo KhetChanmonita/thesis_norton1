@@ -8,7 +8,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero"> 
         <div class="hero-overlay"></div>
 
         <div class="hero-content">
@@ -28,7 +28,7 @@
             </div>
 
             <div class="hero-buttons">
-                <a href="#" class="btn-primary">កក់សេវា</a>
+                <a href="{{ auth()->check() ? route('trucks_section') : route('login') }}" class="btn-primary">កក់សេវា</a>
                 <a href="#" class="btn-outline">ស្វែងយល់បន្ថែម</a>
             </div>
         </div>

@@ -146,7 +146,12 @@
                                             <div class="truck-header">
                                                 <span class="truck-plate">{{ $truck->plate_number }}</span>
                                                 <span class="truck-status status-{{ $truck->status }}">
-                                                    {{ $truck->status == 'available' ? 'ទំនេរ' : 'កំពុងដឹកជញ្ជូន' }}
+                                                    {{ match($truck->status) {
+                                                        'available'   => 'ទំនេរ',
+                                                        'in_progress' => 'កំពុងដំណើរការ',
+                                                        'maintenance' => 'កំពុងជួសជុល',
+                                                        default       => 'កំពុងដឹកជញ្ជូន',
+                                                    } }}
                                                 </span>
                                             </div>
                                             <div class="truck-location">
