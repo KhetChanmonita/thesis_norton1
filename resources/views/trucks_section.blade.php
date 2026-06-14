@@ -15,21 +15,18 @@
 @include('partials.header')
 
 @if(session('booking_success'))
-<div id="bookingSuccessAlert" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:14px 28px;border-radius:12px;box-shadow:0 6px 20px rgba(16,185,129,0.4);font-family:'Kantumruy Pro',sans-serif;font-size:0.95rem;font-weight:600;display:flex;align-items:center;gap:10px;max-width:90vw;text-align:center;">
-    <i class="fas fa-check-circle" style="font-size:1.2rem;"></i>
+<div id="bookingSuccessAlert" class="ts-success-alert">
+    <i class="fas fa-check-circle ts-success-icon"></i>
     {{ session('booking_success') }}
 </div>
 <script>setTimeout(()=>{ const a=document.getElementById('bookingSuccessAlert'); if(a) a.remove(); }, 5000);</script>
 @endif
 
 @if($errors->any())
-<div id="bookingErrorAlert" style="position:fixed;top:90px;left:50%;transform:translateX(-50%);z-index:99999;
-     background:{{ $errors->has('container_number') ? 'linear-gradient(135deg,#f97316,#ea580c)' : 'linear-gradient(135deg,#ef4444,#dc2626)' }};
-     color:#fff;padding:14px 24px;border-radius:12px;
-     box-shadow:0 6px 20px {{ $errors->has('container_number') ? 'rgba(249,115,22,0.45)' : 'rgba(239,68,68,0.4)' }};
-     font-family:'Kantumruy Pro',sans-serif;font-size:0.9rem;font-weight:600;max-width:92vw;text-align:center;
-     display:flex;align-items:center;gap:10px;">
-    <i class="fas {{ $errors->has('container_number') ? 'fa-barcode' : 'fa-exclamation-circle' }}" style="font-size:1.2rem;flex-shrink:0;"></i>
+<div id="bookingErrorAlert" class="ts-error-alert"
+     style="background:{{ $errors->has('container_number') ? 'linear-gradient(135deg,#f97316,#ea580c)' : 'linear-gradient(135deg,#ef4444,#dc2626)' }};
+            box-shadow:0 6px 20px {{ $errors->has('container_number') ? 'rgba(249,115,22,0.45)' : 'rgba(239,68,68,0.4)' }};">
+    <i class="fas {{ $errors->has('container_number') ? 'fa-barcode' : 'fa-exclamation-circle' }} ts-error-icon"></i>
     <span>@foreach($errors->all() as $e) {{ $e }} @endforeach</span>
 </div>
 <script>
@@ -142,7 +139,6 @@
                 ) : null;
             @endphp
             <div class="truck-card{{ $isExtra ? ' truck-extra' : '' }}"
-                 style="{{ $isExtra ? 'display:none;' : '' }}"
                  data-type="{{ $typeKey }}"
                  data-size="{{ $sizeKey }}"
                  data-status="{{ $truckStatus }}">
@@ -188,10 +184,9 @@
                     </div>
 
                     @if(!$canBook)
-                    <div style="display:flex;align-items:center;gap:6px;padding:5px 10px;
-                                background:#fee2e2;border-radius:8px;margin-bottom:8px;">
-                        <i class="fas fa-ban" style="color:#dc2626;font-size:0.75rem;"></i>
-                        <span style="font-size:0.75rem;color:#991b1b;font-weight:600;">
+                    <div class="ts-blocked-notice">
+                        <i class="fas fa-ban ts-blocked-icon"></i>
+                        <span class="ts-blocked-text">
                             {{ $blockReason }}
                         </span>
                     </div>
@@ -207,9 +202,7 @@
                             <i class="fas fa-calendar-check"></i>
                         </button>
                         @else
-                        <button class="quick-book"
-                                style="opacity:0.4;cursor:not-allowed;background:#e2e8f0;
-                                       color:#94a3b8;border-color:#e2e8f0;"
+                        <button class="quick-book ts-quick-book-disabled"
                                 title="{{ $blockReason }}" disabled>
                             <i class="fas fa-ban"></i>
                         </button>
@@ -218,8 +211,8 @@
                 </div>
             </div>
             @empty
-            <div style="grid-column:1/-1;text-align:center;padding:60px;color:#94a3b8;">
-                <i class="fas fa-truck" style="font-size:3rem;display:block;margin-bottom:12px;opacity:0.3;"></i>
+            <div class="ts-empty-state">
+                <i class="fas fa-truck ts-empty-icon"></i>
                 <p>មិនទាន់មានរថយន្ត</p>
             </div>
             @endforelse
@@ -227,17 +220,11 @@
 
         {{-- See More button — only shown when there are more than 6 trucks --}}
         @if($trucks->count() > 6)
-        <div style="text-align:center;margin-top:28px;" id="seeMoreWrap">
-            <button onclick="showMoreTrucks()" class="see-more-btn"
-                    style="display:inline-flex;align-items:center;gap:10px;
-                           padding:13px 32px;background:linear-gradient(135deg,#FF6B00,#e55a00);
-                           color:#fff;border:none;border-radius:12px;cursor:pointer;
-                           font-family:'Kantumruy Pro',sans-serif;font-size:0.95rem;font-weight:700;
-                           box-shadow:0 4px 16px rgba(255,107,0,0.35);transition:all 0.2s;">
+        <div class="ts-see-more-wrap" id="seeMoreWrap">
+            <button onclick="showMoreTrucks()" class="see-more-btn ts-see-more-btn">
                 <i class="fas fa-plus-circle"></i>
                 មើលបន្ថែម &nbsp;
-                <span style="background:rgba(255,255,255,0.25);padding:2px 10px;border-radius:20px;
-                              font-family:'Montserrat',sans-serif;font-size:0.85rem;font-weight:800;">
+                <span class="ts-see-more-badge">
                     {{ $trucks->count() - 6 }} ទៀត
                 </span>
             </button>
@@ -259,7 +246,7 @@
                         </a>
                         
                         {{-- Or Option 2: Contact buttons that always work --}}
-                        <div class="contact-info" style="margin-top: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div class="contact-info ts-contact-info-alt">
                             <a href="tel:+85512345678" class="contact-link">
                                 <i class="fas fa-phone"></i> +855 12 345 678
                             </a>
@@ -349,13 +336,13 @@
                             </select>
                         </div>
                         <div class="booking-field">
-                            <label>លេខកុងតឺន័រ <span style="font-size:0.75em;color:#e53e3e;">(មិនអាចដូចគ្នា — អក្សរ ៤ តួ ចុងត្រូវជា U + លេខ ៧ខ្ទង់)</span></label>
+                            <label>លេខកុងតឺន័រ <span class="ts-hint-red">(មិនអាចដូចគ្នា — អក្សរ ៤ តួ ចុងត្រូវជា U + លេខ ៧ខ្ទង់)</span></label>
                             <input type="text" name="container_number" placeholder="ឧ. TIIU1234567"
                                    pattern="[A-Za-z]{3}[Uu][0-9]{7}"
                                    title="ទម្រង់ត្រឹមត្រូវ៖ អក្សរ ៤ តួ ដែលតួចុងជា U បន្តដោយលេខ ៧ ខ្ទង់ (ឧ. TIIU1234567)"
                                    maxlength="11"
-                                   style="text-transform:uppercase;">
-                            <small style="color:#718096;font-size:0.75rem;">ឧទាហរណ៍៖ TIIU1234567 (អក្សរ TII + U + លេខ ៧ខ្ទង់)</small>
+                                   class="ts-uppercase">
+                            <small class="ts-hint-gray">ឧទាហរណ៍៖ TIIU1234567 (អក្សរ TII + U + លេខ ៧ខ្ទង់)</small>
                         </div>
                         <div class="booking-field" id="pickupLocationField">
                             <label>ទីតាំងទទួល <span class="required">*</span></label>
@@ -373,7 +360,7 @@
                         <div class="booking-field booking-field-full">
                             <label>
                                 តំណទីតាំងដឹកទៅ (Google Maps)
-                                <span style="font-size:0.75em;color:#718096;font-weight:400;"> (ជម្រើស — ចម្លងតំណពី Google Maps)</span>
+                                <span class="ts-hint-gray-inline"> (ជម្រើស — ចម្លងតំណពី Google Maps)</span>
                             </label>
                             <input type="url" name="dropoff_location_link"
                                    placeholder="https://maps.google.com/?q=..."
@@ -410,24 +397,21 @@
                         <div class="booking-field booking-field-full">
                             <label>
                                 ឯកសារបញ្ជីទំនិញ
-                                <span style="font-size:0.75em;color:#718096;font-weight:400;"> (PDF, JPG, PNG — អតិបរមា 5MB)</span>
+                                <span class="ts-hint-gray-inline"> (PDF, JPG, PNG — អតិបរមា 5MB)</span>
                             </label>
-                            <label for="cargoFileInput" id="cargoFileLabel"
-                                   style="display:flex;align-items:center;gap:12px;padding:12px 16px;
-                                          border:2px dashed #CBD5E0;border-radius:10px;cursor:pointer;
-                                          background:#F7FAFC;transition:border-color 0.2s;width:100%;">
-                                <i class="fas fa-cloud-upload-alt" style="font-size:1.4rem;color:#a0aec0;"></i>
+                            <label for="cargoFileInput" id="cargoFileLabel" class="ts-cargo-label">
+                                <i class="fas fa-cloud-upload-alt ts-cargo-icon"></i>
                                 <div>
-                                    <div id="cargoFileName" style="font-size:0.88rem;color:#4a5568;font-weight:600;">
+                                    <div id="cargoFileName" class="ts-cargo-filename">
                                         ចុចដើម្បីជ្រើសរើសឯកសារ
                                     </div>
-                                    <div style="font-size:0.75rem;color:#a0aec0;margin-top:2px;">
+                                    <div class="ts-cargo-hint">
                                         ឧ. Contract Release, Packing List
                                     </div>
                                 </div>
                             </label>
                             <input type="file" name="cargo_list_file" id="cargoFileInput"
-                                   accept=".pdf,.jpg,.jpeg,.png" style="display:none;"
+                                   accept=".pdf,.jpg,.jpeg,.png" class="ts-hidden"
                                    onchange="updateCargoFileName(this)">
                         </div>
                     </div>
@@ -435,7 +419,7 @@
 
                 <div class="booking-modal-footer">
                     <span class="booking-footer-note">
-                        <i class="fas fa-info-circle"></i> វាលដែលមាន <span style="color:#e53e3e;">*</span> ចាំបាច់ត្រូវបំពេញ
+                        <i class="fas fa-info-circle"></i> វាលដែលមាន <span class="ts-required">*</span> ចាំបាច់ត្រូវបំពេញ
                     </span>
                     <div class="booking-footer-actions">
                         <button type="button" class="btn-cancel" onclick="closeBookingModal()">
@@ -591,44 +575,36 @@
             maintenance: { label: 'កំពុងជួសជុល',     color: '#991b1b', bg: '#fee2e2' },
         };
         const st    = statusInfo[truck.status] || statusInfo.available;
-        const badge = `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 14px;
-                         border-radius:20px;font-size:0.78rem;font-weight:700;
-                         background:${st.bg};color:${st.color};">
-                         <i class="fas fa-circle" style="font-size:0.4rem;"></i>${st.label}</span>`;
+        const badge = `<span class="ts-status-badge" style="background:${st.bg};color:${st.color};">
+                         <i class="fas fa-circle ts-badge-dot"></i>${st.label}</span>`;
 
         // Driver rows
         let driversHtml = '';
         if (truck.drivers && truck.drivers.length > 0) {
             truck.drivers.forEach(function(d) {
                 const avatar = d.driver_picture
-                    ? `<img src="{{ asset("") }}${d.driver_picture}"
-                            style="width:38px;height:38px;border-radius:50%;object-fit:cover;
-                                   border:2px solid #e2e8f0;flex-shrink:0;">`
-                    : `<div style="width:38px;height:38px;border-radius:50%;
-                                   background:linear-gradient(135deg,#667eea,#764ba2);
-                                   display:flex;align-items:center;justify-content:center;
-                                   font-weight:800;font-size:0.85rem;color:#fff;flex-shrink:0;">
+                    ? `<img src="{{ asset("") }}${d.driver_picture}" class="ts-driver-avatar-img">`
+                    : `<div class="ts-driver-avatar-placeholder">
                            ${d.full_name ? d.full_name.charAt(0).toUpperCase() : '?'}
                        </div>`;
                 const dStatus = d.status === 'active' ? 'កំពុងធ្វើការ' :
                                 d.status === 'on_leave' ? 'ឈប់សម្រាក' : 'មិនសកម្ម';
                 driversHtml += `
-                    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;
-                                border-bottom:1px solid #f1f5f9;">
+                    <div class="ts-driver-row">
                         ${avatar}
                         <div>
-                            <div style="font-weight:700;color:#1e293b;font-size:0.88rem;">
+                            <div class="ts-driver-name">
                                 ${d.full_name || '—'}
                             </div>
-                            <div style="font-size:0.75rem;color:#64748b;margin-top:2px;">
-                                ${d.phone ? '<i class="fas fa-phone" style="margin-right:4px;font-size:0.65rem;"></i>' + d.phone : ''}
+                            <div class="ts-driver-phone">
+                                ${d.phone ? '<i class="fas fa-phone ts-driver-phone-icon"></i>' + d.phone : ''}
                                 &nbsp;·&nbsp; ${dStatus}
                             </div>
                         </div>
                     </div>`;
             });
         } else {
-            driversHtml = `<div style="color:#94a3b8;font-size:0.83rem;padding:8px 0;">
+            driversHtml = `<div class="ts-no-driver">
                                មិនទាន់មានអ្នកបើកបរ
                            </div>`;
         }
@@ -636,16 +612,14 @@
         modal.innerHTML = `
             <div class="modal-truck-details">
                 <div class="modal-image">
-                    <img src="${imgSrc}" alt="${truck.truck_name}"
-                         style="object-fit:contain;background:#1e293b;">
+                    <img src="${imgSrc}" alt="${truck.truck_name}" class="ts-modal-img">
                     <button class="image-zoom" onclick="zoomImage(this)">
                         <i class="fas fa-search-plus"></i>
                     </button>
                 </div>
                 <div class="modal-info">
-                    <div style="display:flex;align-items:center;justify-content:space-between;
-                                flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-                        <h3 style="margin:0;">${truck.truck_name}</h3>
+                    <div class="ts-modal-title-row">
+                        <h3 class="ts-modal-h3">${truck.truck_name}</h3>
                         ${badge}
                     </div>
 
@@ -668,16 +642,16 @@
                             <span class="modal-value">${truck.capacity_ton ? truck.capacity_ton + ' តោន' : '—'}</span>
                         </div>
                         <div class="modal-info-row">
-                            <span class="modal-label"><i class="fas fa-map-marker-alt" style="color:#FF6B00;"></i> ទីតាំងបច្ចុប្បន្ន</span>
-                            <span class="modal-value" style="${truck.location ? 'color:#FF6B00;font-weight:700;' : 'color:#94a3b8;'}">
+                            <span class="modal-label"><i class="fas fa-map-marker-alt ts-icon-orange"></i> ទីតាំងបច្ចុប្បន្ន</span>
+                            <span class="modal-value ${truck.location ? 'ts-location-set' : 'ts-location-unset'}">
                                 ${truck.location || 'មិនទាន់បានកំណត់'}
                             </span>
                         </div>
                     </div>
 
-                    <div style="margin-top:16px;">
-                        <div style="font-weight:700;color:#1e293b;font-size:0.85rem;margin-bottom:8px;">
-                            <i class="fas fa-user-tie" style="color:#FF6B00;margin-right:6px;"></i>
+                    <div class="ts-drivers-section">
+                        <div class="ts-drivers-title">
+                            <i class="fas fa-user-tie ts-drivers-title-icon"></i>
                             អ្នកបើកបររថយន្ត
                         </div>
                         ${driversHtml}
@@ -688,9 +662,7 @@
                             ? `<button class="book-now" onclick="bookTruck('${truck.plate_number}')">
                                    <i class="fas fa-calendar-check"></i> កក់រថយន្តនេះ
                                </button>`
-                            : `<div style="display:flex;align-items:center;gap:8px;padding:10px 16px;
-                                           background:#fee2e2;border-radius:10px;
-                                           color:#991b1b;font-size:0.83rem;font-weight:700;">
+                            : `<div class="ts-block-reason">
                                    <i class="fas fa-ban"></i>
                                    ${truck.block_reason || 'មិនអាចកក់'}
                                </div>`

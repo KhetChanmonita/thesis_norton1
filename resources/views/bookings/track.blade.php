@@ -7,51 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Kantumruy Pro','Poppins',sans-serif;background:#f1f5f9;color:#334155;min-height:100vh;}
-        .page-wrap{max-width:800px;margin:0 auto;padding:100px 16px 60px;}
-        .alert{padding:14px 20px;border-radius:12px;margin-bottom:24px;display:flex;align-items:center;gap:10px;font-weight:600;}
-        .alert-success{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;}
-        .card{background:#fff;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.07);overflow:hidden;margin-bottom:24px;}
-        .card-header{background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:22px 28px;color:#fff;}
-        .card-header h2{font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:4px;}
-        .card-header p{font-size:0.82rem;opacity:0.7;}
-        .card-body{padding:24px 28px;}
-        .timeline{display:flex;flex-direction:column;gap:0;}
-        .tl-step{display:flex;gap:16px;position:relative;}
-        .tl-step:not(:last-child) .tl-line{position:absolute;left:19px;top:40px;bottom:0;width:2px;background:#e2e8f0;z-index:0;}
-        .tl-step:not(:last-child).done .tl-line{background:#10b981;}
-        .tl-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0;z-index:1;border:2px solid #e2e8f0;}
-        .tl-icon.done{background:#10b981;color:#fff;border-color:#10b981;}
-        .tl-icon.active{background:#FF6B00;color:#fff;border-color:#FF6B00;animation:pulse 1.5s infinite;}
-        .tl-icon.waiting{background:#f1f5f9;color:#94a3b8;border-color:#e2e8f0;}
-        @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,107,0,0.4);}50%{box-shadow:0 0 0 8px rgba(255,107,0,0);}}
-        .tl-content{padding:8px 0 24px;}
-        .tl-title{font-weight:700;color:#1e293b;font-size:0.95rem;}
-        .tl-title.waiting{color:#94a3b8;}
-        .tl-desc{font-size:0.8rem;color:#64748b;margin-top:3px;}
-        .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-        @media(max-width:540px){.info-grid{grid-template-columns:1fr;}}
-        .info-item label{font-size:0.72rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;}
-        .info-item span{font-size:0.9rem;color:#1e293b;font-weight:600;}
-        .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700;}
-        .badge-pending{background:#fef3c7;color:#92400e;}
-        .badge-confirmed{background:#dbeafe;color:#1e40af;}
-        .badge-in_progress{background:#fff3e8;color:#c2410c;}
-        .badge-completed{background:#d1fae5;color:#065f46;}
-        .badge-cancelled{background:#fee2e2;color:#991b1b;}
-        .pay-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 32px;border-radius:12px;font-family:'Kantumruy Pro',sans-serif;font-size:0.95rem;font-weight:700;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;}
-        .pay-btn-orange{background:linear-gradient(135deg,#FF6B00,#e55a00);color:#fff;box-shadow:0 4px 16px rgba(255,107,0,0.4);}
-        .pay-btn-orange:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,107,0,0.5);}
-        .pay-btn-green{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 16px rgba(16,185,129,0.4);}
-        .pay-btn-green:hover{transform:translateY(-2px);}
-        .file-link{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:9px;text-decoration:none;color:#3b82f6;font-size:0.83rem;font-weight:600;}
-        .notify-box{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:2px solid #fed7aa;border-radius:14px;padding:20px 24px;display:flex;gap:14px;align-items:flex-start;}
-        .notify-box .icon{width:44px;height:44px;border-radius:50%;background:#FF6B00;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
-        .notify-box .text h4{font-size:0.95rem;font-weight:700;color:#c2410c;margin-bottom:4px;}
-        .notify-box .text p{font-size:0.83rem;color:#92400e;}
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/track.css') }}">
 </head>
 <body>
 @include('partials.header')

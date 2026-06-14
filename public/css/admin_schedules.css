@@ -1,0 +1,272 @@
+/* ── Stats / toolbar ── */
+.sch-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 24px;
+}
+
+.sch-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.sch-filter-form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.sch-filter-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #475569;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.sch-search-input {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    width: 240px;
+    outline: none;
+}
+
+.sch-date-input {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.sch-btn-search-pad {
+    padding: 9px 18px;
+}
+
+.sch-btn-clear-pad {
+    padding: 9px 14px;
+}
+
+/* ── Table header ── */
+.sch-count-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-left: 4px;
+}
+
+.sch-col-narrow {
+    width: 50px;
+}
+
+.sch-col-center {
+    text-align: center;
+}
+
+/* ── Table rows ── */
+.sch-row-num {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #94a3b8;
+    font-size: 0.82rem;
+}
+
+.sch-dash {
+    color: #cbd5e1;
+}
+
+.sch-truck-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sch-truck-icon-box {
+    width: 36px;
+    height: 36px;
+    background: #fff3e8;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sch-truck-icon {
+    color: #FF6B00;
+    font-size: 0.85rem;
+}
+
+.sch-truck-name {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 0.88rem;
+}
+
+.sch-truck-plate {
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.sch-driver-cell {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.sch-driver-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.78rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.sch-driver-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.87rem;
+}
+
+.sch-driver-phone {
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.sch-location-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sch-location-icon {
+    color: #FF6B00;
+    font-size: 0.75rem;
+}
+
+.sch-location-text {
+    font-size: 0.87rem;
+    color: #334155;
+}
+
+.sch-avail-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sch-avail-icon {
+    color: #FF6B00;
+    font-size: 0.7rem;
+}
+
+.sch-avail-date {
+    font-size: 0.87rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.sch-avail-rel {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 2px;
+    padding-left: 16px;
+}
+
+.sch-day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.sch-badge-dot-sm {
+    font-size: 0.4rem;
+}
+
+.sch-created-cell {
+    font-size: 0.82rem;
+    color: #94a3b8;
+}
+
+.sch-actions-cell {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+/* ── Empty state ── */
+.sch-empty-cell {
+    text-align: center;
+    padding: 48px;
+    color: #94a3b8;
+}
+
+.sch-empty-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.25;
+}
+
+.sch-empty-text {
+    font-size: 0.9rem;
+}
+
+.sch-empty-clear-link {
+    font-size: 0.82rem;
+    color: #FF6B00;
+    margin-top: 8px;
+    display: inline-block;
+}
+
+/* ── Pagination ── */
+.sch-pagination-bar {
+    padding: 14px 22px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sch-pagination-info {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.sch-pagination-pages {
+    display: flex;
+    gap: 6px;
+}
+
+.sch-page-disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* ── Modal forms ── */
+.sch-required {
+    color: #ef4444;
+}

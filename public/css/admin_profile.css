@@ -1,0 +1,378 @@
+.apf-container {
+    max-width: 640px;
+}
+
+/* Profile header card */
+.apf-header-card {
+    background: linear-gradient(135deg, #ff6b00, #e55a00);
+    border-radius: 16px;
+    padding: 28px 28px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.apf-avatar-wrap {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.apf-avatar-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    display: block;
+}
+
+.apf-avatar-initials {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    border: 3px solid rgba(255, 255, 255, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.apf-avatar-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.apf-avatar-overlay i {
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.apf-header-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.apf-role-badge {
+    font-size: 0.78rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 6px;
+}
+
+.apf-hint {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Flash alerts */
+.apf-alert {
+    border-radius: 10px;
+    padding: 13px 16px;
+    margin-bottom: 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+
+.apf-alert-success {
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.apf-alert-error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+/* Edit form card */
+.apf-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    padding: 28px 28px 24px;
+}
+
+.apf-section-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #ff6b00;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.apf-optional {
+    font-weight: 400;
+    color: #94a3b8;
+}
+
+.apf-form-group {
+    margin-bottom: 16px;
+}
+
+.apf-form-group.apf-mb-24 {
+    margin-bottom: 24px;
+}
+
+.apf-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 6px;
+}
+
+.apf-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    font-family: 'Kantumruy Pro', sans-serif;
+    color: #1e293b;
+    outline: none;
+    background: #f8fafc;
+}
+
+.apf-input.is-invalid {
+    border-color: #e53e3e;
+}
+
+.apf-input.apf-input-pw {
+    padding-right: 44px;
+}
+
+.apf-error-msg {
+    color: #e53e3e;
+    font-size: 0.75rem;
+    margin-top: 4px;
+}
+
+.apf-divider {
+    height: 1px;
+    background: #f1f5f9;
+    margin: 20px 0;
+}
+
+/* Password row */
+.apf-pw-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.apf-pw-row-header .apf-label {
+    margin: 0;
+}
+
+.apf-link-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #ff6b00;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.apf-icon-sm {
+    font-size: 0.7rem;
+}
+
+.apf-pw-wrap {
+    position: relative;
+}
+
+.apf-pw-eye {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+.apf-submit-btn {
+    padding: 12px 32px;
+    background: linear-gradient(135deg, #ff6b00, #e55a00);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: 'Kantumruy Pro', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+/* Forgot password modal */
+.apf-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.apf-modal-box {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.apf-modal-header {
+    background: linear-gradient(135deg, #ff6b00, #e55a00);
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.apf-modal-header-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: #fff;
+}
+
+.apf-modal-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.apf-modal-title {
+    font-weight: 700;
+    font-size: 1rem;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+
+.apf-modal-subtitle {
+    font-size: 0.78rem;
+    opacity: 0.85;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+
+.apf-modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.apf-modal-body {
+    padding: 28px 24px;
+}
+
+.apf-modal-info {
+    background: #fff8f3;
+    border: 1.5px solid #fed7aa;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 22px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.88rem;
+    color: #7c2d12;
+}
+
+.apf-modal-email {
+    color: #ff6b00;
+    word-break: break-all;
+}
+
+.apf-modal-note {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-top: 4px;
+    display: inline-block;
+}
+
+.apf-modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.apf-modal-form-flex {
+    flex: 1;
+}
+
+.apf-modal-btn {
+    padding: 12px;
+    border-radius: 10px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.87rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.apf-modal-btn-cancel {
+    flex: 1;
+    background: transparent;
+    border: 2px solid #e2e8f0;
+    color: #64748b;
+}
+
+.apf-modal-btn-send {
+    width: 100%;
+    background: linear-gradient(135deg, #ff6b00, #e55a00);
+    border: none;
+    font-weight: 700;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(255, 107, 0, 0.35);
+}

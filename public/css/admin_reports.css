@@ -1,0 +1,96 @@
+/* ── Stats ── */
+.rpt-stats-grid {
+    grid-template-columns: repeat(5, 1fr);
+    margin-bottom: 24px;
+}
+.rpt-stat-val { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; }
+
+/* ── Charts ── */
+.rpt-charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 18px;
+    margin-bottom: 24px;
+    align-items: start;
+}
+.rpt-chart-center { display: flex; justify-content: center; }
+.rpt-chart-donut-wrap { max-width: 260px; width: 100%; }
+
+/* ── Toolbar ── */
+.rpt-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.rpt-filter-form { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.rpt-filter-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #475569;
+    display: block;
+    margin-bottom: 5px;
+}
+.rpt-month-input {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+}
+.rpt-type-select {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    background: #fff;
+    outline: none;
+}
+.rpt-btn-search-pad { padding: 9px 18px; }
+
+/* ── Table ── */
+.rpt-count-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-left: 4px;
+}
+.rpt-col-center { text-align: center; }
+.rpt-type-cell { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #1e293b; }
+.rpt-type-icon { color: #FF6B00; }
+.rpt-amount { font-family: 'Montserrat', sans-serif; color: #ef4444; font-size: 0.95rem; }
+.rpt-cell-text { font-size: 0.83rem; color: #475569; }
+.rpt-driver-icon { color: #3b82f6; font-size: 0.7rem; }
+.rpt-truck-icon { color: #FF6B00; font-size: 0.7rem; }
+.rpt-dash { color: #cbd5e1; }
+.rpt-desc-cell { font-size: 0.83rem; color: #475569; max-width: 260px; }
+.rpt-date-cell { font-size: 0.83rem; color: #475569; white-space: nowrap; }
+.rpt-actions-cell { display: flex; justify-content: center; gap: 6px; }
+
+/* ── Empty state ── */
+.rpt-empty-cell { text-align: center; padding: 48px; color: #94a3b8; }
+.rpt-empty-icon { font-size: 2.5rem; display: block; margin-bottom: 12px; opacity: 0.25; }
+.rpt-empty-text { font-size: 0.9rem; }
+
+/* ── Pagination ── */
+.rpt-pagination-bar {
+    padding: 14px 22px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.rpt-pagination-info { font-size: 0.8rem; color: #94a3b8; }
+.rpt-pagination-pages { display: flex; gap: 6px; }
+.rpt-page-disabled { opacity: 0.4; cursor: default; }
+
+/* ── Modal forms ── */
+.rpt-required { color: #ef4444; }

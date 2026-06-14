@@ -2,10 +2,14 @@
 @section('title', 'អ្នកបើកបរ')
 @section('page-title')<span>គ្រប់គ្រង</span>អ្នកបើកបរ@endsection
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/admin_drivers.css') }}">
+@endpush
+
 @section('content')
 
 {{-- ── Stats Cards ── --}}
-<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;">
+<div class="stats-grid drv-stats-grid">
     <div class="stat-card">
         <div class="stat-icon blue"><i class="fas fa-id-badge"></i></div>
         <div class="stat-info">
@@ -37,30 +41,29 @@
 </div>
 
 {{-- ── Toolbar ── --}}
-<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
+<div class="drv-toolbar">
 
-    <form method="GET" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+    <form method="GET" class="drv-filter-form">
         <div>
-            <label style="font-size:0.78rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;">ស្វែងរក</label>
+            <label class="drv-filter-label">ស្វែងរក</label>
             <input type="text" name="search" value="{{ request('search') }}"
                    placeholder="ឈ្មោះ / ទូរស័ព្ទ"
-                   style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;font-family:'Kantumruy Pro',sans-serif;font-size:0.85rem;width:220px;outline:none;">
+                   class="drv-search-input">
         </div>
         <div>
-            <label style="font-size:0.78rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;">ស្ថានភាព</label>
-            <select name="status"
-                    style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;font-family:'Kantumruy Pro',sans-serif;font-size:0.85rem;background:#fff;outline:none;">
+            <label class="drv-filter-label">ស្ថានភាព</label>
+            <select name="status" class="drv-status-select">
                 <option value="">ទាំងអស់</option>
                 <option value="active"   {{ request('status')==='active'   ?'selected':'' }}>កំពុងធ្វើការ</option>
                 <option value="inactive" {{ request('status')==='inactive' ?'selected':'' }}>មិនសកម្ម</option>
                 <option value="on_leave" {{ request('status')==='on_leave' ?'selected':'' }}>ឈប់សម្រាក</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-ghost" style="padding:9px 18px;">
+        <button type="submit" class="btn btn-ghost drv-btn-search-pad">
             <i class="fas fa-search"></i> ស្វែងរក
         </button>
         @if(request('search') || request('status'))
-        <a href="{{ route('admin.drivers.index') }}" class="btn btn-ghost" style="padding:9px 14px;">
+        <a href="{{ route('admin.drivers.index') }}" class="btn btn-ghost drv-btn-clear-pad">
             <i class="fas fa-times"></i>
         </a>
         @endif
@@ -78,8 +81,7 @@
         <div class="card-title">
             <i class="fas fa-id-badge"></i>
             បញ្ជីអ្នកបើកបរ
-            <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;
-                         background:#f1f5f9;color:#64748b;padding:2px 10px;border-radius:50px;margin-left:4px;">
+            <span class="drv-count-badge">
                 {{ $drivers->total() }}
             </span>
         </div>
@@ -89,70 +91,64 @@
         <table>
             <thead>
                 <tr>
-                    <th style="width:50px;">ល.រ</th>
+                    <th class="drv-col-narrow">ល.រ</th>
                     <th>អ្នកបើកបរ</th>
                     <th>លេខទូរស័ព្ទ</th>
                     <th>ថ្ងៃចូលធ្វើការ</th>
                     <th>ស្ថានភាព</th>
                     <th>រថយន្តដែលបានកំណត់</th>
-                    <th style="text-align:center;">សកម្មភាព</th>
+                    <th class="drv-col-center">សកម្មភាព</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($drivers as $d)
                 <tr>
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-weight:700;color:#94a3b8;font-size:0.82rem;">
+                        <span class="drv-row-num">
                             {{ ($drivers->currentPage() - 1) * $drivers->perPage() + $loop->iteration }}
                         </span>
                     </td>
 
                     {{-- Driver avatar: photo fills the gradient circle, else show initial --}}
                     <td>
-                        <div style="display:flex;align-items:center;gap:10px;">
-                            <div style="width:42px;height:42px;border-radius:50%;
-                                        background:linear-gradient(135deg,#667eea,#764ba2);
-                                        display:flex;align-items:center;justify-content:center;
-                                        overflow:hidden;flex-shrink:0;
-                                        {{ $d->driver_picture ? 'cursor:zoom-in;' : '' }}">
+                        <div class="drv-driver-cell">
+                            <div class="drv-avatar {{ $d->driver_picture ? 'drv-avatar-zoom' : '' }}">
                                 @if($d->driver_picture)
                                     <img src="{{ asset($d->driver_picture) }}"
                                          alt="{{ $d->full_name }}"
-                                         class="driver-thumb-preview"
+                                         class="driver-thumb-preview drv-avatar-img"
                                          data-src="{{ asset($d->driver_picture) }}"
-                                         data-name="{{ $d->full_name }}"
-                                         style="width:100%;height:100%;object-fit:cover;">
+                                         data-name="{{ $d->full_name }}">
                                 @else
-                                    <span style="font-family:'Montserrat',sans-serif;font-weight:800;
-                                                 font-size:0.85rem;color:#fff;">
+                                    <span class="drv-avatar-initial">
                                         {{ strtoupper(mb_substr($d->full_name, 0, 1)) }}
                                     </span>
                                 @endif
                             </div>
                             <div>
-                                <div style="font-weight:700;color:#1e293b;">{{ $d->full_name }}</div>
-                                <div style="font-size:0.75rem;color:#94a3b8;">ID #{{ $d->driver_id }}</div>
+                                <div class="drv-driver-name">{{ $d->full_name }}</div>
+                                <div class="drv-text-muted-sm">ID #{{ $d->driver_id }}</div>
                             </div>
                         </div>
                     </td>
 
                     <td>
                         @if($d->phone)
-                            <a href="tel:{{ $d->phone }}" style="color:#3b82f6;text-decoration:none;font-size:0.87rem;">
-                                <i class="fas fa-phone" style="font-size:0.7rem;margin-right:4px;"></i>
+                            <a href="tel:{{ $d->phone }}" class="drv-phone-link">
+                                <i class="fas fa-phone drv-icon-mr"></i>
                                 {{ $d->phone }}
                             </a>
                         @else
-                            <span style="color:#cbd5e1;">—</span>
+                            <span class="drv-dash">—</span>
                         @endif
                     </td>
 
-                    <td style="font-size:0.85rem;color:#475569;">
+                    <td class="drv-hire-cell">
                         @if($d->hire_date)
-                            <i class="fas fa-calendar" style="color:#FF6B00;font-size:0.7rem;margin-right:4px;"></i>
+                            <i class="fas fa-calendar drv-icon-orange-mr"></i>
                             {{ \Carbon\Carbon::parse($d->hire_date)->format('d/m/Y') }}
                         @else
-                            <span style="color:#cbd5e1;">—</span>
+                            <span class="drv-dash">—</span>
                         @endif
                     </td>
 
@@ -166,30 +162,29 @@
                             $st = $statusMap[$d->status] ?? ['label'=>$d->status,'class'=>'badge-inactive'];
                         @endphp
                         <span class="badge {{ $st['class'] }}">
-                            <i class="fas fa-circle" style="font-size:0.45rem;"></i>
+                            <i class="fas fa-circle drv-badge-dot"></i>
                             {{ $st['label'] }}
                         </span>
                     </td>
 
                     <td>
                         @if($d->truck)
-                            <div style="display:flex;align-items:center;gap:7px;">
-                                <div style="width:28px;height:28px;background:#fff3e8;border-radius:7px;
-                                            display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                    <i class="fas fa-truck" style="color:#FF6B00;font-size:0.7rem;"></i>
+                            <div class="drv-truck-cell">
+                                <div class="drv-truck-icon-box">
+                                    <i class="fas fa-truck drv-truck-icon"></i>
                                 </div>
                                 <div>
-                                    <div style="font-size:0.83rem;font-weight:600;color:#1e293b;">{{ $d->truck->truck_name }}</div>
-                                    <div style="font-size:0.72rem;color:#94a3b8;">{{ $d->truck->plate_number }}</div>
+                                    <div class="drv-truck-name">{{ $d->truck->truck_name }}</div>
+                                    <div class="drv-truck-plate">{{ $d->truck->plate_number }}</div>
                                 </div>
                             </div>
                         @else
-                            <span style="color:#cbd5e1;font-size:0.83rem;">មិនទាន់កំណត់</span>
+                            <span class="drv-truck-none">មិនទាន់កំណត់</span>
                         @endif
                     </td>
 
                     <td>
-                        <div style="display:flex;gap:6px;justify-content:center;">
+                        <div class="drv-actions-cell">
                             <button class="btn btn-ghost btn-sm"
                                     onclick="openEditDriver(
                                         {{ $d->driver_id }},
@@ -215,12 +210,11 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="7" style="text-align:center;padding:48px;color:#94a3b8;">
-                        <i class="fas fa-id-badge" style="font-size:2.5rem;display:block;margin-bottom:12px;opacity:0.25;"></i>
-                        <div style="font-size:0.9rem;">មិនមានអ្នកបើកបរ</div>
+                    <td colspan="7" class="drv-empty-cell">
+                        <i class="fas fa-id-badge drv-empty-icon"></i>
+                        <div class="drv-empty-text">មិនមានអ្នកបើកបរ</div>
                         @if(request('search') || request('status'))
-                        <a href="{{ route('admin.drivers.index') }}"
-                           style="font-size:0.82rem;color:#FF6B00;margin-top:8px;display:inline-block;">
+                        <a href="{{ route('admin.drivers.index') }}" class="drv-empty-clear-link">
                             លុបការស្វែងរក
                         </a>
                         @endif
@@ -232,13 +226,13 @@
     </div>
 
     @if($drivers->hasPages())
-    <div style="padding:14px 22px;border-top:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:0.8rem;color:#94a3b8;">
+    <div class="drv-pagination-bar">
+        <span class="drv-pagination-info">
             បង្ហាញ {{ $drivers->firstItem() }}–{{ $drivers->lastItem() }} នៃ {{ $drivers->total() }}
         </span>
-        <div style="display:flex;gap:6px;">
+        <div class="drv-pagination-pages">
             @if($drivers->onFirstPage())
-                <span class="page-btn" style="opacity:0.4;cursor:default;"><i class="fas fa-chevron-left"></i></span>
+                <span class="page-btn drv-page-disabled"><i class="fas fa-chevron-left"></i></span>
             @else
                 <a href="{{ $drivers->previousPageUrl() }}" class="page-btn"><i class="fas fa-chevron-left"></i></a>
             @endif
@@ -248,7 +242,7 @@
             @if($drivers->hasMorePages())
                 <a href="{{ $drivers->nextPageUrl() }}" class="page-btn"><i class="fas fa-chevron-right"></i></a>
             @else
-                <span class="page-btn" style="opacity:0.4;cursor:default;"><i class="fas fa-chevron-right"></i></span>
+                <span class="page-btn drv-page-disabled"><i class="fas fa-chevron-right"></i></span>
             @endif
         </div>
     </div>
@@ -270,36 +264,28 @@
             <div class="modal-body">
 
                 {{-- Profile picture upload --}}
-                <div class="form-group" style="margin-bottom:20px;">
-                    <label class="form-label">រូបអ្នកបើកបរ <span style="font-size:0.75rem;color:#94a3b8;">(ជម្រើស)</span></label>
+                <div class="form-group drv-mb-20">
+                    <label class="form-label">រូបអ្នកបើកបរ <span class="drv-text-muted-sm">(ជម្រើស)</span></label>
 
                     {{-- Using <label for> is the most reliable way to trigger file browser --}}
-                    <label for="addDriverImage" id="addDriverPreview"
-                           style="display:flex;flex-direction:column;align-items:center;justify-content:center;
-                                  width:100%;height:170px;background:#f8fafc;border:2px dashed #e2e8f0;
-                                  border-radius:12px;cursor:pointer;overflow:hidden;transition:border-color 0.2s;
-                                  gap:10px;">
-                        <div id="addDriverImgWrap"
-                             style="width:90px;height:90px;border-radius:50%;
-                                    background:linear-gradient(135deg,#667eea,#764ba2);
-                                    display:flex;align-items:center;justify-content:center;overflow:hidden;">
-                            <i id="addDriverIcon" class="fas fa-user" style="font-size:2.2rem;color:#fff;"></i>
-                            <img id="addDriverImg" src="" alt=""
-                                 style="display:none;width:100%;height:100%;object-fit:cover;">
+                    <label for="addDriverImage" id="addDriverPreview" class="drv-upload-label">
+                        <div id="addDriverImgWrap" class="drv-avatar-circle-90">
+                            <i id="addDriverIcon" class="fas fa-user drv-avatar-icon-lg"></i>
+                            <img id="addDriverImg" src="" alt="" class="drv-avatar-img-hidden">
                         </div>
-                        <div style="text-align:center;">
-                            <div style="font-size:0.82rem;color:#64748b;font-weight:600;">ចុចដើម្បីបន្ថែមរូបភាព</div>
-                            <div style="font-size:0.72rem;color:#94a3b8;margin-top:2px;">JPG, PNG, WEBP — អតិបរមា 2MB</div>
+                        <div class="drv-text-center">
+                            <div class="drv-upload-title">ចុចដើម្បីបន្ថែមរូបភាព</div>
+                            <div class="drv-upload-hint">JPG, PNG, WEBP — អតិបរមា 2MB</div>
                         </div>
                     </label>
                     <input type="file" name="driver_picture" id="addDriverImage"
-                           accept="image/*" style="display:none;"
+                           accept="image/*" class="d-none"
                            onchange="previewAddDriver(this)">
                 </div>
 
                 <div class="form-grid">
                     <div class="form-group form-full">
-                        <label class="form-label">ឈ្មោះពេញ <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">ឈ្មោះពេញ <span class="drv-required">*</span></label>
                         <input type="text" name="full_name" class="form-control"
                                placeholder="បញ្ចូលឈ្មោះពេញ" required>
                     </div>
@@ -312,7 +298,7 @@
                         <input type="date" name="hire_date" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ស្ថានភាព <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">ស្ថានភាព <span class="drv-required">*</span></label>
                         <select name="status" class="form-control">
                             <option value="active">កំពុងធ្វើការ (active)</option>
                             <option value="inactive">មិនសកម្ម (inactive)</option>
@@ -361,39 +347,31 @@
             <div class="modal-body">
 
                 {{-- Profile picture upload --}}
-                <div class="form-group" style="margin-bottom:20px;">
+                <div class="form-group drv-mb-20">
                     <label class="form-label">រូបអ្នកបើកបរ</label>
 
                     {{-- Circular photo preview (not clickable — just display) --}}
-                    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:4px;">
-                        <div style="width:90px;height:90px;border-radius:50%;
-                                    background:linear-gradient(135deg,#667eea,#764ba2);
-                                    overflow:hidden;display:flex;align-items:center;justify-content:center;">
-                            <i id="editDriverIcon" class="fas fa-user" style="font-size:2.2rem;color:#fff;"></i>
-                            <img id="editDriverImg" src="" alt=""
-                                 style="display:none;width:100%;height:100%;object-fit:cover;">
+                    <div class="drv-edit-photo-wrap">
+                        <div class="drv-avatar-circle-90">
+                            <i id="editDriverIcon" class="fas fa-user drv-avatar-icon-lg"></i>
+                            <img id="editDriverImg" src="" alt="" class="drv-avatar-img-hidden">
                         </div>
 
                         {{-- Separate upload button — <label for> triggers file browser reliably --}}
-                        <label for="editDriverImage"
-                               style="display:inline-flex;align-items:center;gap:8px;padding:9px 20px;
-                                      background:#f1f5f9;border:1.5px dashed #cbd5e1;border-radius:9px;
-                                      cursor:pointer;font-family:'Kantumruy Pro',sans-serif;
-                                      font-size:0.82rem;font-weight:600;color:#64748b;transition:all 0.2s;">
-                            <i class="fas fa-cloud-upload-alt" style="color:#FF6B00;"></i>
+                        <label for="editDriverImage" class="drv-upload-btn">
+                            <i class="fas fa-cloud-upload-alt text-orange"></i>
                             ជ្រើសរើស / ប្ដូររូបភាព
                         </label>
-                        <span id="editDriverFileName"
-                              style="font-size:0.75rem;color:#94a3b8;display:none;"></span>
+                        <span id="editDriverFileName" class="drv-filename-label"></span>
                     </div>
                     <input type="file" name="driver_picture" id="editDriverImage"
-                           accept="image/*" style="display:none;"
+                           accept="image/*" class="d-none"
                            onchange="previewEditDriver(this)">
                 </div>
 
                 <div class="form-grid">
                     <div class="form-group form-full">
-                        <label class="form-label">ឈ្មោះពេញ <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">ឈ្មោះពេញ <span class="drv-required">*</span></label>
                         <input type="text" name="full_name" id="ed_name" class="form-control" required>
                     </div>
                     <div class="form-group">
@@ -405,7 +383,7 @@
                         <input type="date" name="hire_date" id="ed_hire" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ស្ថានភាព <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">ស្ថានភាព <span class="drv-required">*</span></label>
                         <select name="status" id="ed_status" class="form-control">
                             <option value="active">កំពុងធ្វើការ (active)</option>
                             <option value="inactive">មិនសកម្ម (inactive)</option>
@@ -439,19 +417,14 @@
 </div>
 
 {{-- ══════════════ PHOTO PREVIEW MODAL ══════════════ --}}
-<div id="driverImgViewModal"
-     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:99999;
-            flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+<div id="driverImgViewModal" class="drv-img-view-modal">
     <button onclick="document.getElementById('driverImgViewModal').style.display='none'"
-            style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.15);border:none;
-                   color:#fff;width:42px;height:42px;border-radius:50%;font-size:18px;cursor:pointer;
-                   display:flex;align-items:center;justify-content:center;">
+            class="drv-img-view-close">
         <i class="fas fa-times"></i>
     </button>
-    <p id="driverImgViewLabel" style="color:rgba(255,255,255,0.7);font-family:'Kantumruy Pro',sans-serif;font-size:0.85rem;"></p>
-    <img id="driverImgViewSrc" src=""
-         style="max-width:360px;max-height:360px;border-radius:50%;box-shadow:0 24px 60px rgba(0,0,0,0.6);object-fit:cover;">
-    <p style="color:rgba(255,255,255,0.4);font-size:0.75rem;">ចុចគ្រប់ទីកន្លែងដើម្បីបិទ</p>
+    <p id="driverImgViewLabel" class="drv-img-view-label"></p>
+    <img id="driverImgViewSrc" src="" class="drv-img-view-img">
+    <p class="drv-img-view-hint">ចុចគ្រប់ទីកន្លែងដើម្បីបិទ</p>
 </div>
 
 @push('scripts')

@@ -1,0 +1,396 @@
+/* ── Stats / toolbar ── */
+.drv-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 24px;
+}
+
+.drv-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.drv-filter-form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.drv-filter-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #475569;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.drv-search-input {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    width: 220px;
+    outline: none;
+}
+
+.drv-status-select {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    background: #fff;
+    outline: none;
+}
+
+.drv-btn-search-pad {
+    padding: 9px 18px;
+}
+
+.drv-btn-clear-pad {
+    padding: 9px 14px;
+}
+
+/* ── Table header ── */
+.drv-count-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-left: 4px;
+}
+
+.drv-col-narrow {
+    width: 50px;
+}
+
+.drv-col-center {
+    text-align: center;
+}
+
+/* ── Table rows ── */
+.drv-row-num {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #94a3b8;
+    font-size: 0.82rem;
+}
+
+.drv-driver-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.drv-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.drv-avatar-zoom {
+    cursor: zoom-in;
+}
+
+.drv-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.drv-avatar-initial {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #fff;
+}
+
+.drv-driver-name {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.drv-text-muted-sm {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.drv-phone-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 0.87rem;
+}
+
+.drv-icon-mr {
+    font-size: 0.7rem;
+    margin-right: 4px;
+}
+
+.drv-dash {
+    color: #cbd5e1;
+}
+
+.drv-hire-cell {
+    font-size: 0.85rem;
+    color: #475569;
+}
+
+.drv-icon-orange-mr {
+    color: #FF6B00;
+    font-size: 0.7rem;
+    margin-right: 4px;
+}
+
+.drv-badge-dot {
+    font-size: 0.45rem;
+}
+
+.drv-truck-cell {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.drv-truck-icon-box {
+    width: 28px;
+    height: 28px;
+    background: #fff3e8;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.drv-truck-icon {
+    color: #FF6B00;
+    font-size: 0.7rem;
+}
+
+.drv-truck-name {
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.drv-truck-plate {
+    font-size: 0.72rem;
+    color: #94a3b8;
+}
+
+.drv-truck-none {
+    color: #cbd5e1;
+    font-size: 0.83rem;
+}
+
+.drv-actions-cell {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+/* ── Empty state ── */
+.drv-empty-cell {
+    text-align: center;
+    padding: 48px;
+    color: #94a3b8;
+}
+
+.drv-empty-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.25;
+}
+
+.drv-empty-text {
+    font-size: 0.9rem;
+}
+
+.drv-empty-clear-link {
+    font-size: 0.82rem;
+    color: #FF6B00;
+    margin-top: 8px;
+    display: inline-block;
+}
+
+/* ── Pagination ── */
+.drv-pagination-bar {
+    padding: 14px 22px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.drv-pagination-info {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.drv-pagination-pages {
+    display: flex;
+    gap: 6px;
+}
+
+.drv-page-disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* ── Modal forms ── */
+.drv-mb-20 {
+    margin-bottom: 20px;
+}
+
+.drv-required {
+    color: #ef4444;
+}
+
+.drv-text-center {
+    text-align: center;
+}
+
+.drv-upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 170px;
+    background: #f8fafc;
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    gap: 10px;
+}
+
+.drv-avatar-circle-90 {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.drv-avatar-icon-lg {
+    font-size: 2.2rem;
+    color: #fff;
+}
+
+.drv-avatar-img-hidden {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.drv-upload-title {
+    font-size: 0.82rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.drv-upload-hint {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.drv-edit-photo-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.drv-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    background: #f1f5f9;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 9px;
+    cursor: pointer;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #64748b;
+    transition: all 0.2s;
+}
+
+.drv-filename-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    display: none;
+}
+
+/* ── Photo preview modal ── */
+.drv-img-view-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 99999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.drv-img-view-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #fff;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drv-img-view-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+}
+
+.drv-img-view-img {
+    max-width: 360px;
+    max-height: 360px;
+    border-radius: 50%;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+    object-fit: cover;
+}
+
+.drv-img-view-hint {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.75rem;
+}

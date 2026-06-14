@@ -2,6 +2,10 @@
 @section('title', 'របាយការណ៍ចំណាយ')
 @section('page-title')<span>គ្រប់គ្រង</span>របាយការណ៍ចំណាយ@endsection
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/admin_reports.css') }}">
+@endpush
+
 @section('content')
 
 @php
@@ -20,11 +24,11 @@
 @endphp
 
 {{-- ── Stats Cards ── --}}
-<div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:24px;">
+<div class="stats-grid rpt-stats-grid">
     <div class="stat-card">
         <div class="stat-icon teal"><i class="fas fa-wallet"></i></div>
         <div class="stat-info">
-            <div class="val" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;">
+            <div class="val rpt-stat-val">
                 ${{ number_format($grandTotal, 2) }}
             </div>
             <div class="lbl">ចំណាយសរុបក្នុងខែ</div>
@@ -34,7 +38,7 @@
     <div class="stat-card">
         <div class="stat-icon {{ $typeIcon[$key]['class'] }}"><i class="fas {{ $typeIcon[$key]['icon'] }}"></i></div>
         <div class="stat-info">
-            <div class="val" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;">
+            <div class="val rpt-stat-val">
                 ${{ number_format($totals[$key] ?? 0, 2) }}
             </div>
             <div class="lbl">{{ $label }}</div>
@@ -44,13 +48,13 @@
 </div>
 
 {{-- ── Analysis Charts ── --}}
-<div style="display:grid;grid-template-columns:1fr 1.6fr;gap:18px;margin-bottom:24px;align-items:start;">
+<div class="rpt-charts-grid">
     <div class="card">
         <div class="card-header">
             <div class="card-title"><i class="fas fa-chart-pie"></i> សមាមាត្រចំណាយតាមប្រភេទ</div>
         </div>
-        <div class="card-body" style="display:flex;justify-content:center;">
-            <div style="max-width:260px;width:100%;">
+        <div class="card-body rpt-chart-center">
+            <div class="rpt-chart-donut-wrap">
                 <canvas id="expenseTypeChart"></canvas>
             </div>
         </div>
@@ -66,27 +70,23 @@
 </div>
 
 {{-- ── Toolbar ── --}}
-<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
+<div class="rpt-toolbar">
 
-    <form method="GET" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+    <form method="GET" class="rpt-filter-form">
         <div>
-            <label style="font-size:0.78rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;">ខែ</label>
-            <input type="month" name="month" value="{{ $month }}"
-                   style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;
-                          font-family:'Montserrat',sans-serif;font-size:0.85rem;outline:none;">
+            <label class="rpt-filter-label">ខែ</label>
+            <input type="month" name="month" value="{{ $month }}" class="rpt-month-input">
         </div>
         <div>
-            <label style="font-size:0.78rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;">ប្រភេទ</label>
-            <select name="expense_type"
-                    style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;
-                           font-family:'Kantumruy Pro',sans-serif;font-size:0.85rem;background:#fff;outline:none;">
+            <label class="rpt-filter-label">ប្រភេទ</label>
+            <select name="expense_type" class="rpt-type-select">
                 <option value="">ទាំងអស់</option>
                 @foreach($typeLabel as $key => $label)
                 <option value="{{ $key }}" {{ request('expense_type')===$key ? 'selected' : '' }}>{{ $label }}</option>
                 @endforeach
             </select>
         </div>
-        <button type="submit" class="btn btn-ghost" style="padding:9px 18px;">
+        <button type="submit" class="btn btn-ghost rpt-btn-search-pad">
             <i class="fas fa-search"></i> តម្រង
         </button>
     </form>
@@ -103,8 +103,7 @@
         <div class="card-title">
             <i class="fas fa-file-invoice-dollar"></i>
             បញ្ជីចំណាយ
-            <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;
-                         background:#f1f5f9;color:#64748b;padding:2px 10px;border-radius:50px;margin-left:4px;">
+            <span class="rpt-count-badge">
                 {{ $expenses->total() }}
             </span>
         </div>
@@ -119,7 +118,7 @@
                     <th>អ្នកបើកបរ / រថយន្ត</th>
                     <th>បរិយាយ</th>
                     <th>កាលបរិច្ឆេទ</th>
-                    <th style="text-align:center;">សកម្មភាព</th>
+                    <th class="rpt-col-center">សកម្មភាព</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,35 +126,35 @@
                 <tr>
                     <td>
                         @php $ti = $typeIcon[$e->expense_type] ?? ['icon'=>'fa-receipt','class'=>'purple']; @endphp
-                        <span style="display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;font-weight:600;color:#1e293b;">
-                            <i class="fas {{ $ti['icon'] }}" style="color:#FF6B00;"></i>
+                        <span class="rpt-type-cell">
+                            <i class="fas {{ $ti['icon'] }} rpt-type-icon"></i>
                             {{ $typeLabel[$e->expense_type] ?? $e->expense_type }}
                         </span>
                     </td>
                     <td>
-                        <strong style="font-family:'Montserrat',sans-serif;color:#ef4444;font-size:0.95rem;">
+                        <strong class="rpt-amount">
                             ${{ number_format($e->amount, 2) }}
                         </strong>
                     </td>
-                    <td style="font-size:0.83rem;color:#475569;">
+                    <td class="rpt-cell-text">
                         @if($e->driver)
-                            <div><i class="fas fa-id-badge" style="color:#3b82f6;font-size:0.7rem;"></i> {{ $e->driver->full_name }}</div>
+                            <div><i class="fas fa-id-badge rpt-driver-icon"></i> {{ $e->driver->full_name }}</div>
                         @endif
                         @if($e->truck)
-                            <div><i class="fas fa-truck" style="color:#FF6B00;font-size:0.7rem;"></i> {{ $e->truck->truck_name }} ({{ $e->truck->plate_number }})</div>
+                            <div><i class="fas fa-truck rpt-truck-icon"></i> {{ $e->truck->truck_name }} ({{ $e->truck->plate_number }})</div>
                         @endif
                         @if(!$e->driver && !$e->truck)
-                            <span style="color:#cbd5e1;">—</span>
+                            <span class="rpt-dash">—</span>
                         @endif
                     </td>
-                    <td style="font-size:0.83rem;color:#475569;max-width:260px;">
+                    <td class="rpt-desc-cell">
                         {{ $e->description ?: '—' }}
                     </td>
-                    <td style="font-size:0.83rem;color:#475569;white-space:nowrap;">
+                    <td class="rpt-date-cell">
                         {{ $e->expense_date ? $e->expense_date->format('d/m/Y') : '—' }}
                     </td>
                     <td>
-                        <div style="display:flex;justify-content:center;gap:6px;">
+                        <div class="rpt-actions-cell">
                             <button type="button" class="btn btn-ghost btn-sm" title="កែប្រែ"
                                     onclick="openEditExpense({{ $e->expense_id }}, '{{ $e->expense_type }}', {{ $e->amount }}, '{{ $e->expense_date ? $e->expense_date->format('Y-m-d') : '' }}', {{ $e->driver_id ?? 'null' }}, {{ $e->truck_id ?? 'null' }}, {{ json_encode($e->description) }})">
                                 <i class="fas fa-edit"></i>
@@ -172,9 +171,9 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" style="text-align:center;padding:48px;color:#94a3b8;">
-                        <i class="fas fa-file-invoice-dollar" style="font-size:2.5rem;display:block;margin-bottom:12px;opacity:0.25;"></i>
-                        <div style="font-size:0.9rem;">មិនមានចំណាយសម្រាប់ខែនេះ</div>
+                    <td colspan="6" class="rpt-empty-cell">
+                        <i class="fas fa-file-invoice-dollar rpt-empty-icon"></i>
+                        <div class="rpt-empty-text">មិនមានចំណាយសម្រាប់ខែនេះ</div>
                     </td>
                 </tr>
                 @endforelse
@@ -183,13 +182,13 @@
     </div>
 
     @if($expenses->hasPages())
-    <div style="padding:14px 22px;border-top:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;">
-        <span style="font-size:0.8rem;color:#94a3b8;">
+    <div class="rpt-pagination-bar">
+        <span class="rpt-pagination-info">
             បង្ហាញ {{ $expenses->firstItem() }}–{{ $expenses->lastItem() }} នៃ {{ $expenses->total() }}
         </span>
-        <div style="display:flex;gap:6px;">
+        <div class="rpt-pagination-pages">
             @if($expenses->onFirstPage())
-                <span class="page-btn" style="opacity:0.4;cursor:default;"><i class="fas fa-chevron-left"></i></span>
+                <span class="page-btn rpt-page-disabled"><i class="fas fa-chevron-left"></i></span>
             @else
                 <a href="{{ $expenses->previousPageUrl() }}" class="page-btn"><i class="fas fa-chevron-left"></i></a>
             @endif
@@ -199,7 +198,7 @@
             @if($expenses->hasMorePages())
                 <a href="{{ $expenses->nextPageUrl() }}" class="page-btn"><i class="fas fa-chevron-right"></i></a>
             @else
-                <span class="page-btn" style="opacity:0.4;cursor:default;"><i class="fas fa-chevron-right"></i></span>
+                <span class="page-btn rpt-page-disabled"><i class="fas fa-chevron-right"></i></span>
             @endif
         </div>
     </div>
@@ -221,7 +220,7 @@
             <div class="modal-body">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">ប្រភេទចំណាយ <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">ប្រភេទចំណាយ <span class="rpt-required">*</span></label>
                         <select name="expense_type" id="exp_type" class="form-control" onchange="toggleExpenseFields(this.value)" required>
                             @foreach($typeLabel as $key => $label)
                             <option value="{{ $key }}">{{ $label }}</option>
@@ -229,11 +228,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ចំនួនទឹកប្រាក់ (USD) <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">ចំនួនទឹកប្រាក់ (USD) <span class="rpt-required">*</span></label>
                         <input type="number" name="amount" class="form-control" min="0" step="0.01" placeholder="ឧ. 250.00" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">កាលបរិច្ឆេទ <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">កាលបរិច្ឆេទ <span class="rpt-required">*</span></label>
                         <input type="date" name="expense_date" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
                     </div>
                     <div class="form-group" id="exp_driver_field">
@@ -245,7 +244,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group" id="exp_truck_field" style="display:none;">
+                    <div class="form-group d-none" id="exp_truck_field">
                         <label class="form-label">រថយន្ត</label>
                         <select name="truck_id" class="form-control">
                             <option value="">-- ជ្រើសរើស --</option>
@@ -289,7 +288,7 @@
             <div class="modal-body">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">ប្រភេទចំណាយ <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">ប្រភេទចំណាយ <span class="rpt-required">*</span></label>
                         <select name="expense_type" id="edit_exp_type" class="form-control" onchange="toggleExpenseFields(this.value, 'edit_')" required>
                             @foreach($typeLabel as $key => $label)
                             <option value="{{ $key }}">{{ $label }}</option>
@@ -297,11 +296,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ចំនួនទឹកប្រាក់ (USD) <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">ចំនួនទឹកប្រាក់ (USD) <span class="rpt-required">*</span></label>
                         <input type="number" name="amount" id="edit_exp_amount" class="form-control" min="0" step="0.01" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">កាលបរិច្ឆេទ <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">កាលបរិច្ឆេទ <span class="rpt-required">*</span></label>
                         <input type="date" name="expense_date" id="edit_exp_date" class="form-control" required>
                     </div>
                     <div class="form-group" id="edit_exp_driver_field">
@@ -313,7 +312,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group" id="edit_exp_truck_field" style="display:none;">
+                    <div class="form-group d-none" id="edit_exp_truck_field">
                         <label class="form-label">រថយន្ត</label>
                         <select name="truck_id" id="edit_exp_truck_id" class="form-control">
                             <option value="">-- ជ្រើសរើស --</option>

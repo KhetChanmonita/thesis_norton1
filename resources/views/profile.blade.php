@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -7,43 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Kantumruy+Pro:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Kantumruy Pro', sans-serif; background: #f4f6fb; min-height: 100vh; }
-        .profile-page { padding: 60px 20px 80px; }
-        .profile-container { max-width: 640px; margin: 0 auto; }
-        .profile-card { background: #fff; border-radius: 20px; box-shadow: 0 4px 24px rgba(0,0,0,0.09); overflow: hidden; }
-        .profile-header { background: linear-gradient(135deg, #ff6b00, #e55a00); padding: 36px 32px 28px; text-align: center; }
-        .avatar-wrap { position: relative; width: 90px; height: 90px; margin: 0 auto 14px; cursor: pointer; }
-        .avatar-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,0.6); display: block; }
-        .avatar-initials { width: 90px; height: 90px; border-radius: 50%; background: rgba(255,255,255,0.25); border: 3px solid rgba(255,255,255,0.6); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 800; color: #fff; font-family: 'Montserrat', sans-serif; }
-        .avatar-overlay { position: absolute; inset: 0; border-radius: 50%; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
-        .avatar-wrap:hover .avatar-overlay { opacity: 1; }
-        .avatar-overlay i { color: #fff; font-size: 1.3rem; }
-        .profile-header h2 { color: #fff; font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; }
-        .profile-role-badge { display: inline-block; background: rgba(255,255,255,0.2); color: #fff; font-size: 0.75rem; padding: 3px 12px; border-radius: 20px; }
-        .profile-body { padding: 32px; }
-        .section-title { font-size: 0.82rem; font-weight: 700; color: #ff6b00; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
-        .form-group input[type=text],
-        .form-group input[type=email],
-        .form-group input[type=password] { width: 100%; padding: 11px 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; font-family: 'Kantumruy Pro', sans-serif; color: #1e293b; background: #f8fafc; transition: border-color 0.2s; outline: none; }
-        .form-group input:focus { border-color: #ff6b00; background: #fff; }
-        .form-group input.is-invalid { border-color: #e53e3e; background: #fff5f5; }
-        .invalid-feedback { color: #e53e3e; font-size: 0.78rem; margin-top: 5px; }
-        .divider { height: 1px; background: #f1f5f9; margin: 24px 0; }
-        .btn-save { width: 100%; padding: 13px; background: linear-gradient(135deg, #ff6b00, #e55a00); color: #fff; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; font-family: 'Kantumruy Pro', sans-serif; cursor: pointer; transition: opacity 0.2s; }
-        .btn-save:hover { opacity: 0.9; }
-        .alert { padding: 13px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-        .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
-        .alert-error   { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
-        .pw-toggle { position: relative; }
-        .pw-toggle input { padding-right: 44px; }
-        .pw-eye { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; cursor: pointer; font-size: 0.95rem; }
-        .pw-eye:hover { color: #ff6b00; }
-        .img-hint { font-size: 0.72rem; color: rgba(255,255,255,0.75); margin-top: 6px; }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 </head>
 <body>
     @include('partials.header')

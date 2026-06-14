@@ -1,0 +1,274 @@
+/* ── Success alert toast ── */
+.hm-success-alert {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999999;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: .95rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 90vw;
+    text-align: center;
+}
+
+.hm-success-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* ── Learn-more / contact modal ── */
+.hm-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.62);
+    z-index: 100000;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 82px 16px 24px;
+    overflow-y: auto;
+}
+
+.hm-modal-box {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.hm-modal-header {
+    background: linear-gradient(135deg, #FF6B00, #FF9040);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hm-modal-header-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #fff;
+}
+
+.hm-modal-icon {
+    background: rgba(255, 255, 255, 0.2);
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.hm-modal-icon-i {
+    font-size: 24px;
+}
+
+.hm-modal-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+
+.hm-modal-subtitle {
+    margin: 4px 0 0;
+    font-size: .82rem;
+    opacity: .88;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+
+.hm-modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .2s;
+    flex-shrink: 0;
+}
+
+/* ── Error box ── */
+.hm-error-box {
+    margin: 16px 28px 0;
+    background: #fff5f5;
+    border: 1.5px solid #fed7d7;
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: #c53030;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: .87rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── Form ── */
+.hm-form {
+    padding: 24px 28px;
+}
+
+.hm-section {
+    border: 1.5px solid #eeeeee;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+
+.hm-section-mb20 {
+    border: 1.5px solid #eeeeee;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.hm-section-header {
+    background: linear-gradient(135deg, #fff6ef, #fff);
+    border-bottom: 1.5px solid #eeeeee;
+    padding: 11px 18px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-weight: 700;
+    font-size: .9rem;
+    color: #FF6B00;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hm-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.hm-cell {
+    padding: 13px 18px;
+}
+
+.hm-cell-bb {
+    padding: 13px 18px;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.hm-cell-br {
+    padding: 13px 18px;
+    border-right: 1px solid #f2f2f2;
+}
+
+.hm-cell-br-bb {
+    padding: 13px 18px;
+    border-right: 1px solid #f2f2f2;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.hm-label {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: .8rem;
+    font-weight: 600;
+    color: #555;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.hm-required {
+    color: #e53e3e;
+}
+
+.hm-required-inline {
+    color: #e53e3e;
+    margin: 0 2px;
+}
+
+.hm-input {
+    width: 100%;
+    padding: 9px 13px;
+    border: 1.5px solid #e8edf2;
+    border-radius: 8px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: .87rem;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.hm-select {
+    background: #fff;
+}
+
+.hm-textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+/* ── Footer ── */
+.hm-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.hm-footer-note {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: .76rem;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.hm-icon-orange {
+    color: #FF6B00;
+}
+
+.hm-footer-actions {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.hm-btn-cancel {
+    padding: 10px 22px;
+    background: transparent;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: .87rem;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+}
+
+.hm-btn-submit {
+    padding: 10px 26px;
+    background: linear-gradient(135deg, #FF6B00, #FF9040);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: .9rem;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(255, 107, 0, 0.35);
+}

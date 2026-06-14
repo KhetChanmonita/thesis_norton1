@@ -1,0 +1,113 @@
+/* ── Stats ── */
+.pmt-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 24px;
+}
+.pmt-stat-val { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; }
+
+/* ── Toolbar ── */
+.pmt-toolbar-wrap { margin-bottom: 20px; }
+.pmt-filter-form { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.pmt-filter-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #475569;
+    display: block;
+    margin-bottom: 5px;
+}
+.pmt-search-input {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    width: 240px;
+    outline: none;
+}
+.pmt-method-select {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    background: #fff;
+    outline: none;
+}
+.pmt-date-input {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+}
+.pmt-btn-search-pad { padding: 9px 18px; }
+.pmt-btn-clear-pad { padding: 9px 14px; }
+
+/* ── Table ── */
+.pmt-count-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-left: 4px;
+}
+.pmt-col-num { width: 48px; }
+.pmt-col-center { text-align: center; }
+.pmt-row-num { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #94a3b8; font-size: 0.82rem; }
+
+.pmt-customer-wrap { display: flex; align-items: center; gap: 9px; }
+.pmt-customer-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif; font-weight: 800;
+    font-size: 0.8rem; color: #fff; flex-shrink: 0;
+}
+.pmt-customer-name { font-weight: 700; color: #1e293b; font-size: 0.88rem; }
+.pmt-customer-phone { font-size: 0.72rem; color: #94a3b8; }
+
+.pmt-dash { color: #cbd5e1; font-size: 0.83rem; }
+.pmt-dash-sm { color: #cbd5e1; }
+
+.pmt-booking-badge {
+    font-family: 'Montserrat', sans-serif; font-weight: 700;
+    font-size: 0.83rem; color: #FF6B00;
+    background: #fff3e8; padding: 3px 10px; border-radius: 6px;
+}
+.pmt-amount { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1rem; color: #10b981; }
+
+.pmt-method-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; }
+.pmt-method-icon { font-size: 0.7rem; }
+
+.pmt-ref-badge {
+    font-family: 'Montserrat', sans-serif; font-size: 0.78rem;
+    color: #475569; background: #f8fafc; padding: 3px 9px;
+    border-radius: 6px; border: 1px solid #e2e8f0; letter-spacing: 0.5px;
+}
+
+.pmt-date-cell { font-size: 0.83rem; color: #475569; }
+.pmt-date-icon { color: #FF6B00; font-size: 0.7rem; margin-right: 4px; }
+
+.pmt-delete-wrap { display: flex; justify-content: center; }
+
+/* ── Empty state ── */
+.pmt-empty-cell { text-align: center; padding: 52px; color: #94a3b8; }
+.pmt-empty-icon { font-size: 2.5rem; display: block; margin-bottom: 12px; opacity: 0.25; }
+.pmt-empty-text { font-size: 0.9rem; }
+.pmt-clear-link { font-size: 0.82rem; color: #FF6B00; margin-top: 8px; display: inline-block; }
+
+/* ── Pagination ── */
+.pmt-pagination-bar {
+    padding: 14px 22px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.pmt-pagination-info { font-size: 0.8rem; color: #94a3b8; }
+.pmt-pagination-pages { display: flex; gap: 6px; }
+.pmt-page-disabled { opacity: 0.4; cursor: default; }

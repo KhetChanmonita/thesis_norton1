@@ -1,0 +1,337 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Kantumruy Pro', 'Poppins', sans-serif;
+    background: #f1f5f9;
+    color: #334155;
+    min-height: 100vh;
+}
+
+.page-wrap {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 28px 16px 60px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 0.83rem;
+    text-decoration: none;
+    margin-bottom: 22px;
+}
+
+.back-link:hover {
+    color: #FF6B00;
+}
+
+.card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 18px;
+}
+
+.amount-banner {
+    padding: 22px 28px;
+    text-align: center;
+}
+
+.amount-banner.deposit {
+    background: linear-gradient(135deg, #FF6B00, #e55a00);
+    color: #fff;
+}
+
+.amount-banner.final {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+}
+
+.amount-banner .stage-label {
+    font-size: 0.82rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+}
+
+.amount-banner .amount {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 800;
+}
+
+.amount-banner .booking-ref {
+    font-size: 0.78rem;
+    opacity: 0.75;
+    margin-top: 6px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.summary-row:last-child {
+    border-bottom: none;
+}
+
+.summary-row .lbl {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.summary-row .val {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e293b;
+    text-align: right;
+    max-width: 60%;
+}
+
+.khqr-wrap {
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.khqr-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #1e293b;
+    text-align: center;
+}
+
+.khqr-img-wrap {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 300px;
+}
+
+.khqr-img-wrap img {
+    width: 100%;
+    display: block;
+}
+
+.khqr-amount-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+}
+
+.khqr-steps {
+    width: 100%;
+    max-width: 340px;
+}
+
+.khqr-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.khqr-step .num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #FF6B00;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.khqr-step .num.green {
+    background: #10b981;
+}
+
+.khqr-step p {
+    font-size: 0.83rem;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.app-icons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.app-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 1.5px solid #e2e8f0;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 28px;
+    margin: 0;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.separator span {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    white-space: nowrap;
+}
+
+.methods-section {
+    padding: 24px 28px 8px;
+}
+
+.methods-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.methods-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+@media(max-width:400px) {
+    .methods-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.method-radio {
+    display: none;
+}
+
+.method-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 12px 6px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+    text-align: center;
+}
+
+.method-card:hover {
+    border-color: #FF6B00;
+    background: #fff7ed;
+}
+
+.method-radio:checked+.method-card {
+    border-color: #FF6B00;
+    background: #fff3e8;
+    box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.12);
+}
+
+.method-card i {
+    font-size: 1.3rem;
+}
+
+.method-card span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.confirm-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.98rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+}
+
+.confirm-btn.deposit {
+    background: linear-gradient(135deg, #FF6B00, #e55a00);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(255, 107, 0, 0.35);
+}
+
+.confirm-btn.deposit:hover {
+    transform: translateY(-2px);
+}
+
+.confirm-btn.final {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35);
+}
+
+.confirm-btn.final:hover {
+    transform: translateY(-2px);
+}
+
+.form-footer {
+    padding: 0 28px 24px;
+}
+
+.security-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.73rem;
+    color: #94a3b8;
+}
