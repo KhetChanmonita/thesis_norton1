@@ -66,3 +66,7 @@
 }
 .no-phone-notice i { font-size: 1.1rem; color: #F59E0B; flex-shrink: 0; }
 .no-phone-notice a { color: #FF6B00; font-weight: 700; text-decoration: underline; }
+
+/* ── Inline style replacements ── */
+.his-page-wrap { padding-top: 32px; }
+.his-hash-icon { color: #FF6B00; font-size: 0.75rem; }

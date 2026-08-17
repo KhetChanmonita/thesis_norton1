@@ -36,4 +36,9 @@ class Truck extends Model
     {
         return $this->hasMany(Expense::class, 'truck_id', 'truck_id');
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'truck_id', 'truck_id');
+    }
 }

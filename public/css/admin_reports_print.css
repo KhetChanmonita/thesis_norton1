@@ -1,0 +1,148 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Kantumruy Pro', sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* ── On-screen toolbar (hidden when printing) ── */
+.print-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 24px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.print-btn {
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: none;
+    background: #FF6B00;
+    color: #fff;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.print-btn-ghost {
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    color: #64748b;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ── Printable page ── */
+.print-page {
+    max-width: 900px;
+    margin: 24px auto;
+    background: #fff;
+    padding: 40px 48px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+
+.print-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid #FF6B00;
+    padding-bottom: 18px;
+    margin-bottom: 24px;
+}
+
+.print-brand { display: flex; align-items: center; gap: 12px; }
+.print-brand img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
+.print-brand-name { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: #1e293b; }
+.print-brand-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; max-width: 280px; }
+
+.print-meta { text-align: right; }
+.print-title { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; color: #FF6B00; }
+.print-month { font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-top: 2px; }
+.print-generated { font-size: 0.72rem; color: #94a3b8; margin-top: 4px; }
+
+.print-summary {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.print-summary-item {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.print-summary-item .lbl { font-size: 0.78rem; color: #64748b; font-weight: 600; }
+.print-summary-item .val { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
+
+.print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+
+.print-table th {
+    background: #1a1a2e;
+    color: #fff;
+    padding: 10px 8px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.print-table td {
+    padding: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.print-table tbody tr:nth-child(even) { background: #f8fafc; }
+
+.print-table tfoot td {
+    border-top: 2px solid #1e293b;
+    border-bottom: none;
+    padding-top: 10px;
+}
+
+.print-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+@media print {
+    .print-toolbar { display: none; }
+    body { background: #fff; }
+    .print-page {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+    .print-table th { background: #1a1a2e !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-table tbody tr:nth-child(even) { background: #f8fafc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ── Inline style replacements ── */
+.print-td-empty    { text-align: center; padding: 20px; }
+.print-tfoot-label { text-align: right; font-weight: 700; }
+.print-tfoot-val-bold { font-weight: 800; }
+.print-val-green   { color: #059669; }
+.print-val-red     { color: #dc2626; }
+.print-section-h3  { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #1e293b; margin-bottom: 10px; }
+.print-table-mb    { margin-bottom: 28px; }

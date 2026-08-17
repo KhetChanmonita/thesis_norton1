@@ -8,10 +8,26 @@ use Illuminate\Http\Request;
 
 class CustomerAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::withCount('bookings')->latest()->paginate(10);
-        return view('admin.customers.index', compact('customers'));
+        $query = Customer::withCount('bookings')->with('latestBooking.truck');
+
+        if ($request->filled('search')) {
+            $query->where('full_name', 'like', '%' . $request->search . '%');
+        }
+
+        $customers = $query->latest()->paginate(10)->withQueryString();
+
+        $total         = Customer::count();
+        $totalBusiness = Customer::whereNotNull('company_name')->where('company_name', '!=', '')->count();
+        $totalWithBookings = Customer::has('bookings')->count();
+        $totalNewThisMonth = Customer::whereMonth('created_at', now()->month)
+                                      ->whereYear('created_at', now()->year)
+                                      ->count();
+
+        return view('admin.customers.index',
+            compact('customers', 'total', 'totalBusiness', 'totalWithBookings', 'totalNewThisMonth')
+        );
     }
 
     public function edit(Customer $customer)

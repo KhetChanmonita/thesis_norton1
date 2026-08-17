@@ -25,7 +25,27 @@
 
 {{-- ── Stats Cards ── --}}
 <div class="stats-grid rpt-stats-grid">
-    <div class="stat-card">
+    <a href="{{ route('admin.reports.revenue', ['month' => $month]) }}" class="stat-card rpt-stat-clickable">
+        <div class="stat-icon green"><i class="fas fa-hand-holding-usd"></i></div>
+        <div class="stat-info">
+            <div class="val rpt-stat-val">
+                ${{ number_format($monthlyRevenue, 2) }}
+            </div>
+            <div class="lbl">ចំណូលសរុបក្នុងខែ</div>
+        </div>
+    </a>
+    <a href="{{ route('admin.reports.profit', ['month' => $month]) }}" class="stat-card rpt-stat-clickable">
+        <div class="stat-icon {{ $monthlyProfit >= 0 ? 'green' : 'red' }}">
+            <i class="fas {{ $monthlyProfit >= 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down' }}"></i>
+        </div>
+        <div class="stat-info">
+            <div class="val rpt-stat-val" style="color:{{ $monthlyProfit >= 0 ? '#059669' : '#dc2626' }};">
+                {{ $monthlyProfit >= 0 ? '' : '-' }}${{ number_format(abs($monthlyProfit), 2) }}
+            </div>
+            <div class="lbl">ប្រាក់ចំណេញក្នុងខែ</div>
+        </div>
+    </a>
+    <a href="{{ route('admin.reports.index', ['month' => $month]) }}" class="stat-card rpt-stat-clickable">
         <div class="stat-icon teal"><i class="fas fa-wallet"></i></div>
         <div class="stat-info">
             <div class="val rpt-stat-val">
@@ -33,9 +53,9 @@
             </div>
             <div class="lbl">ចំណាយសរុបក្នុងខែ</div>
         </div>
-    </div>
+    </a>
     @foreach($typeLabel as $key => $label)
-    <div class="stat-card">
+    <a href="{{ route('admin.reports.index', ['month' => $month, 'expense_type' => $key]) }}" class="stat-card rpt-stat-clickable">
         <div class="stat-icon {{ $typeIcon[$key]['class'] }}"><i class="fas {{ $typeIcon[$key]['icon'] }}"></i></div>
         <div class="stat-info">
             <div class="val rpt-stat-val">
@@ -43,7 +63,7 @@
             </div>
             <div class="lbl">{{ $label }}</div>
         </div>
-    </div>
+    </a>
     @endforeach
 </div>
 
@@ -91,10 +111,15 @@
         </button>
     </form>
 
-    <button class="btn btn-orange"
-            onclick="document.getElementById('addExpenseModal').classList.add('open')">
-        <i class="fas fa-plus"></i> បន្ថែមចំណាយ
-    </button>
+    <div class="rpt-toolbar-end">
+        <a href="{{ route('admin.reports.cost-sheet', ['month' => $month]) }}" class="btn btn-ghost">
+            <i class="fas fa-table"></i> គ្រប់គ្រងវិក្កយបត្រ
+        </a>
+        <button class="btn btn-orange"
+                onclick="document.getElementById('addExpenseModal').classList.add('open')">
+            <i class="fas fa-plus"></i> បន្ថែមចំណាយ
+        </button>
+    </div>
 </div>
 
 {{-- ── Table ── --}}
@@ -113,6 +138,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>ល.រ</th>
                     <th>ប្រភេទ</th>
                     <th>ចំនួនទឹកប្រាក់</th>
                     <th>អ្នកបើកបរ / រថយន្ត</th>
@@ -124,6 +150,11 @@
             <tbody>
                 @forelse($expenses as $e)
                 <tr>
+                    <td>
+                        <span class="rpt-row-num">
+                            {{ ($expenses->currentPage() - 1) * $expenses->perPage() + $loop->iteration }}
+                        </span>
+                    </td>
                     <td>
                         @php $ti = $typeIcon[$e->expense_type] ?? ['icon'=>'fa-receipt','class'=>'purple']; @endphp
                         <span class="rpt-type-cell">
@@ -159,19 +190,16 @@
                                     onclick="openEditExpense({{ $e->expense_id }}, '{{ $e->expense_type }}', {{ $e->amount }}, '{{ $e->expense_date ? $e->expense_date->format('Y-m-d') : '' }}', {{ $e->driver_id ?? 'null' }}, {{ $e->truck_id ?? 'null' }}, {{ json_encode($e->description) }})">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <form method="POST" action="{{ route('admin.reports.destroy', $e->expense_id) }}"
-                                  onsubmit="return confirm('លុបចំណាយនេះ?')">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-danger btn-sm" title="លុប">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
+                            <button class="btn btn-danger btn-sm" title="លុប"
+                                    onclick="confirmDeleteExpense({{ $e->expense_id }}, {{ json_encode(($typeLabel[$e->expense_type] ?? $e->expense_type).' — $'.number_format($e->amount, 2)) }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="rpt-empty-cell">
+                    <td colspan="7" class="rpt-empty-cell">
                         <i class="fas fa-file-invoice-dollar rpt-empty-icon"></i>
                         <div class="rpt-empty-text">មិនមានចំណាយសម្រាប់ខែនេះ</div>
                     </td>
@@ -220,7 +248,7 @@
             <div class="modal-body">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">ប្រភេទចំណាយ <span class="rpt-required">*</span></label>
+                        <label class="form-label">ប្រភេទចំណាយ</label>
                         <select name="expense_type" id="exp_type" class="form-control" onchange="toggleExpenseFields(this.value)" required>
                             @foreach($typeLabel as $key => $label)
                             <option value="{{ $key }}">{{ $label }}</option>
@@ -228,11 +256,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ចំនួនទឹកប្រាក់ (USD) <span class="rpt-required">*</span></label>
+                        <label class="form-label">ចំនួនទឹកប្រាក់ (USD)</label>
                         <input type="number" name="amount" class="form-control" min="0" step="0.01" placeholder="ឧ. 250.00" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">កាលបរិច្ឆេទ <span class="rpt-required">*</span></label>
+                        <label class="form-label">កាលបរិច្ឆេទ</label>
                         <input type="date" name="expense_date" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
                     </div>
                     <div class="form-group" id="exp_driver_field">
@@ -288,7 +316,7 @@
             <div class="modal-body">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label class="form-label">ប្រភេទចំណាយ <span class="rpt-required">*</span></label>
+                        <label class="form-label">ប្រភេទចំណាយ</label>
                         <select name="expense_type" id="edit_exp_type" class="form-control" onchange="toggleExpenseFields(this.value, 'edit_')" required>
                             @foreach($typeLabel as $key => $label)
                             <option value="{{ $key }}">{{ $label }}</option>
@@ -296,11 +324,11 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ចំនួនទឹកប្រាក់ (USD) <span class="rpt-required">*</span></label>
+                        <label class="form-label">ចំនួនទឹកប្រាក់ (USD)</label>
                         <input type="number" name="amount" id="edit_exp_amount" class="form-control" min="0" step="0.01" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">កាលបរិច្ឆេទ <span class="rpt-required">*</span></label>
+                        <label class="form-label">កាលបរិច្ឆេទ</label>
                         <input type="date" name="expense_date" id="edit_exp_date" class="form-control" required>
                     </div>
                     <div class="form-group" id="edit_exp_driver_field">
@@ -340,16 +368,44 @@
     </div>
 </div>
 
+{{-- Delete Confirm Modal --}}
+<div class="modal-overlay confirm-overlay" id="deleteExpenseModal">
+    <div class="modal-box confirm-modal-box">
+        <form id="deleteExpenseForm" method="POST">
+            @csrf @method('DELETE')
+            <div class="modal-body confirm-modal-body">
+                <div class="confirm-icon-circle"><i class="fas fa-trash"></i></div>
+                <div class="confirm-title">លុបចំណាយនេះ?</div>
+                <p class="confirm-subtitle" id="deleteExpenseName"></p>
+            </div>
+            <div class="modal-footer confirm-modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('deleteExpenseModal').classList.remove('open')">
+                    <i class="fas fa-times"></i> បោះបង់
+                </button>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> លុប
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script>
+function confirmDeleteExpense(id, label) {
+    document.getElementById('deleteExpenseForm').action = '{{ url("/admin/reports") }}/' + id;
+    document.getElementById('deleteExpenseName').textContent = label + ' — សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ';
+    document.getElementById('deleteExpenseModal').classList.add('open');
+}
+
 function toggleExpenseFields(type, prefix) {
     prefix = prefix || '';
     var driverField = document.getElementById(prefix + 'exp_driver_field');
     var truckField  = document.getElementById(prefix + 'exp_truck_field');
     driverField.style.display = (type === 'salary') ? 'block' : 'none';
-    truckField.style.display  = (type === 'fuel' || type === 'repair') ? 'block' : 'none';
+    truckField.style.display  = (type === 'fuel' || type === 'repair' || type === 'other') ? 'block' : 'none';
 }
 
 var editExpenseUrlTemplate = @json(route('admin.reports.update', ['expense' => '__ID__']));
@@ -420,14 +476,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var trendData = @json($trendData);
     new Chart(document.getElementById('expenseTrendChart'), {
-        type: 'bar',
         data: {
             labels: trendData.map(function (d) { return d.label; }),
             datasets: [
-                { label: typeLabels[0], data: trendData.map(d => d.salary), backgroundColor: typeColors.salary },
-                { label: typeLabels[1], data: trendData.map(d => d.fuel),   backgroundColor: typeColors.fuel },
-                { label: typeLabels[2], data: trendData.map(d => d.repair), backgroundColor: typeColors.repair },
-                { label: typeLabels[3], data: trendData.map(d => d.other),  backgroundColor: typeColors.other },
+                { type: 'bar', label: typeLabels[0], data: trendData.map(d => d.salary), backgroundColor: typeColors.salary, stack: 'expenses' },
+                { type: 'bar', label: typeLabels[1], data: trendData.map(d => d.fuel),   backgroundColor: typeColors.fuel,   stack: 'expenses' },
+                { type: 'bar', label: typeLabels[2], data: trendData.map(d => d.repair), backgroundColor: typeColors.repair, stack: 'expenses' },
+                { type: 'bar', label: typeLabels[3], data: trendData.map(d => d.other),  backgroundColor: typeColors.other,  stack: 'expenses' },
+                { type: 'line', label: 'ប្រាក់ចំណេញ', data: trendData.map(d => d.profit),
+                  borderColor: '#059669', backgroundColor: '#059669', tension: 0.3,
+                  borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: '#059669', fill: false },
             ]
         },
         options: {

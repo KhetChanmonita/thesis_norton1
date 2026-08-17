@@ -109,6 +109,9 @@ body {
 .register-wrapper {
     display: flex;
     width: 100%;
+    max-width: 1200px;
+    max-height: 1000px;
+    margin: 40px auto;
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--box-shadow);

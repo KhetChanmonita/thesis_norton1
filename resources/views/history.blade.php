@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ប្រវត្តិការកក់ - LS Trucking Service</title>
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
@@ -20,7 +21,7 @@
     <p>ការកក់ និងប្រវត្តិការទូទាត់ទាំងអស់របស់អ្នក</p>
 </div>
 
-<div class="page-wrap" style="padding-top: 32px;">
+<div class="page-wrap his-page-wrap">
 
     @if(!Auth::user()->phone)
     <div class="no-phone-notice">
@@ -101,7 +102,7 @@
         $payLabel = [
             'unpaid'       => 'មិនទាន់បង់',
             'deposit_paid' => 'បង់ 50%',
-            'fully_paid'   => 'បានបង់ពេញ',
+            'fully_paid'   => 'បានបង់ប្រាក់',
         ];
         $typeLabel = $b->booking_type === 'import' ? 'នាំចូល' : 'នាំចេញ';
     @endphp
@@ -109,11 +110,11 @@
         <div class="booking-card-header">
             <div>
                 <div class="booking-id">
-                    <i class="fas fa-hashtag" style="color:#FF6B00;font-size:0.75rem;"></i>
-                    ការកក់ #{{ $b->booking_id }}
+                    <i class="fas fa-hashtag his-hash-icon"></i>
+                    ការកក់ {{ $b->formatted_id }}
                 </div>
                 <div class="booking-date">
-                    <i class="fas fa-calendar" style="margin-right:3px;"></i>
+                    <i class="fas fa-calendar mybk-cal-icon"></i>
                     {{ $b->booking_date ? \Carbon\Carbon::parse($b->booking_date)->format('d/m/Y') : '—' }}
                     @if($b->customer) &nbsp;·&nbsp; {{ $b->customer->full_name }} @endif
                 </div>
@@ -121,11 +122,11 @@
             <div class="badges">
                 <span class="badge badge-type">{{ $typeLabel }}</span>
                 <span class="badge badge-{{ $b->status }}">
-                    <i class="fas fa-circle" style="font-size:0.4rem;"></i>
+                    <i class="fas fa-circle mybk-status-dot"></i>
                     {{ $statusLabel[$b->status] ?? $b->status }}
                 </span>
                 <span class="badge badge-{{ $b->payment_status }}">
-                    <i class="fas fa-{{ $b->payment_status === 'fully_paid' ? 'check-circle' : ($b->payment_status === 'deposit_paid' ? 'circle-half-stroke' : 'times-circle') }}" style="font-size:0.65rem;"></i>
+                    <i class="fas fa-{{ $b->payment_status === 'fully_paid' ? 'check-circle' : ($b->payment_status === 'deposit_paid' ? 'circle-half-stroke' : 'times-circle') }} mybk-pay-icon"></i>
                     {{ $payLabel[$b->payment_status] ?? $b->payment_status }}
                 </span>
             </div>
@@ -134,14 +135,14 @@
         <div class="booking-card-body">
             <div class="booking-info">
                 <div class="route-row">
-                    <i class="fas fa-map-marker-alt" style="color:#FF6B00;font-size:0.75rem;"></i>
+                    <i class="fas fa-map-marker-alt mybk-pickup-icon"></i>
                     <span class="loc">{{ Str::limit($b->pickup_location ?? '—', 35) }}</span>
                     <i class="fas fa-long-arrow-alt-right route-arrow"></i>
-                    <i class="fas fa-map-marker-alt" style="color:#10b981;font-size:0.75rem;"></i>
+                    <i class="fas fa-map-marker-alt mybk-dropoff-icon"></i>
                     <span class="loc">{{ Str::limit($b->dropoff_location ?? '—', 35) }}</span>
                     @if($b->dropoff_location_link)
-                        <a href="{{ $b->dropoff_location_link }}" target="_blank" rel="noopener" style="color:#FF6B00;" title="មើលលើ Google Maps">
-                            <i class="fas fa-external-link-alt" style="font-size:0.7rem;"></i>
+                        <a href="{{ $b->dropoff_location_link }}" target="_blank" rel="noopener" class="mybk-maps-link" title="មើលលើ Google Maps">
+                            <i class="fas fa-external-link-alt mybk-maps-icon"></i>
                         </a>
                     @endif
                 </div>
@@ -167,7 +168,7 @@
                     @if($b->total_price)
                     <div class="meta-item">
                         <i class="fas fa-dollar-sign"></i>
-                        <strong style="color:#FF6B00;">${{ number_format($b->total_price, 2) }}</strong>
+                        <strong class="mybk-price-val">${{ number_format($b->total_price, 2) }}</strong>
                     </div>
                     @endif
                     @if($b->container_number)
@@ -180,7 +181,7 @@
                 @if($b->payments->isNotEmpty())
                 <div class="meta-row">
                     @foreach($b->payments as $pay)
-                    <div class="meta-item" style="background:#f0fdf4;padding:3px 8px;border-radius:6px;color:#059669;">
+                    <div class="meta-item mybk-pay-meta">
                         <i class="fas fa-check"></i>
                         ${{ number_format($pay->amount, 2) }}
                         — {{ \Carbon\Carbon::parse($pay->payment_date)->format('d/m/Y') }}
@@ -221,7 +222,7 @@
     {{-- Payment history table --}}
     @php $allPayments = $bookings->flatMap->payments->sortByDesc('payment_date'); @endphp
     @if($allPayments->isNotEmpty())
-    <div class="section-hdr" style="margin-top:8px;">
+    <div class="section-hdr mybk-history-hdr">
         <i class="fas fa-history"></i> ប្រវត្តិការទូទាត់
     </div>
     <div class="card">
@@ -244,27 +245,25 @@
                 @endphp
                 <tr>
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-weight:700;color:#FF6B00;
-                                     background:#fff3e8;padding:2px 8px;border-radius:5px;font-size:0.78rem;">
-                            #{{ $pay->booking_id }}
+                        <span class="mybk-pay-id">
+                            {{ $pay->booking?->formatted_id ?? '#'.$pay->booking_id }}
                         </span>
                     </td>
                     <td>
-                        <strong style="font-family:'Montserrat',sans-serif;color:#10b981;font-size:0.95rem;">
+                        <strong class="mybk-pay-amount">
                             ${{ number_format($pay->amount, 2) }}
                         </strong>
                     </td>
                     <td>
-                        <i class="fas {{ $icon }}" style="color:#FF6B00;margin-right:5px;font-size:0.75rem;"></i>
+                        <i class="fas {{ $icon }} mybk-pay-method-icon"></i>
                         {{ ucfirst(str_replace('_', ' ', $pay->payment_method ?? '—')) }}
                     </td>
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-size:0.75rem;color:#64748b;
-                                     background:#f8fafc;padding:2px 8px;border-radius:5px;border:1px solid #e2e8f0;">
+                        <span class="mybk-pay-ref">
                             {{ $pay->transaction_reference ?? '—' }}
                         </span>
                     </td>
-                    <td style="font-size:0.8rem;color:#475569;">
+                    <td class="mybk-pay-date">
                         {{ $pay->payment_date ? \Carbon\Carbon::parse($pay->payment_date)->format('d/m/Y') : '—' }}
                     </td>
                 </tr>
@@ -274,7 +273,7 @@
     </div>
     @endif
 
-    <div style="text-align:center;margin-top:8px;">
+    <div class="mybk-bottom-center">
         <a href="{{ route('trucks_section') }}" class="btn-new-booking">
             <i class="fas fa-plus"></i> កក់ថ្មី
         </a>

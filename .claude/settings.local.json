@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(php -r \"echo PHP_VERSION;\")",
-      "Bash(php artisan *)"
-    ]
-  }
-}

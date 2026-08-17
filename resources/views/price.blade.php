@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>តម្លៃសេវា | Trucking System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -79,7 +80,7 @@
                         <label id="port-label">
                             <i class="fas fa-anchor"></i>
                             <span id="port-label-text">មាត់ច្រកកំពង់ផែ</span>
-                            <span style="color:#ef4444;">*</span>
+                           
                         </label>
                         <select id="origin-port">
                             <option value="">-- ជ្រើសរើសកំពង់ផែ --</option>
@@ -93,7 +94,7 @@
                         <label>
                             <i class="fas fa-map-marker-alt"></i>
                             ខេត្ត/រាជធានីគោលដៅ
-                            <span style="color:#ef4444;">*</span>
+                           
                         </label>
                         <select id="destination-province">
                             <option value="">-- ជ្រើសរើសខេត្ត --</option>
@@ -133,7 +134,7 @@
                     </div>
                 </div>
                 <div class="result-actions">
-                    <a href="{{ route('login') }}" class="btn-book">
+                    <a href="/trucks_section" class="btn-book">
                         <i class="fas fa-calendar-check"></i> ចូលគណនីដើម្បីកក់
                     </a>
                     <a href="{{ route('contact') }}" class="btn-contact">
@@ -258,7 +259,7 @@
 <section class="faq-section">
     <div class="container">
         <div class="section-header">
-            <h2>សំណួរ<span class="highlight">ដែលគេសួរញឹកញាប់</span></h2>
+            <h2>សំណួរ<span class="highlight">ដែលអតិថិជនសួរជាញឹកញាប់</span></h2>
             <p>ស្វែងរកចម្លើយសម្រាប់សំណួររបស់អ្នក</p>
         </div>
 
@@ -272,15 +273,15 @@
                 <div class="faq-contact-list">
                     <div class="faq-contact-item">
                         <i class="fas fa-phone-alt"></i>
-                        <span>+855 12 345 678</span>
+                        <span>096 267 9042</span>
                     </div>
                     <div class="faq-contact-item">
                         <i class="fab fa-telegram-plane"></i>
-                        <span>@lstrucking</span>
+                        <span>@KCmonita11</span>
                     </div>
                     <div class="faq-contact-item">
                         <i class="fas fa-envelope"></i>
-                        <span>info@lstrucking.com</span>
+                        <span>khetchanmonita3@gmail.com</span>
                     </div>
                 </div>
                 <a href="{{ route('contact') }}" class="faq-contact-btn">

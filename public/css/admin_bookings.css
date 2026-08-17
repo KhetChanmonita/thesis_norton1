@@ -1,0 +1,148 @@
+/* ── Table header ── */
+.bkg-count-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-left: 4px;
+}
+
+/* ── Table ── */
+.bkg-row-num { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #64748b; }
+
+/* ── Filter bar ── */
+.bkg-filter-card { margin-bottom: 20px; }
+.bkg-filter-body { padding: 14px 22px; }
+.bkg-filter-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.bkg-filter-field-wide { flex: 1; min-width: 200px; }
+.bkg-filter-field-sm { min-width: 160px; }
+.bkg-filter-btns { display: flex; gap: 8px; padding-bottom: 1px; }
+
+/* ── Table cells ── */
+.bkg-id-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.83rem;
+    color: #FF6B00;
+    background: #fff3e8;
+    padding: 3px 10px;
+    border-radius: 6px;
+}
+.bkg-phone { color: #94a3b8; }
+.bkg-map-pin { color: #FF6B00; }
+.bkg-map-marker { color: #10b981; }
+.bkg-map-link { color: #FF6B00; }
+.bkg-action-btns { display: flex; gap: 6px; }
+.bkg-btn-disabled { opacity: 0.4; cursor: not-allowed; }
+.bkg-empty-cell { text-align: center; color: #94a3b8; padding: 32px; }
+.bkg-pagination { padding: 14px 22px; border-top: 1px solid #f1f5f9; }
+
+/* ── Modals ── */
+.bkg-modal-lg { max-width: 560px; }
+.bkg-modal-md { max-width: 440px; }
+.bkg-modal-map-link { display: none; color: #FF6B00; margin-left: 6px; }
+.bkg-modal-form-group { margin-bottom: 18px; }
+.bkg-hidden { display: none; }
+.bkg-no-margin { margin: 0; }
+
+/* ── Status modal — price field ── */
+.bkg-price-box {
+    background: #fff7ed;
+    border: 1.5px solid #fed7aa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 4px;
+}
+.bkg-price-box-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    color: #c2410c;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+.bkg-price-input-wrap { position: relative; }
+.bkg-price-prefix {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
+    color: #64748b;
+}
+.bkg-price-input-pl { padding-left: 28px; }
+.bkg-price-hint { font-size: 0.75rem; color: #94a3b8; margin-top: 6px; }
+
+/* ── Status modal — completed notice ── */
+.bkg-completed-box {
+    background: #f0fdf4;
+    border: 1.5px solid #bbf7d0;
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+.bkg-completed-box-inner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #065f46;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* ── Extra charge modal — standby ── */
+.bkg-standby-hint { font-size: 0.78rem; color: #94a3b8; margin-top: 6px; }
+.bkg-standby-total { color: #FF6B00; }
+
+/* ── Charge list (JS-rendered) ── */
+.bkg-charge-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
+.bkg-charge-reason { font-size: 0.85rem; color: #1e293b; }
+.bkg-charge-meta { display: flex; align-items: center; gap: 10px; }
+.bkg-charge-amount { color: #FF6B00; }
+.bkg-charge-resp { font-size: 0.72rem; font-weight: 700; }
+.bkg-file-link { color: #FF6B00; }
+
+/* ── Booking detail modal ── */
+.bkg-detail-section { margin-bottom: 20px; }
+.bkg-detail-section:last-child { margin-bottom: 0; }
+
+.bkg-detail-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #FF6B00;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.bkg-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+}
+
+.bkg-detail-full { grid-column: 1 / -1; }
+
+.bkg-detail-lbl {
+    display: block;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.bkg-detail-val {
+    display: block;
+    font-size: 0.86rem;
+    color: #1e293b;
+    font-weight: 600;
+    word-break: break-word;
+}

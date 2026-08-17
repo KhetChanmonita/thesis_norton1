@@ -13,33 +13,175 @@ body {
     overflow-x: hidden;
 }
 
-/* ── Hero ── */
+/* ── Hero Banner ── */
 .contact-hero {
-    background: linear-gradient(135deg, #d46b00 0%, #ff8a00 45%, #ffb347 100%);
+    background: url('/images/banner_contach.jpg') center/cover no-repeat;
     color: white;
     text-align: center;
-    padding: 140px 20px 90px;
     margin-top: 70px;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 540px;
 }
 
-.contact-hero-shape {
+.contact-hero-overlay {
     position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0.28) 100%);
 }
-.contact-hero-shape.s1 { width: 420px; height: 420px; background: rgba(255,255,255,0.07); top: -120px; right: -80px; }
-.contact-hero-shape.s2 { width: 260px; height: 260px; background: rgba(255,255,255,0.06); bottom: -80px; left: -50px; }
-.contact-hero-shape.s3 { width: 120px; height: 120px; background: rgba(255,255,255,0.09); top: 40px; left: 14%; }
 
-.contact-hero-float {
+.contact-hero-body {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px 50px;
+}
+
+.contact-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    padding: 8px 22px;
+    border-radius: 50px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.contact-hero h1 {
+    font-family: 'Montserrat', 'Kantumruy Pro', sans-serif;
+    font-size: 2.7rem;
+    font-weight: 800;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+}
+
+.contact-hero-hl {
+    background: rgba(255,138,0,0.85);
+    border-radius: 8px;
+    padding: 0 12px;
+    margin-left: 6px;
+    display: inline-block;
+}
+
+.contact-hero p {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 1rem;
+    opacity: 0.88;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+.contact-hero-features {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.38);
+    backdrop-filter: blur(6px);
+    padding: 16px 40px;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+.chf-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 30px;
+}
+
+.chf-item i { font-size: 1.05rem; color: #ffb347; }
+
+.chf-sep {
+    width: 1px;
+    height: 28px;
+    background: rgba(255,255,255,0.28);
+    flex-shrink: 0;
+}
+
+/* ── Image card (left column) ── */
+.contact-image-card {
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    background: url('/images/banner_contach.jpg') center/cover no-repeat;
+    min-height: 665px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.contact-image-overlay {
     position: absolute;
-    color: rgba(255,255,255,0.10);
-    pointer-events: none;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.30) 55%, rgba(0,0,0,0.10) 100%);
+    border-radius: 20px;
 }
 
-.contact-hero-body { position: relative; z-index: 1; }
+.contact-image-content {
+    position: relative;
+    z-index: 1;
+    padding: 32px 28px;
+    color: white;
+}
+
+.contact-image-content h2 {
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: white;
+    line-height: 1.2;
+}
+
+.contact-image-content > .contact-image-content p,
+.contact-image-content p {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    line-height: 1.75;
+    margin-bottom: 24px;
+}
+
+.cic-features { display: flex; flex-direction: column; gap: 14px; }
+
+.cic-feature {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.cic-icon {
+    width: 42px; height: 42px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: #ffb347;
+    flex-shrink: 0;
+    backdrop-filter: blur(4px);
+}
+
+.cic-text { display: flex; flex-direction: column; gap: 2px; }
+.cic-km { font-family: 'Kantumruy Pro', sans-serif; font-size: 0.83rem; font-weight: 700; color: #fff; }
+.cic-en { font-family: 'Poppins', sans-serif; font-size: 0.72rem; color: rgba(255,255,255,0.60); }
 
 .contact-hero-badge {
     display: inline-flex;
@@ -84,14 +226,15 @@ body {
 /* ── Main section ── */
 .contact-section {
     padding: 60px 20px 80px;
+    background: #f8f9fa;
 }
 
 .contact-container {
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 32px;
+    grid-template-columns: 360px 1fr 320px;
+    gap: 28px;
     align-items: start;
 }
 
@@ -248,7 +391,7 @@ body {
 .contact-info-col {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 39px;
 }
 
 .contact-info-card,
@@ -256,7 +399,7 @@ body {
 .contact-social-card {
     background: white;
     border-radius: 18px;
-    padding: 26px;
+    padding: 40px;
     box-shadow: 0 6px 24px rgba(0,0,0,0.07);
 }
 
@@ -384,14 +527,20 @@ body {
 .cs-btn:hover { transform: translateX(4px); }
 
 /* Responsive */
+@media (max-width: 1100px) {
+    .contact-container { grid-template-columns: 300px 1fr 290px; gap: 20px; }
+}
+
 @media (max-width: 900px) {
     .contact-container { grid-template-columns: 1fr; }
     .cf-row { grid-template-columns: 1fr; }
-    .contact-hero h1 { font-size: 2rem; }
-    .contact-hero-float { display: none; }
+    .contact-image-card { min-height: 340px; justify-content: flex-end; }
+    .contact-section { padding: 70px 16px 60px; }
 }
 
 @media (max-width: 480px) {
     .contact-form-card { padding: 22px 16px; }
-    .contact-hero { padding: 110px 16px 60px; }
+    .contact-image-card { min-height: 280px; }
+    .contact-image-content { padding: 20px 18px; }
+    .contact-image-content h2 { font-size: 1.4rem; }
 }

@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ភ្លេចពាក្យសម្ងាត់ | LS Trucking Service</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Kantumruy+Pro:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -26,7 +27,7 @@
 
                 @if (session('status'))
                     <div class="alert-success">
-                        <i class="fas fa-check-circle" style="flex-shrink:0;margin-top:2px"></i>
+                        <i class="fas fa-check-circle"></i>
                         {{ session('status') }}
                     </div>
                 @endif

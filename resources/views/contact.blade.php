@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>ទំនាក់ទំនង | LS Trucking Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -12,17 +13,22 @@
 <body>
 @include('partials.header')
 
-{{-- Hero --}}
+{{-- Hero Banner --}}
 <section class="contact-hero">
-    <div class="contact-hero-shape s1"></div>
-    <div class="contact-hero-shape s2"></div>
-    <div class="contact-hero-shape s3"></div>
-    <i class="fas fa-headset contact-hero-float" style="top:20%;right:8%;font-size:5rem;"></i>
-    <i class="fas fa-phone-alt contact-hero-float" style="bottom:20%;left:7%;font-size:3rem;transform:rotate(-15deg);"></i>
+    <div class="contact-hero-overlay"></div>
     <div class="contact-hero-body">
         <div class="contact-hero-badge"><i class="fas fa-comment-dots"></i> យើងស្ថិតនៅទីនេះ ២៤/៧</div>
-        <h1>ទំនាក់<span class="contact-hero-hl">ទំនងយើង</span></h1>
+        <h1>ទំនាក់ <span class="contact-hero-hl">ទំនងយើង</span></h1>
         <p>មានសំណួរអំពីតម្លៃ ការកក់ ឬសេវាកម្ម? ក្រុមការងាររបស់យើងរួចរាល់ជានិច្ច</p>
+    </div>
+    <div class="contact-hero-features">
+        <div class="chf-item"><i class="fas fa-globe"></i><span>ដឹកជញ្ជូនអន្តរជាតិ</span></div>
+        <div class="chf-sep"></div>
+        <div class="chf-item"><i class="fas fa-truck"></i><span>ដឹកជញ្ជូនក្នុងស្រុក</span></div>
+        <div class="chf-sep"></div>
+        <div class="chf-item"><i class="fas fa-box"></i><span>ផ្ទុក និងរួម</span></div>
+        <div class="chf-sep"></div>
+        <div class="chf-item"><i class="fas fa-shield-alt"></i><span>សុវត្ថិភាព និងទំនុកចិត្ត</span></div>
     </div>
 </section>
 
@@ -30,7 +36,46 @@
 <section class="contact-section">
     <div class="contact-container">
 
-        {{-- Left: form --}}
+        {{-- Left: image card --}}
+        <div class="contact-image-card">
+            <div class="contact-image-overlay"></div>
+            <div class="contact-image-content">
+                <h2>ទាក់ទងយើង</h2>
+                <p>មានសំណួរអំពីតម្លៃ ការកក់ ឬសេវាកម្ម?<br>ក្រុមការងាររបស់យើងរួចរាល់ជានិច្ច</p>
+                <div class="cic-features">
+                    <div class="cic-feature">
+                        <div class="cic-icon"><i class="fas fa-globe"></i></div>
+                        <div class="cic-text">
+                            <span class="cic-km">ការដឹកជញ្ជូនអន្តរជាតិ</span>
+                            <span class="cic-en">International Freight</span>
+                        </div>
+                    </div>
+                    <div class="cic-feature">
+                        <div class="cic-icon"><i class="fas fa-truck"></i></div>
+                        <div class="cic-text">
+                            <span class="cic-km">ការដឹកជញ្ជូនក្នុងស្រុក</span>
+                            <span class="cic-en">Road Transportation</span>
+                        </div>
+                    </div>
+                    <div class="cic-feature">
+                        <div class="cic-icon"><i class="fas fa-ship"></i></div>
+                        <div class="cic-text">
+                            <span class="cic-km">ការដឹកជញ្ជូនសមុទ្រ</span>
+                            <span class="cic-en">Ocean Freight</span>
+                        </div>
+                    </div>
+                    <div class="cic-feature">
+                        <div class="cic-icon"><i class="fas fa-warehouse"></i></div>
+                        <div class="cic-text">
+                            <span class="cic-km">ផ្ទុក និងសោហ៊ុយ</span>
+                            <span class="cic-en">Warehousing & 3PL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Middle: form --}}
         <div class="contact-form-card">
             <div class="contact-form-head">
                 <i class="fas fa-paper-plane"></i>
@@ -59,12 +104,12 @@
 
                 <div class="cf-row">
                     <div class="cf-group">
-                        <label><i class="fas fa-user"></i> ឈ្មោះពេញ <span>*</span></label>
+                        <label><i class="fas fa-user"></i> ឈ្មោះពេញ</label>
                         <input type="text" name="full_name" value="{{ old('full_name') }}"
                                placeholder="ឧ. សុខ សុភា" required>
                     </div>
                     <div class="cf-group">
-                        <label><i class="fas fa-phone-alt"></i> លេខទូរស័ព្ទ <span>*</span></label>
+                        <label><i class="fas fa-phone-alt"></i> លេខទូរស័ព្ទ</label>
                         <input type="text" name="phone" value="{{ old('phone') }}"
                                placeholder="ឧ. 012 345 678" required>
                     </div>
@@ -84,7 +129,7 @@
                 </div>
 
                 <div class="cf-group">
-                    <label><i class="fas fa-tag"></i> ប្រភេទសំណួរ <span>*</span></label>
+                    <label><i class="fas fa-tag"></i> ប្រភេទសំណួរ</label>
                     <select name="inquiry_type" required>
                         <option value="">-- ជ្រើសរើសប្រភេទ --</option>
                         <option value="price"       {{ old('inquiry_type')=='price'       ? 'selected':'' }}>សំណួរអំពីតម្លៃ</option>
@@ -96,7 +141,7 @@
                 </div>
 
                 <div class="cf-group">
-                    <label><i class="fas fa-comment-alt"></i> សារ <span>*</span></label>
+                    <label><i class="fas fa-comment-alt"></i> សារ</label>
                     <textarea name="message" rows="5"
                               placeholder="សូមសរសេរសំណួរ ឬតម្រូវការរបស់អ្នក..." required>{{ old('message') }}</textarea>
                 </div>
@@ -117,57 +162,39 @@
                         <div class="ci-icon"><i class="fas fa-phone-alt"></i></div>
                         <div>
                             <div class="ci-label">ទូរស័ព្ទ</div>
-                            <div class="ci-val">+855 12 345 678</div>
-                            <div class="ci-val">+855 23 456 789</div>
+                            <div class="ci-val">096 267 9042</div>
                         </div>
                     </div>
                     <div class="ci-item">
                         <div class="ci-icon"><i class="fab fa-telegram-plane"></i></div>
                         <div>
                             <div class="ci-label">Telegram</div>
-                            <div class="ci-val">@lstrucking</div>
+                            <div class="ci-val">@KCmonita11</div>
                         </div>
                     </div>
                     <div class="ci-item">
                         <div class="ci-icon"><i class="fas fa-envelope"></i></div>
                         <div>
                             <div class="ci-label">អុីម៉ែល</div>
-                            <div class="ci-val">info@lstrucking.com</div>
+                            <div class="ci-val">khetchanmonita3@gmail.com</div>
                         </div>
                     </div>
                     <div class="ci-item">
                         <div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <div>
                             <div class="ci-label">អាសយដ្ឋាន</div>
-                            <div class="ci-val">កំពង់ផែព្រះសីហនុ, ខេត្តព្រះសីហនុ</div>
-                            <div class="ci-val">ព្រះរាជាណាចក្រកម្ពុជា</div>
+                            <div class="ci-val">ផ្លូវបឹងទទឹងថ្ងៃ២ ផ្ទះលេខ ៩៨៣ ខណ្ឌជ្រោយចង្វា រាជធានីភ្នំពេញ</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="contact-hours-card">
-                <h3><i class="fas fa-clock"></i> ម៉ោងធ្វើការ</h3>
-                <div class="ch-row">
-                    <span>ចន្ទ – សុក្រ</span>
-                    <span class="ch-time">ម៉ោង ៧:០០ – ១៨:០០</span>
-                </div>
-                <div class="ch-row">
-                    <span>សៅរ៍ – អាទិត្យ</span>
-                    <span class="ch-time">ម៉ោង ៨:០០ – ១៧:០០</span>
-                </div>
-                <div class="ch-note">
-                    <i class="fas fa-headset"></i>
-                    <span>បន្ទប់ควบคุมស្ថានភាពការដឹក ២៤/៧</span>
-                </div>
-            </div>
 
             <div class="contact-social-card">
                 <h3>តាមដានយើង</h3>
                 <div class="cs-links">
-                    <a href="#" class="cs-btn facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
-                    <a href="#" class="cs-btn telegram"><i class="fab fa-telegram-plane"></i> Telegram</a>
-                    <a href="#" class="cs-btn tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
+                    <a href="https://t.me/+855962679042" target="_blank" class="cs-btn telegram"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                    <a href="https://www.tiktok.com/@khetchanmonita" target="_blank" class="cs-btn tiktok"><i class="fab fa-tiktok"></i> TikTok</a>
                 </div>
             </div>
 

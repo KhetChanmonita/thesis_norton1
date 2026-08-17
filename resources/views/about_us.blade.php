@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>អំពីយើង | LS Trucking Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -15,10 +16,9 @@
 {{-- ══ HERO ══ --}}
 <section class="au-hero">
     <div class="au-hero-left">
-        <span class="au-hero-tag">អំពីយើង</span>
-        <h1>បទពិសោធន៍</h1>
+        <h1>ជាដៃគូទុកចិត្ត<br><span class="au-orange">ក្នុងការដឹកជញ្ជូនគ្រប់ទីកន្លែង</span></h1>
         <div class="au-hero-line"></div>
-        <p>LS Trucking Service ជាក្រុមហ៊ុនដឹកជញ្ជូនដែលមានបទពិសោធន៍ជាង ៩ ឆ្នាំ ក្នុងការដឹកជញ្ជូនទំនិញពីកំពង់ផែ ទៅដល់គ្រប់ ២៥ ខេត្ត-រាជធានីទូទាំងប្រទេស ។ យើងប្រើប្រាស់បច្ចេកវិទ្យាទំនើប ដើម្បីផ្តល់សេវាកម្មដ៏ល្អ ទំនួលខុសត្រូវ និងទំនុកចត្ត ដល់អតិថិជនគ្រប់រូប ។</p>
+        <p>LS Trucking Service ជាក្រុមហ៊ុនដឹកជញ្ជូនដែលមានបទពិសោធន៍ជាង ៣ ឆ្នាំ ក្នុងការដឹកជញ្ជូនទំនិញពីកំពង់ផែ ទៅដល់គ្រប់ ២៥ ខេត្ត-រាជធានីទូទាំងប្រទេស ។ យើងប្រើប្រាស់បច្ចេកវិទ្យាទំនើប ដើម្បីផ្តល់សេវាកម្មដ៏ល្អ ទំនួលខុសត្រូវ និងទំនុកចត្ត ដល់អតិថិជនគ្រប់រូប ។</p>
 
         <a href="{{ route('contact') }}" class="au-hero-btn">
             <i class="fas fa-arrow-right"></i> ទំនាក់ទំនងយើង
@@ -29,60 +29,93 @@
     </div>
 </section>
 
-{{-- ══ STATS BAR ══ --}}
+{{-- ══ FEATURE BAR ══ --}}
 <div class="au-stats-wrap">
-    <div class="au-stats-bar">
-        <div class="au-stat-item">
-            <div class="au-stat-icon"><i class="fas fa-truck"></i></div>
-            <div class="au-stat-body">
-                <span class="au-stat-num">10+</span>
-                <span class="au-stat-title">ឡានរថយន្តធំ</span>
-                <span class="au-stat-sub">បទពិសោធន៍ដឹកជញ្ជូន</span>
+    <div class="au-feature-bar">
+        <div class="au-feature-item">
+            <div class="au-feature-icon"><i class="fas fa-shield-alt"></i></div>
+            <div>
+                <h4 class="au-feature-title">សុវត្ថិភាពជាទម្លាប់</h4>
+                <p class="au-feature-desc">យើងធានាសុវត្ថិភាពទំនិញរបស់អ្នកគ្រប់ដំណាក់កាល តាមស្តង់ដារខ្ពស់បំផុត ។</p>
             </div>
         </div>
-        <div class="au-stat-sep"></div>
-        <div class="au-stat-item">
-            <div class="au-stat-icon"><i class="fas fa-users"></i></div>
-            <div class="au-stat-body">
-                <span class="au-stat-num">900+</span>
-                <span class="au-stat-title">អតិថិជន</span>
-                <span class="au-stat-sub">ភ្ញៀវចាត់ចែងបំណឹងសេវាកម្មមើលយើង</span>
+        <div class="au-feature-sep"></div>
+        <div class="au-feature-item">
+            <div class="au-feature-icon"><i class="fas fa-clock"></i></div>
+            <div>
+                <h4 class="au-feature-title">ដឹកជញ្ជូនទាន់ពេលវេលា</h4>
+                <p class="au-feature-desc">ការដឹកជញ្ជូនរបស់យើងតែងតែទាន់ពេលវេលា ស្របតាមកាលវិភាគដែលបានកំណត់ ។</p>
             </div>
         </div>
-        <div class="au-stat-sep"></div>
-        <div class="au-stat-item">
-            <div class="au-stat-icon"><i class="fas fa-map-marker-alt"></i></div>
-            <div class="au-stat-body">
-                <span class="au-stat-num">25+</span>
-                <span class="au-stat-title">តំបន់គ្រប់ដណ្តប់</span>
-                <span class="au-stat-sub">ខេត្ត និងក្រោយប្រទេស</span>
+        <div class="au-feature-sep"></div>
+        <div class="au-feature-item">
+            <div class="au-feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+                <h4 class="au-feature-title">គ្របដណ្តប់ទូទាំងប្រទេស</h4>
+                <p class="au-feature-desc">បណ្តាញសេវាកម្មរបស់យើងគ្របដណ្តប់គ្រប់ ២៥ ខេត្ត-រាជធានីទូទាំងប្រទេស ។</p>
             </div>
         </div>
-        <div class="au-stat-sep"></div>
-        <div class="au-stat-item">
-            <div class="au-stat-icon"><i class="fas fa-shield-alt"></i></div>
-            <div class="au-stat-body">
-                <span class="au-stat-num">100%</span>
-                <span class="au-stat-title">សុវត្ថិភាព</span>
-                <span class="au-stat-sub">ទំនុកបម្រុងសុវត្ថិភាព 100%</span>
+        <div class="au-feature-sep"></div>
+        <div class="au-feature-item">
+            <div class="au-feature-icon"><i class="fas fa-headset"></i></div>
+            <div>
+                <h4 class="au-feature-title">សេវាជំនួយទាន់ពេលវេលា 24/7</h4>
+                <p class="au-feature-desc">ក្រុមការងាររបស់យើងត្រៀមខ្លួនជួយអ្នកគ្រប់ពេលវេលា និងគ្រប់ស្ថានភាព ។</p>
             </div>
         </div>
     </div>
 </div>
 
+{{-- ══ ABOUT COMPANY ══ --}}
+<section class="au-company-section">
+    <div class="au-container">
+        <div class="au-company-grid">
+            <div class="au-company-left">
+                <div class="au-company-tag">
+                    <span class="au-company-dash"></span>
+                    <h2>អំពីក្រុមហ៊ុន</h2>
+                </div>
+                <p>LS Trucking Service ជាក្រុមហ៊ុនដឹកជញ្ជូនទំនិញ ដែលបង្កើតឡើងដោយក្រុមការងារដែលមានបទពិសោធន៍ និងជំនាញវិជ្ជាជីវៈ ។ យើងប្តេជ្ញាផ្តល់សេវាកម្មប្រកបដោយគុណភាព សុវត្ថិភាព និងភាពជឿទុកចិត្ត ដើម្បីបំពេញតម្រូវការអាជីវកម្មរបស់អតិថិជនគ្រប់ប្រភេទ ។</p>
+            </div>
+            <div class="au-company-stats">
+                <div class="au-company-stat">
+                    <div class="au-company-stat-icon"><i class="fas fa-user-tie"></i></div>
+                    <span class="au-company-stat-num">10+</span>
+                    <span class="au-company-stat-label">បុគ្គលិកជំនាញ</span>
+                </div>
+                <div class="au-company-stat">
+                    <div class="au-company-stat-icon"><i class="fas fa-users"></i></div>
+                    <span class="au-company-stat-num">៣ ឆ្នាំ</span>
+                    <span class="au-company-stat-label">បទពិសោធន៍</span>
+                </div>
+                <div class="au-company-stat">
+                    <div class="au-company-stat-icon"><i class="fas fa-truck"></i></div>
+                    <span class="au-company-stat-num">1,000+</span>
+                    <span class="au-company-stat-label">ការដឹកជញ្ជូនជោគជ័យ</span>
+                </div>
+                <div class="au-company-stat">
+                    <div class="au-company-stat-icon"><i class="fas fa-award"></i></div>
+                    <span class="au-company-stat-num">98%</span>
+                    <span class="au-company-stat-label">ការពេញចិត្តរបស់អតិថិជន</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 {{-- ══ MISSION / VISION / VALUES ══ --}}
 <section class="au-mvv-section">
     <div class="au-container">
         <div class="au-mvv-head">
-            <h2>មេសកកម្ម និងគុណតម្លៃ<span class="au-orange">មេស់យើង</span></h2>
+            <h2>បេសកម្ម និងគុណតម្លៃ<span class="au-orange">របស់យើង</span></h2>
             <div class="au-mvv-line"></div>
         </div>
 
         <div class="au-mvv-grid">
             <div class="au-mvv-card">
                 <div class="au-mvv-icon-wrap"><i class="fas fa-bullseye"></i></div>
-                <h3>មេសកកម្ម</h3>
-                <p>ផ្តល់សេវាកម្មដឹកជញ្ជូនប្រកបដោយគុណភាព ភាពស្មោះត្រង់ និងទំនួលខុសត្រូវ ដើម្បីបំណឹងតម្រូវការអតិថិជន និងពង្រឹងសេដ្ឋកិច្ចជាតិ ។</p>
+                <h3>បេសកម្ម</h3>
+                <p>ផ្តល់សេវាកម្មដឹកជញ្ជូនប្រកបដោយគុណភាព ភាពស្មោះត្រង់ និងទំនួលខុសត្រូវ ដើម្បីបំពេញតម្រូវការអតិថិជន និងពង្រឹងសេដ្ឋកិច្ចជាតិ ។</p>
             </div>
             <div class="au-mvv-card">
                 <div class="au-mvv-icon-wrap"><i class="fas fa-eye"></i></div>
@@ -107,7 +140,6 @@
 <section class="au-timeline-section">
     <div class="au-container">
         <div class="au-section-head">
-            <span class="au-section-tag"><i class="fas fa-history"></i> ប្រវត្តិក្រុមហ៊ុន</span>
             <h2>ដំណាក់កាល<span class="au-orange">ការអភិវឌ្ឍ</span></h2>
             <p>ចំណុចសំខាន់ៗក្នុងដំណើររបស់ LS Trucking Service</p>
         </div>
@@ -116,31 +148,31 @@
             <div class="au-tl-item au-tl-left">
                 <div class="au-tl-dot"><i class="fas fa-flag"></i></div>
                 <div class="au-tl-card">
-                    <span class="au-tl-year">២០១៥</span>
+                    <span class="au-tl-year">២០២២</span>
                     <h4>ការបង្កើតក្រុមហ៊ុន</h4>
-                    <p>LS Trucking Service ចាប់ផ្តើមប្រតិបត្តិការ ជាមួយរថយន្ត ៣ គ្រឿង និងបុគ្គលិក ១០ នាក់ ពីកំពង់ផែព្រះសីហនុ។</p>
+                    <p>LS Trucking Service ចាប់ផ្តើមប្រតិបត្តិការ ជាមួយរថយន្ត ១ គ្រឿង និងបុគ្គលិក ១ នាក់ និងបម្រើការនៅកំពុងផែភ្នំព្រះសីហនុ ។</p>
                 </div>
             </div>
             <div class="au-tl-item au-tl-right">
                 <div class="au-tl-dot"><i class="fas fa-truck"></i></div>
                 <div class="au-tl-card">
-                    <span class="au-tl-year">២០១៧</span>
+                    <span class="au-tl-year">២០២៤</span>
                     <h4>ពង្រីករថយន្ត</h4>
-                    <p>ពង្រីករថយន្តដល់ ២០ គ្រឿង និងចាប់ផ្តើមដំណើរការពីកំពង់ផែភ្នំពេញ ។</p>
+                    <p>ពង្រីករថយន្តដល់ ១០ គ្រឿង និងចាប់ផ្តើមដំណើរការពីកំពង់ផែភ្នំពេញ ។</p>
                 </div>
             </div>
             <div class="au-tl-item au-tl-left">
                 <div class="au-tl-dot"><i class="fas fa-map-marked-alt"></i></div>
                 <div class="au-tl-card">
-                    <span class="au-tl-year">២០១៩</span>
+                    <span class="au-tl-year">២០២៦</span>
                     <h4>គ្របដណ្តប់ ២៥ ខេត្ត</h4>
-                    <p>LS Trucking ក្លាយជាក្រុមហ៊ុនដំបូងគេដែលអាចដឹកជញ្ជូនទំនិញទៅគ្រប់ ២៥ ខេត្ត-រាជធានី។</p>
+                    <p>LS Truckingពង្រីករថយន្តដល់ ១៨ គ្រឿង ក្លាយជាក្រុមហ៊ុនដែលអាចដឹកជញ្ជូនទំនិញទៅគ្រប់ ២៥ ខេត្ត-រាជធានី។</p>
                 </div>
             </div>
             <div class="au-tl-item au-tl-right">
                 <div class="au-tl-dot"><i class="fas fa-laptop"></i></div>
                 <div class="au-tl-card">
-                    <span class="au-tl-year">២០២២</span>
+                    <span class="au-tl-year">២០២៦</span>
                     <h4>ប្រព័ន្ធឌីជីថល</h4>
                     <p>បើកដំណើរការប្រព័ន្ធគ្រប់គ្រងការកក់អនឡាញ ដើម្បីបង្កើនភាពងាយស្រួលដល់អតិថិជន។</p>
                 </div>
@@ -148,9 +180,9 @@
             <div class="au-tl-item au-tl-left">
                 <div class="au-tl-dot au-tl-dot-active"><i class="fas fa-star"></i></div>
                 <div class="au-tl-card au-tl-card-active">
-                    <span class="au-tl-year">២០២៥</span>
+                    <span class="au-tl-year">នៅឆ្នាំខាងមុខ​ ២០២៧</span>
                     <h4>ឈានមុខគេ</h4>
-                    <p>LS Trucking Service ឈានដល់ ៥០+ រថយន្ត ១០០+ បុគ្គលិក ជាក្រុមហ៊ុនដឹកជញ្ជូនល្បីបំផុតក្នុងប្រទេស។</p>
+                    <p>LS Trucking Service អាចឈានដល់ ៣០+ រថយន្ត ៣០+ បុគ្គលិក ជាក្រុមហ៊ុនដឹកជញ្ជូនល្បីបំផុតក្នុងប្រទេស។</p>
                 </div>
             </div>
         </div>
@@ -194,7 +226,7 @@
             <div class="au-why-card">
                 <div class="au-why-icon"><i class="fas fa-handshake"></i></div>
                 <h4>ការទំនុកចិត្ត</h4>
-                <p>អតិថិជនជាង ១,០០០ រូបបានផ្តល់ការទុកចិត្ត ដោយមានប្រវត្តិ ៩ ឆ្នាំ</p>
+                <p>អតិថិជនជាង ១,០០០ រូបបានផ្តល់ការទុកចិត្ត ដោយមានប្រវត្តិ 3 ឆ្នាំ</p>
             </div>
         </div>
     </div>
@@ -204,62 +236,100 @@
 <section class="au-team-section">
     <div class="au-container">
         <div class="au-section-head">
-            <span class="au-section-tag"><i class="fas fa-users"></i> ក្រុមការងារ</span>
             <h2>ក្រុម<span class="au-orange">ដឹកនាំ</span>របស់យើង</h2>
             <p>អ្នកជំនាញដែលនាំមកនូវបទពិសោធន៍ និងទស្សនវិស័យ</p>
         </div>
         <div class="au-team-grid">
             <div class="au-team-card">
                 <div class="au-team-img">
-                    <img src="{{ asset('images/choose-us.jpg') }}" alt="CEO">
+                    <img src="{{ asset('images/boss/leangsry.png') }}" alt="CEO">
                     <div class="au-team-overlay">
                         <div class="au-team-socials">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#"><i class="fab fa-telegram-plane"></i></a>
+                            
                         </div>
                     </div>
                 </div>
                 <div class="au-team-info">
-                    <h4>កញ្ញា ខេត្ត ចាន់មូនីតា</h4>
-                    <span class="au-team-role">នាយកប្រតិបត្តិ (CEO)</span>
-                    <p>ជំនាញផ្នែកគ្រប់គ្រង និងយុទ្ធសាស្ត្រអាជីវកម្ម ជាង ១០ ឆ្នាំ</p>
-                </div>
-            </div>
-            <div class="au-team-card">
-                <div class="au-team-img">
-                    <img src="{{ asset('images/import-pp.png') }}" alt="COO">
-                    <div class="au-team-overlay">
-                        <div class="au-team-socials">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#"><i class="fab fa-telegram-plane"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="au-team-info">
-                    <h4>លោក សុខកាយ សុបញ្ញា</h4>
-                    <span class="au-team-role">អគ្គនាយកប្រតិបត្តិ (COO)</span>
-                    <p>ជំនាញផ្នែកប្រតិបត្តិការ និងការគ្រប់គ្រងខ្សែច្រវ៉ាក់ផ្គត់ផ្គង់</p>
-                </div>
-            </div>
-            <div class="au-team-card">
-                <div class="au-team-img">
-                    <img src="{{ asset('images/import-shv.png') }}" alt="Operations">
-                    <div class="au-team-overlay">
-                        <div class="au-team-socials">
-                            <a href="#"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#"><i class="fab fa-telegram-plane"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="au-team-info">
-                    <h4>កញ្ញា ហុន លីណា</h4>
+                    <h4>ស្រេង លាងស្រុី</h4>
                     <span class="au-team-role">នាយកប្រតិបត្តិការ</span>
-                    <p>ជំនាញផ្នែកប្រតិបត្តិការ និងការសម្របសម្រួលក្រុមមន្ត្រី</p>
+                    <p>ជំនាញពាណិជ្ជកម្មអន្តរជាតិ និងយុទ្ធសាស្ត្រអាជីវកម្ម ជាង ១០ ឆ្នាំ</p>
                 </div>
             </div>
+            <div class="au-team-card">  
+                <div class="au-team-img">
+                    <img src="{{ asset('images/boss/socheata.png') }}" alt="COO">
+                    <div class="au-team-overlay">
+                        <div class="au-team-socials">
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="au-team-info">
+                    <h4>ស្រេង សុជាតា</h4>
+                    <span class="au-team-role">អគ្គនាយករងប្រតិបត្តិការ</span>
+                    <p>ជំនាញផ្នែកប្រតិបត្តិការ និងជើងសារគយ​ ជាង ១៥​ ឆ្នាំ</p>
+                </div>
+            </div>
+            <div class="au-team-card">
+                <div class="au-team-img">
+                    <img src="{{ asset('images/boss/sovann.png') }}" alt="Operations">
+                    <div class="au-team-overlay">
+                        <div class="au-team-socials">
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="au-team-info">
+                    <h4>ពេជ្រធុន សុវណ្ណ</h4>
+                    <span class="au-team-role">អ្នកគ្រប់គ្រងប្រតិបត្តិការទូទៅ</span>
+                    <p>ជំនាញផ្នែកប្រតិបត្តិការ និងគ្រប់គ្រងពាណិជ្ជកម្ម ជាង ៨ ឆ្នាំ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ══ STAFF ══ --}}
+<section class="au-staff-section">
+    <div class="au-container">
+        <div class="au-section-head">
+            <h2>ក្រុមការងារ<span class="au-orange">របស់យើង</span></h2>
+            <p>ក្រុមបុគ្គលិកដែលឧស្សាហ៍ព្យាយាម និងសកម្មក្នុងការផ្តល់សេវាកម្ម</p>
+        </div>
+        <div class="au-staff-grid">
+            <div class="au-staff-card">
+                <div class="au-staff-img-wrap">
+                    <img src="{{ asset('images/staff/nita.png') }}" alt="Staff 1">
+                    <div class="au-staff-icon"><i class="fas fa-user"></i></div>
+                </div>
+                <h4 class="au-staff-name">ខេត្ត ចាន់មូនីតា</h4>
+                <span class="au-staff-role">គណនីករ</span>
+            </div>
+            <div class="au-staff-card">
+                <div class="au-staff-img-wrap">
+                    <img src="{{ asset('images/staff/lina.png') }}" alt="Staff 2">
+                    <div class="au-staff-icon"><i class="fas fa-user"></i></div>
+                </div>
+                <h4 class="au-staff-name">ហុន លីណា</h4>
+                <span class="au-staff-role">ផ្នែកប្រតិបត្តិការ</span>
+            </div>
+            <div class="au-staff-card">
+                <div class="au-staff-img-wrap">
+                    <img src="{{ asset('images/staff/panha.png') }}" alt="Staff 3">
+                    <div class="au-staff-icon"><i class="fas fa-user"></i></div>
+                </div>
+                <h4 class="au-staff-name">ឈុន បញ្ញា</h4>
+                <span class="au-staff-role">អ្នកដឹកជញ្ជូនឯកសារ</span>
+            </div>
+             <div class="au-staff-card">
+                <div class="au-staff-img-wrap">
+                    <img src="{{ asset('images/staff/lin.jpg') }}" alt="Staff 3">
+                    <div class="au-staff-icon"><i class="fas fa-user"></i></div>
+                </div>
+                <h4 class="au-staff-name">យ៉ាន ដាលីន</h4>
+                <span class="au-staff-role">អ្នករៀបចំឯកសារ</span>
+            </div>
+           
         </div>
     </div>
 </section>
@@ -270,7 +340,7 @@
     <div class="au-cta-shape c2"></div>
     <div class="au-container au-cta-body">
         <div class="au-cta-left">
-            <h2>ត្រៀមខ្លួនជាមួយ<br><span style="color:#ffb347;">ដៃគូដឹកជញ្ជូន</span>របស់អ្នក?</h2>
+            <h2>ត្រៀមខ្លួនជាមួយ<br><span class="au-cta-highlight">ដៃគូដឹកជញ្ជូន</span>របស់អ្នក?</h2>
             <p>ទំនាក់ទំនងមកយើងថ្ងៃនេះ ឬប្រើប្រាស់ប្រព័ន្ធគណនាតម្លៃរបស់យើងដើម្បីចាប់ផ្តើម</p>
         </div>
         <div class="au-cta-right">

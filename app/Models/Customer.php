@@ -24,4 +24,9 @@ class Customer extends Model
     {
         return $this->hasMany(Booking::class, 'customer_id', 'customer_id');
     }
+
+    public function latestBooking()
+    {
+        return $this->hasOne(Booking::class, 'customer_id', 'customer_id')->latest();
+    }
 }

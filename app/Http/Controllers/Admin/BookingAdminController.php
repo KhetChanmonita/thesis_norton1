@@ -5,13 +5,21 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\BookingStatusHistory;
+use App\Models\ExtraCharge;
 use Illuminate\Http\Request;
 
 class BookingAdminController extends Controller
 {
+    public const CHARGE_TYPE_LABELS = [
+        'extra_charge' => 'ការគិតប្រាក់បន្ថែម (Extra Charge)',
+        'empty_return' => 'ត្រឡប់ទទេ (Empty Return)',
+        'overweight'   => 'ទម្ងន់លើស (Over Weight)',
+        'standby'      => 'ឈប់រង់ចាំ (Standby)',
+    ];
+
     public function index(Request $request)
     {
-        $query = Booking::with('customer');
+        $query = Booking::with(['customer', 'truck', 'extraCharges']);
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -29,6 +37,10 @@ class BookingAdminController extends Controller
 
     public function updateStatus(Request $request, Booking $booking)
     {
+        if (in_array($booking->status, ['completed', 'cancelled'])) {
+            return back()->with('error', 'ការកក់នេះបានបញ្ចប់ ឬបានលុបចោលរួចហើយ — មិនអាចផ្លាស់ប្ដូរស្ថានភាពបានទេ!');
+        }
+
         $request->validate([
             'status'      => 'required|in:pending,confirmed,in_progress,completed,cancelled',
             'total_price' => 'nullable|numeric|min:0',
@@ -75,5 +87,41 @@ class BookingAdminController extends Controller
     {
         $booking->delete();
         return back()->with('success', 'ការកក់ត្រូវបានលុប!');
+    }
+
+    public function storeExtraCharge(Request $request, Booking $booking)
+    {
+        $request->validate([
+            'charge_type' => 'required|in:extra_charge,empty_return,overweight,standby',
+            'days'        => 'required_if:charge_type,standby|nullable|integer|min:1',
+            'amount'      => 'required_unless:charge_type,standby|nullable|numeric|min:0.01',
+            'note'        => 'nullable|string|max:500',
+        ]);
+
+        $amount = $request->charge_type === 'standby'
+            ? $request->days * 50
+            : $request->amount;
+
+        $reason = self::CHARGE_TYPE_LABELS[$request->charge_type];
+        if ($request->charge_type === 'standby') {
+            $reason .= ' — ' . $request->days . ' ថ្ងៃ x $50';
+        }
+        if ($request->filled('note')) {
+            $reason .= ' (' . $request->note . ')';
+        }
+
+        ExtraCharge::create([
+            'booking_id' => $booking->booking_id,
+            'amount'     => $amount,
+            'reason'     => $reason,
+            'date'       => now()->toDateString(),
+        ]);
+
+        // Extra charges add directly to the booking total, so the customer's
+        // remaining 50% payment reflects the new cost.
+        $newTotal = ($booking->total_price ?? 0) + $amount;
+        $booking->update(['total_price' => $newTotal]);
+
+        return back()->with('success', 'ការគិតប្រាក់បន្ថែមត្រូវបានបន្ថែម! តម្លៃសរុបថ្មី = $' . number_format($newTotal, 2));
     }
 }

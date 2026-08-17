@@ -45,15 +45,15 @@
     <form method="GET" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
 
         <div>
-            <label style="font-size:0.78rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;">ស្វែងរក</label>
+            <label style="font-size:0.78rem;font-weight:400;color:#475569;display:block;margin-bottom:5px;">ស្វែងរក</label>
             <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="ឈ្មោះអតិថិជន / លេខយោង"
+                   placeholder="ឈ្មោះអតិថិជន / លេខការកក់"
                    style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;
                           font-family:'Kantumruy Pro',sans-serif;font-size:0.85rem;width:240px;outline:none;">
         </div>
 
         <div>
-            <label style="font-size:0.78rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;">វិធីទូទាត់</label>
+            <label style="font-size:0.78rem;font-weight:400;color:#475569;display:block;margin-bottom:5px;">វិធីទូទាត់</label>
             <select name="method"
                     style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;
                            font-family:'Kantumruy Pro',sans-serif;font-size:0.85rem;background:#fff;outline:none;">
@@ -67,10 +67,25 @@
         </div>
 
         <div>
-            <label style="font-size:0.78rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;">កាលបរិច្ឆេទ</label>
-            <input type="date" name="date" value="{{ request('date') }}"
-                   style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;
-                          font-family:'Montserrat',sans-serif;font-size:0.85rem;outline:none;">
+            <label style="font-size:0.78rem;font-weight:400;color:#475569;display:block;margin-bottom:5px;">កាលបរិច្ឆេទ</label>
+            <div style="position:relative;">
+                <style>
+                    #pmDateFilter::-webkit-datetime-edit { color: {{ request('date') ? 'inherit' : 'transparent' }}; }
+                    #pmDateFilter:focus::-webkit-datetime-edit { color: inherit; }
+                </style>
+                <input type="date" name="date" id="pmDateFilter" value="{{ request('date') }}"
+                       style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;
+                              font-family:'Kantumruy Pro',sans-serif;font-size:0.85rem;outline:none;"
+                       oninput="document.getElementById('pmDatePh').style.display='none';this.style.setProperty('--c','inherit');document.querySelector('#pmDateFilter').style.cssText+=';color:inherit'"
+                       onchange="document.getElementById('pmDatePh').style.display=this.value?'none':'block'">
+                <span id="pmDatePh"
+                      style="position:absolute;left:14px;top:50%;transform:translateY(-50%);
+                             color:#94a3b8;font-size:0.83rem;pointer-events:none;
+                             font-family:'Kantumruy Pro',sans-serif;
+                             display:{{ request('date') ? 'none' : 'block' }};">
+                    ថ្ងៃ/ខែ/ឆ្នាំ
+                </span>
+            </div>
         </div>
 
         <button type="submit" class="btn btn-ghost" style="padding:9px 18px;">
@@ -90,7 +105,7 @@
         <div class="card-title">
             <i class="fas fa-receipt"></i>
             បញ្ជីការបង់ប្រាក់
-            <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;
+            <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:400;
                          background:#f1f5f9;color:#64748b;padding:2px 10px;border-radius:50px;margin-left:4px;">
                 {{ $payments->total() }}
             </span>
@@ -104,10 +119,12 @@
                     <th style="width:48px;">ល.រ</th>
                     <th>អតិថិជន</th>
                     <th>លេខការកក់</th>
+                    <th>ដំណាក់កាល</th>
                     <th>ចំនួនទឹកប្រាក់</th>
                     <th>វិធីទូទាត់</th>
-                    <th>លេខយោង</th>
+                    <th>ប្រតិបត្តិការ</th>
                     <th>កាលបរិច្ឆេទ</th>
+                    <th style="text-align:center;">ការផ្ទៀងផ្ទាត់</th>
                     <th style="text-align:center;">សកម្មភាព</th>
                 </tr>
             </thead>
@@ -115,7 +132,7 @@
                 @forelse($payments as $p)
                 <tr>
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-weight:700;
+                        <span style="font-family:'Montserrat',sans-serif;font-weight:400;
                                      color:#94a3b8;font-size:0.82rem;">
                             {{ ($payments->currentPage() - 1) * $payments->perPage() + $loop->iteration }}
                         </span>
@@ -128,12 +145,12 @@
                                 <div style="width:36px;height:36px;border-radius:50%;
                                             background:linear-gradient(135deg,#667eea,#764ba2);
                                             display:flex;align-items:center;justify-content:center;
-                                            font-family:'Montserrat',sans-serif;font-weight:800;
+                                            font-family:'Montserrat',sans-serif;font-weight:400;
                                             font-size:0.8rem;color:#fff;flex-shrink:0;">
                                     {{ strtoupper(mb_substr($p->booking->customer->full_name, 0, 1)) }}
                                 </div>
                                 <div>
-                                    <div style="font-weight:700;color:#1e293b;font-size:0.88rem;">
+                                    <div style="font-weight:400;color:#1e293b;font-size:0.88rem;">
                                         {{ $p->booking->customer->full_name }}
                                     </div>
                                     @if($p->booking->customer->phone)
@@ -150,16 +167,30 @@
 
                     {{-- Booking ID --}}
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-weight:700;
-                                     font-size:0.83rem;color:#FF6B00;
-                                     background:#fff3e8;padding:3px 10px;border-radius:6px;">
-                            #{{ $p->booking_id }}
+                        <span style="font-family:'Montserrat',sans-serif;font-weight:400;
+                                     font-size:0.83rem;color:#1e293b;">
+                            {{ $p->booking?->formatted_id ?? '#'.$p->booking_id }}
                         </span>
+                    </td>
+
+                    {{-- Payment stage --}}
+                    <td>
+                        @if($p->payment_stage === 'first')
+                            <span style="display:inline-flex;align-items:center;gap:6px;background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:400;">
+                                <i class="fas fa-flag" style="font-size:0.7rem;"></i> First Payment
+                            </span>
+                        @elseif($p->payment_stage === 'second')
+                            <span style="display:inline-flex;align-items:center;gap:6px;background:#d1fae5;color:#065f46;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:400;">
+                                <i class="fas fa-flag-checkered" style="font-size:0.7rem;"></i> Second Payment
+                            </span>
+                        @else
+                            <span style="color:#cbd5e1;">—</span>
+                        @endif
                     </td>
 
                     {{-- Amount --}}
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-weight:800;
+                        <span style="font-family:'Montserrat',sans-serif;font-weight:400;
                                      font-size:1rem;color:#10b981;">
                             ${{ number_format($p->amount, 2) }}
                         </span>
@@ -184,21 +215,20 @@
                         @endphp
                         <span style="display:inline-flex;align-items:center;gap:6px;
                                      background:{{ $mi['bg'] }};color:{{ $mi['color'] }};
-                                     padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700;">
+                                     padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:400;">
                             <i class="{{ $mi['icon'] }}" style="font-size:0.7rem;"></i>
                             {{ $mi['label'] }}
                         </span>
                     </td>
 
-                    {{-- Transaction reference --}}
+                    {{-- Transaction proof --}}
                     <td>
-                        @if($p->transaction_reference)
-                            <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;
-                                         color:#475569;background:#f8fafc;padding:3px 9px;
-                                         border-radius:6px;border:1px solid #e2e8f0;
-                                         letter-spacing:0.5px;">
-                                {{ $p->transaction_reference }}
-                            </span>
+                        @if($p->proof_file)
+                            <a href="{{ asset($p->proof_file) }}" target="_blank" rel="noopener"
+                               style="display:inline-flex;align-items:center;gap:4px;color:#FF6B00;font-size:0.78rem;font-weight:600;"
+                               title="មើលភស្តុតាងការទូទាត់">
+                                <i class="fas fa-receipt"></i> ភស្តុតាង
+                            </a>
                         @else
                             <span style="color:#cbd5e1;">—</span>
                         @endif
@@ -217,23 +247,49 @@
                         @endif
                     </td>
 
+                    {{-- Verification --}}
+                    <td style="text-align:center;">
+                        @if($p->verification_status === 'verified')
+                            <span style="display:inline-flex;align-items:center;gap:5px;background:#d1fae5;color:#065f46;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:600;">
+                                <i class="fas fa-check-circle"></i> បានផ្ទៀង
+                            </span>
+                        @elseif($p->verification_status === 'rejected')
+                            <span style="display:inline-flex;align-items:center;gap:5px;background:#fee2e2;color:#991b1b;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:600;">
+                                <i class="fas fa-times-circle"></i> បានបដិសេធ
+                            </span>
+                        @else
+                            <div style="display:flex;gap:6px;justify-content:center;">
+                                <form method="POST" action="{{ route('admin.payments.verify', $p->payment_id) }}">
+                                    @csrf
+                                    <button type="submit" title="ផ្ទៀងផ្ទាត់"
+                                            style="padding:5px 12px;background:#d1fae5;color:#065f46;border:none;border-radius:7px;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                                        <i class="fas fa-check"></i> ផ្ទៀង
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ route('admin.payments.reject', $p->payment_id) }}">
+                                    @csrf
+                                    <button type="submit" title="បដិសេធ"
+                                            style="padding:5px 12px;background:#fee2e2;color:#991b1b;border:none;border-radius:7px;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                                        <i class="fas fa-times"></i> បដិសេធ
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    </td>
+
                     {{-- Delete --}}
                     <td>
                         <div style="display:flex;justify-content:center;">
-                            <form method="POST"
-                                  action="{{ route('admin.payments.destroy', $p->payment_id) }}"
-                                  onsubmit="return confirm('លុបការទូទាត់នេះ?')">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-danger btn-sm" title="លុប">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
+                            <button class="btn btn-danger btn-sm" title="លុប"
+                                    onclick="confirmDeletePayment({{ $p->payment_id }}, {{ json_encode(($p->booking?->formatted_id ?? '#'.$p->booking_id).' — $'.number_format($p->amount, 2)) }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" style="text-align:center;padding:52px;color:#94a3b8;">
+                    <td colspan="10" style="text-align:center;padding:52px;color:#94a3b8;">
                         <i class="fas fa-receipt" style="font-size:2.5rem;display:block;margin-bottom:12px;opacity:0.25;"></i>
                         <div style="font-size:0.9rem;">មិនមានការទូទាត់</div>
                         @if(request('search') || request('method') || request('date'))
@@ -277,4 +333,35 @@
     @endif
 </div>
 
+{{-- Delete Confirm Modal --}}
+<div class="modal-overlay confirm-overlay" id="deletePaymentModal">
+    <div class="modal-box confirm-modal-box">
+        <form id="deletePaymentForm" method="POST">
+            @csrf @method('DELETE')
+            <div class="modal-body confirm-modal-body">
+                <div class="confirm-icon-circle"><i class="fas fa-trash"></i></div>
+                <div class="confirm-title">លុបការទូទាត់នេះ?</div>
+                <p class="confirm-subtitle" id="deletePaymentName"></p>
+            </div>
+            <div class="modal-footer confirm-modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('deletePaymentModal').classList.remove('open')">
+                    <i class="fas fa-times"></i> បោះបង់
+                </button>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> លុប
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+function confirmDeletePayment(id, label) {
+    document.getElementById('deletePaymentForm').action = '{{ url("/admin/payments") }}/' + id;
+    document.getElementById('deletePaymentName').textContent = label + ' — សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ';
+    document.getElementById('deletePaymentModal').classList.add('open');
+}
+</script>
+@endpush
 @endsection

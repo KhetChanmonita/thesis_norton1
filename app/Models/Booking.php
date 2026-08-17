@@ -18,6 +18,7 @@ class Booking extends Model
         'customer_id',
         'booking_type',
         'container_number',
+        'container_size',
         'pickup_location',
         'dropoff_location',
         'dropoff_location_link',
@@ -37,6 +38,8 @@ class Booking extends Model
         'drop_off_date' => 'date',
         'booking_date'  => 'date',
     ];
+
+    protected $appends = ['formatted_id'];
 
     public function schedule()
     {
@@ -66,5 +69,16 @@ class Booking extends Model
     public function statusHistory()
     {
         return $this->hasMany(BookingStatusHistory::class, 'booking_id', 'booking_id');
+    }
+
+    public function costSheet()
+    {
+        return $this->hasOne(CostSheet::class, 'booking_id', 'booking_id');
+    }
+
+    public function getFormattedIdAttribute()
+    {
+        $date = $this->booking_date ?? $this->created_at;
+        return 'LS' . $date->format('ym') . '-' . $this->booking_id;
     }
 }

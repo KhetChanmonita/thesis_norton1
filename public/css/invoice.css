@@ -1,0 +1,356 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Kantumruy Pro', sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 64px;
+}
+
+/* ── Print toolbar (hidden on print) ── */
+.inv-toolbar {
+    width: 100%;
+    max-width: 820px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    gap: 12px;
+}
+.inv-toolbar-title {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+}
+.inv-toolbar-btns { display: flex; gap: 10px; }
+.inv-btn {
+    padding: 8px 20px;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-decoration: none;
+    border: none;
+    transition: opacity 0.15s;
+}
+.inv-btn:hover { opacity: 0.88; }
+.inv-btn-ghost { background: #fff; color: #475569; border: 1.5px solid #e2e8f0; }
+.inv-btn-print { background: #FF6B00; color: #fff; box-shadow: 0 4px 12px rgba(255,107,0,0.3); }
+
+/* ── Invoice paper ── */
+.inv-paper {
+    width: 100%;
+    max-width: 820px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+/* ── Header band ── */
+.inv-header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    padding: 32px 36px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+}
+.inv-company {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.inv-logo-box {
+    width: 56px; height: 56px;
+    background: #FF6B00;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+}
+.inv-company-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.04em;
+}
+.inv-company-sub {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 3px;
+}
+.inv-company-info {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.inv-company-info span {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.inv-company-info i { color: #FF6B00; width: 12px; }
+
+.inv-meta { text-align: right; flex-shrink: 0; }
+.inv-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #FF6B00;
+    letter-spacing: 0.06em;
+    line-height: 1;
+}
+.inv-title-km {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+}
+.inv-num {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255,107,0,0.2);
+    border: 1px solid rgba(255,107,0,0.4);
+    border-radius: 7px;
+    padding: 4px 12px;
+    display: inline-block;
+}
+.inv-date-row {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.55);
+}
+.inv-date-row span { color: rgba(255,255,255,0.85); font-weight: 600; }
+
+/* ── Orange divider strip ── */
+.inv-strip {
+    height: 4px;
+    background: linear-gradient(90deg, #FF6B00, #FF8C00, #FFb347);
+}
+
+/* ── Info grid ── */
+.inv-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-bottom: 1.5px solid #f1f5f9;
+}
+.inv-info-block { padding: 24px 28px; }
+.inv-info-block + .inv-info-block { border-left: 1.5px solid #f1f5f9; }
+.inv-info-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #FF6B00;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.inv-info-label i { font-size: 0.75rem; }
+.inv-customer-name {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 6px;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+.inv-customer-company {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #FF6B00;
+    margin-bottom: 10px;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+.inv-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+    color: #475569;
+}
+.inv-detail-row i { color: #94a3b8; width: 14px; font-size: 0.72rem; }
+
+.inv-bk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 16px;
+}
+.inv-bk-key {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+.inv-bk-val {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-top: 2px;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+.inv-type-badge {
+    display: inline-block;
+    padding: 3px 11px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+.inv-type-import { background: #fff3e8; color: #c2410c; }
+.inv-type-export { background: #eff6ff; color: #1d4ed8; }
+
+/* ── Cost table ── */
+.inv-breakdown { padding: 24px 28px; }
+.inv-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.inv-table thead tr { background: #1e293b; }
+.inv-table thead th {
+    padding: 10px 14px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: left;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+.inv-table thead th:last-child { text-align: right; width: 130px; }
+.inv-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.1s;
+}
+.inv-table tbody tr:hover { background: #fafafa; }
+.inv-table tbody td {
+    padding: 10px 14px;
+    font-size: 0.84rem;
+    color: #475569;
+}
+.inv-table tbody td:last-child {
+    text-align: right;
+    font-weight: 700;
+    font-family: 'Kantumruy Pro', sans-serif;
+    color: #1e293b;
+}
+.inv-table tbody .inv-row-zero td,
+.inv-table tbody .inv-row-zero td:last-child { color: #d1d5db; }
+.inv-row-label { display: flex; align-items: center; gap: 8px; }
+.inv-row-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #FF6B00;
+    flex-shrink: 0;
+}
+.inv-row-dot.zero { background: #e2e8f0; }
+.inv-table tfoot tr { border-top: 2.5px solid #1e293b; }
+.inv-table tfoot td {
+    padding: 14px 14px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    font-family: 'Kantumruy Pro', sans-serif;
+    background: #f8fafc;
+}
+.inv-table tfoot td:last-child {
+    text-align: right;
+    font-size: 1.1rem;
+    color: #FF6B00;
+}
+.inv-total-label {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    color: #1e293b;
+}
+
+/* ── Signatures ── */
+.inv-footer {
+    padding: 24px 28px;
+    border-top: 1.5px solid #f1f5f9;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+.inv-sig-block { display: flex; flex-direction: column; gap: 8px; }
+.inv-sig-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #94a3b8;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+.inv-sig-line {
+    border-bottom: 1.5px solid #cbd5e1;
+    margin-top: 48px;
+}
+.inv-sig-name {
+    font-size: 0.78rem;
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 6px;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+
+/* ── Bottom bar ── */
+.inv-bottom-bar {
+    background: #f8fafc;
+    border-top: 1.5px solid #f1f5f9;
+    padding: 14px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+.inv-bottom-note {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    font-family: 'Kantumruy Pro', sans-serif;
+    line-height: 1.6;
+}
+.inv-bottom-brand {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #FF6B00;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    opacity: 0.7;
+}
+
+/* ── Print ── */
+@media print {
+    body { background: #fff; padding: 0; }
+    .inv-toolbar { display: none !important; }
+    .inv-paper { box-shadow: none; border-radius: 0; max-width: none; }
+    .inv-table tbody .inv-row-zero { display: none; }
+}
+/* ── Inline style replacements ── */
+.inv-toolbar-title i { color: #FF6B00; margin-right: 6px; }
+.inv-bk-val-orange   { color: #FF6B00; }
+.inv-row-item-label  { font-weight: 600; color: #1e293b; font-family: 'Kantumruy Pro', sans-serif; }
+.inv-total-label i   { color: #FF6B00; margin-right: 8px; }
+.inv-sig-label i     { margin-right: 5px; }
+.inv-sig-block-end   { align-items: flex-end; }

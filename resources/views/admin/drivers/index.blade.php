@@ -127,7 +127,7 @@
                             </div>
                             <div>
                                 <div class="drv-driver-name">{{ $d->full_name }}</div>
-                                <div class="drv-text-muted-sm">ID #{{ $d->driver_id }}</div>
+                                <div class="drv-text-muted-sm">ID D{{ $d->driver_id }}</div>
                             </div>
                         </div>
                     </td>
@@ -197,14 +197,10 @@
                                     title="កែប្រែ">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <form method="POST"
-                                  action="{{ route('admin.drivers.destroy', $d->driver_id) }}"
-                                  onsubmit="return confirm('លុបអ្នកបើកបរ?')">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-danger btn-sm" title="លុប">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
+                            <button class="btn btn-danger btn-sm" title="លុប"
+                                    onclick="confirmDeleteDriver({{ $d->driver_id }}, {{ json_encode($d->full_name) }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -285,20 +281,20 @@
 
                 <div class="form-grid">
                     <div class="form-group form-full">
-                        <label class="form-label">ឈ្មោះពេញ <span class="drv-required">*</span></label>
+                        <label class="form-label">ឈ្មោះពេញ</label>
                         <input type="text" name="full_name" class="form-control"
                                placeholder="បញ្ចូលឈ្មោះពេញ" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">លេខទូរស័ព្ទ</label>
-                        <input type="tel" name="phone" class="form-control" placeholder="012 345 678">
+                        <input type="text" name="phone" class="form-control" placeholder="012 345 678" maxlength="20">
                     </div>
                     <div class="form-group">
                         <label class="form-label">ថ្ងៃចូលធ្វើការ</label>
                         <input type="date" name="hire_date" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ស្ថានភាព <span class="drv-required">*</span></label>
+                        <label class="form-label">ស្ថានភាព</label>
                         <select name="status" class="form-control">
                             <option value="active">កំពុងធ្វើការ (active)</option>
                             <option value="inactive">មិនសកម្ម (inactive)</option>
@@ -371,19 +367,19 @@
 
                 <div class="form-grid">
                     <div class="form-group form-full">
-                        <label class="form-label">ឈ្មោះពេញ <span class="drv-required">*</span></label>
+                        <label class="form-label">ឈ្មោះពេញ</label>
                         <input type="text" name="full_name" id="ed_name" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">លេខទូរស័ព្ទ</label>
-                        <input type="tel" name="phone" id="ed_phone" class="form-control">
+                        <input type="text" name="phone" id="ed_phone" class="form-control" maxlength="20">
                     </div>
                     <div class="form-group">
                         <label class="form-label">ថ្ងៃចូលធ្វើការ</label>
                         <input type="date" name="hire_date" id="ed_hire" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">ស្ថានភាព <span class="drv-required">*</span></label>
+                        <label class="form-label">ស្ថានភាព</label>
                         <select name="status" id="ed_status" class="form-control">
                             <option value="active">កំពុងធ្វើការ (active)</option>
                             <option value="inactive">មិនសកម្ម (inactive)</option>
@@ -427,11 +423,39 @@
     <p class="drv-img-view-hint">ចុចគ្រប់ទីកន្លែងដើម្បីបិទ</p>
 </div>
 
+{{-- ══════════════ DELETE CONFIRM MODAL ══════════════ --}}
+<div class="modal-overlay confirm-overlay" id="deleteDriverModal">
+    <div class="modal-box confirm-modal-box">
+        <form id="deleteDriverForm" method="POST">
+            @csrf @method('DELETE')
+            <div class="modal-body confirm-modal-body">
+                <div class="confirm-icon-circle"><i class="fas fa-trash"></i></div>
+                <div class="confirm-title">លុបអ្នកបើកបរនេះ?</div>
+                <p class="confirm-subtitle" id="deleteDriverName"></p>
+            </div>
+            <div class="modal-footer confirm-modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('deleteDriverModal').classList.remove('open')">
+                    <i class="fas fa-times"></i> បោះបង់
+                </button>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> លុប
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 @push('scripts')
 <script>
 /* =================================================
    Global functions
    ================================================= */
+
+function confirmDeleteDriver(id, name) {
+    document.getElementById('deleteDriverForm').action = '{{ url("/admin/drivers") }}/' + id;
+    document.getElementById('deleteDriverName').textContent = name + ' — សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ';
+    document.getElementById('deleteDriverModal').classList.add('open');
+}
 
 function previewAddDriver(input) {
     if (!input.files || !input.files[0]) return;

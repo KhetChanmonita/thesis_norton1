@@ -1,0 +1,444 @@
+/* ════════════════════════════════════════════
+   Excel-style Cost Sheet
+   Column widths:  No(42) | BID(92) | Cust(138) | Type(78) | Plate(96) | Cont(112)
+   Sticky left:    0       | 42      | 134        | 272       | 350        | 446
+════════════════════════════════════════════ */
+
+/* ── Sheet wrapper ── */
+.xl-sheet-wrap {
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+    border: 1.5px solid #cde0d4;
+    overflow: hidden;
+    margin-bottom: 24px;
+    background: #fff;
+}
+
+/* ── Ribbon ── */
+.xl-ribbon {
+    background: linear-gradient(135deg, #1a5c38, #217346);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.xl-ribbon-icon {
+    width: 34px; height: 34px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 0.9rem; flex-shrink: 0;
+}
+.xl-ribbon-title {
+    color: #fff;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.xl-ribbon-month {
+    color: rgba(255,255,255,0.72);
+    font-weight: 400;
+    margin-left: 8px;
+    font-size: 0.82rem;
+}
+.xl-ribbon-badge {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    flex-shrink: 0;
+}
+.xl-ribbon-spacer { flex: 1; }
+.xl-ribbon-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    border-radius: 7px;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    transition: background 0.15s;
+    flex-shrink: 0;
+}
+.xl-ribbon-btn:hover { background: rgba(255,255,255,0.24); }
+
+/* ── Formula bar ── */
+.xl-formula-bar {
+    height: 30px;
+    border-bottom: 1.5px solid #d8e4dd;
+    display: flex;
+    align-items: stretch;
+    background: #f0f4f2;
+}
+.xl-name-box {
+    min-width: 80px;
+    padding: 0 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1e293b;
+    border-right: 1.5px solid #d8e4dd;
+    background: #fff;
+    letter-spacing: 0.03em;
+    flex-shrink: 0;
+}
+.xl-fx-label {
+    padding: 0 10px;
+    display: flex; align-items: center;
+    color: #217346;
+    font-style: italic;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border-right: 1.5px solid #d8e4dd;
+    flex-shrink: 0;
+}
+.xl-formula-val {
+    flex: 1;
+    padding: 0 14px;
+    display: flex; align-items: center;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.82rem;
+    color: #475569;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.xl-save-status {
+    padding: 0 14px;
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.77rem;
+    font-weight: 700;
+    border-left: 1.5px solid #d8e4dd;
+    min-width: 190px;
+    justify-content: flex-end;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.xl-save-saving { color: #d97706; }
+.xl-save-ok     { color: #059669; }
+.xl-save-error  { color: #ef4444; }
+
+/* ── Table scroll container ── */
+.xl-table-container {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 270px);
+    min-height: 220px;
+    position: relative;
+}
+
+/* ── Table ── */
+.xl-table {
+    border-collapse: collapse;
+    font-size: 0.81rem;
+    white-space: nowrap;
+    width: max-content;
+    min-width: 100%;
+}
+
+/* ── Column-letter header ── */
+.xl-col-letters th {
+    height: 22px;
+    line-height: 22px;
+    padding: 0;
+    text-align: center;
+    background: #e4ede7;
+    color: #64748b;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.71rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border: 1px solid #cdd9d2;
+    position: sticky;
+    top: 0;
+    z-index: 32;
+}
+.xl-col-letters .xl-sticky { z-index: 42; }
+
+/* ── Main header ── */
+.xl-header-row th {
+    background: #1D6F42;
+    color: #fff;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 8px 10px;
+    text-align: left;
+    border: 1px solid #155934;
+    position: sticky;
+    top: 22px;
+    z-index: 30;
+}
+.xl-header-row .xl-sticky { z-index: 40; }
+.xl-total-hdr { text-align: right !important; background: #155934 !important; }
+
+/* ── Sticky columns ── */
+.xl-sticky-0     { position: sticky; left: 0; }
+.xl-sticky-1     { position: sticky; left: 42px; }
+.xl-sticky-2     { position: sticky; left: 134px; }
+.xl-sticky-3     { position: sticky; left: 272px; }
+.xl-sticky-4     { position: sticky; left: 350px; }
+.xl-sticky-5     { position: sticky; left: 446px; }
+.xl-sticky-right { position: sticky; right: 0; }
+
+/* Separator shadow after frozen zone */
+.xl-sep {
+    border-right: 2.5px solid #9db8a4 !important;
+    box-shadow: 3px 0 8px -2px rgba(0,0,0,0.13);
+}
+/* Separator before total column */
+.xl-total-hdr,
+.xl-total-cell,
+.xl-foot-grand {
+    border-left: 2.5px solid #9db8a4 !important;
+}
+
+/* ── Body cells ── */
+.xl-table tbody tr:nth-child(odd)  td { background: #f3faf5; }
+.xl-table tbody tr:nth-child(even) td { background: #ffffff; }
+
+.xl-table tbody tr:hover td { background: #e3f5ea !important; }
+
+/* Focused row highlight */
+.xl-table tbody tr:focus-within td { background: #fff8f0 !important; }
+
+.xl-table td {
+    padding: 0;
+    border: 1px solid #dde4df;
+    vertical-align: middle;
+}
+
+/* Row-number column */
+.xl-row-num {
+    width: 42px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.71rem;
+    font-weight: 700;
+    color: #64748b;
+    padding: 0 4px;
+    background: #e4ede7 !important;
+    border-right: 2px solid #cdd9d2 !important;
+}
+
+/* Read-only cells */
+.xl-readonly {
+    padding: 7px 10px;
+    color: #334155;
+    font-size: 0.79rem;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+
+/* Type badges */
+.xl-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 0.71rem;
+    font-weight: 700;
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+.xl-badge-import { background: #fff3e8; color: #c2410c; }
+.xl-badge-export { background: #eff6ff; color: #1d4ed8; }
+
+/* ── Editable cell inputs ── */
+.xl-cell {
+    display: block;
+    width: 100%;
+    height: 32px;
+    padding: 0 8px;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.81rem;
+    color: #1e293b;
+    cursor: cell;
+    box-sizing: border-box;
+    transition: background 0.1s;
+}
+.xl-cell::placeholder { color: #c4cfd9; font-size: 0.75rem; }
+.xl-cell-num { text-align: right; }
+
+.xl-cell:hover { background: rgba(33,115,70,0.06); }
+.xl-cell:focus {
+    background: #fffbf5;
+    outline: 2.5px solid #FF6B00;
+    outline-offset: -2px;
+    cursor: text;
+    position: relative;
+    z-index: 5;
+}
+
+/* ── Total column ── */
+.xl-total-cell {
+    text-align: right;
+    padding: 0 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 0.84rem;
+    color: #1D6F42;
+    background: #ecfdf5 !important;
+    min-width: 90px;
+}
+
+/* ── Footer totals row ── */
+.xl-foot-row td {
+    position: sticky;
+    bottom: 0;
+    background: #1D6F42;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 0.79rem;
+    padding: 7px 10px;
+    border: 1px solid #155934;
+    text-align: right;
+    z-index: 20;
+}
+.xl-foot-row .xl-sticky { z-index: 30; }
+.xl-foot-rn  { text-align: center !important; font-size: 1rem; background: #155934 !important; }
+.xl-foot-lbl { text-align: left !important; font-family: 'Kantumruy Pro', sans-serif; font-size: 0.79rem; color: rgba(255,255,255,0.85); }
+.xl-foot-na  { text-align: center; color: rgba(255,255,255,0.4); }
+.xl-foot-grand { background: #0f4526 !important; font-size: 0.88rem; color: #a7f3d0 !important; }
+
+/* ── Empty state ── */
+.xl-empty-cell {
+    text-align: center;
+    padding: 64px;
+    color: #94a3b8;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.9rem;
+}
+.xl-empty-icon { font-size: 2.8rem; display: block; margin-bottom: 12px; opacity: 0.18; }
+
+/* ── Pagination ── */
+.xl-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 18px;
+    border-top: 1.5px solid #e2eae5;
+    background: #f7faf8;
+}
+.xl-pag-info {
+    font-size: 0.79rem;
+    color: #64748b;
+    font-family: 'Montserrat', sans-serif;
+}
+.xl-pag-btns { display: flex; gap: 4px; }
+.xl-pag-btn {
+    min-width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 7px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    text-decoration: none;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    transition: all 0.15s;
+    padding: 0 6px;
+}
+.xl-pag-btn:hover   { background: #ecfdf5; border-color: #217346; color: #217346; }
+.xl-pag-active      { background: #217346 !important; color: #fff !important; border-color: #217346 !important; }
+.xl-pag-disabled    { opacity: 0.35; cursor: default; }
+
+/* ── Print styles ── */
+@media print {
+    .xl-ribbon,
+    .xl-formula-bar,
+    .xl-pagination,
+    .rpt-toolbar,
+    .btn { display: none !important; }
+
+    .xl-table-container { max-height: none !important; overflow: visible !important; }
+    .xl-sheet-wrap { box-shadow: none; border: none; border-radius: 0; }
+
+    .xl-table { font-size: 0.68rem; }
+    .xl-cell  { height: 20px; font-size: 0.68rem; }
+
+    /* Un-freeze columns for print */
+    .xl-sticky-0, .xl-sticky-1, .xl-sticky-2,
+    .xl-sticky-3, .xl-sticky-4, .xl-sticky-5,
+    .xl-sticky-right, .xl-col-letters th,
+    .xl-header-row th, .xl-foot-row td {
+        position: static !important;
+    }
+    .xl-foot-row td { background: #1D6F42 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .xl-header-row th { background: #1D6F42 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ════════════════════════════════════════════
+   cs- table styles (used by cost-sheet blade)
+════════════════════════════════════════════ */
+.cs-table-wrap { overflow-x: auto; }
+.cs-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; white-space: nowrap; }
+.cs-table th {
+    background: #1D6F42;
+    color: #fff;
+    font-weight: 700;
+    padding: 10px 8px;
+    text-align: left;
+    border: 1px solid #155934;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.79rem;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.cs-table td { padding: 4px 7px; border: 1px solid #dde4df; vertical-align: middle; }
+.cs-table tbody tr:nth-child(odd)  td { background: #f3faf5; }
+.cs-table tbody tr:nth-child(even) td { background: #ffffff; }
+.cs-table tbody tr:hover td { background: #e3f5ea !important; }
+.cs-readonly { color: #334155; font-size: 0.79rem; padding: 6px 8px; font-family: 'Kantumruy Pro', sans-serif; }
+.cs-input {
+    width: 100%; min-width: 70px; padding: 6px 7px;
+    border: 1px solid transparent; border-radius: 5px;
+    font-family: 'Kantumruy Pro', sans-serif; font-size: 0.82rem;
+    background: transparent; outline: none; transition: all 0.15s;
+}
+.cs-input:hover { border-color: #cbd5e1; background: #fff; }
+.cs-input:focus { border-color: #FF6B00; background: #fff; box-shadow: 0 0 0 2px rgba(255,107,0,0.12); }
+.cs-num  { text-align: right; }
+.cs-size { min-width: 50px; }
+.cs-total { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #1D6F42; text-align: right; background: #ecfdf5 !important; white-space: nowrap; }
+.cs-save-status { font-size: 0.8rem; color: #94a3b8; margin-left: auto; align-self: center; }
+
+/* ── Status / type / payment badges ── */
+.cs-badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; font-family: 'Kantumruy Pro', sans-serif; white-space: nowrap; }
+.cs-badge-import    { background: #fff3e8; color: #c2410c; }
+.cs-badge-export    { background: #eff6ff; color: #1d4ed8; }
+.cs-badge-pending   { background: #fef3c7; color: #92400e; }
+.cs-badge-confirmed { background: #dbeafe; color: #1e40af; }
+.cs-badge-progress  { background: #e0f2fe; color: #0369a1; }
+.cs-badge-done      { background: #dcfce7; color: #166534; }
+.cs-badge-cancel    { background: #fee2e2; color: #991b1b; }
+.cs-badge-paid      { background: #dcfce7; color: #166534; }
+.cs-badge-unpaid    { background: #fee2e2; color: #991b1b; }
+.cs-badge-partial   { background: #fef3c7; color: #92400e; }
+
+/* ── Inline style replacements ── */
+.cs-back-mb      { margin-bottom: 18px; }
+.cs-th-center    { text-align: center; }
+.cs-nowrap       { white-space: nowrap; }
+.cs-right        { text-align: right; }
+.cs-td-invoice   { text-align: center; padding: 4px 8px; }
+.cs-invoice-btn  {
+    display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px;
+    background: linear-gradient(135deg, #ff6b00, #ff8c00); color: #fff;
+    border-radius: 7px; font-size: 0.75rem; font-weight: 700;
+    font-family: 'Montserrat', sans-serif; text-decoration: none;
+    white-space: nowrap; box-shadow: 0 2px 8px rgba(255,107,0,0.25);
+    transition: opacity 0.15s; cursor: pointer;
+}

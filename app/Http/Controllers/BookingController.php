@@ -250,6 +250,7 @@ class BookingController extends Controller
             'email'            => 'nullable|email',
             'booking_type'     => 'required|in:import,export',
             'container_number' => ['nullable', 'string', 'max:50', 'regex:/^[A-Z]{3}U[0-9]{7}$/'],
+            'container_size'   => 'nullable|in:20F,40F,45F',
             'pickup_location'  => 'required|string|max:200',
             'dropoff_location' => 'required|string|max:200',
             'dropoff_location_link' => 'nullable|url|max:500',
@@ -340,6 +341,7 @@ class BookingController extends Controller
             'truck_id'         => $selectedTruck->truck_id ?? null,
             'booking_type'     => $request->booking_type,
             'container_number' => $containerNumber,
+            'container_size'   => $request->container_size ?? null,
             'pickup_location'  => $request->pickup_location,
             'dropoff_location' => $request->dropoff_location,
             'dropoff_location_link' => $request->dropoff_location_link,
@@ -353,6 +355,10 @@ class BookingController extends Controller
             'cargo_list_file'  => $filePath,
             'access_token'     => $accessToken,
         ]);
+
+        if ($selectedTruck) {
+            $selectedTruck->update(['status' => 'in_progress']);
+        }
 
         session()->push('my_booking_ids', $booking->booking_id);
 
@@ -433,7 +439,7 @@ class BookingController extends Controller
     // ── Booking tracking ───────────────────────────────────────────────────
     public function trackBooking(Request $request, $id)
     {
-        $booking   = Booking::with('customer')->findOrFail($id);
+        $booking   = Booking::with(['customer', 'extraCharges', 'payments'])->findOrFail($id);
         $token     = $request->query('token') ?? session('booking_token_' . $id);
         $inSession = in_array((int)$id, session('my_booking_ids', []));
 
@@ -449,6 +455,32 @@ class BookingController extends Controller
         }
 
         return view('bookings.track', compact('booking'));
+    }
+
+    // ── Respond to an extra charge (accept / reject) ───────────────────────
+    public function respondExtraCharge(Request $request, $extraChargeId)
+    {
+        $charge  = \App\Models\ExtraCharge::with('booking')->findOrFail($extraChargeId);
+        $booking = $charge->booking;
+
+        $token     = $request->input('token') ?? session('booking_token_' . $booking->booking_id);
+        $inSession = in_array((int)$booking->booking_id, session('my_booking_ids', []));
+
+        if (!$inSession && $token !== $booking->access_token) {
+            abort(403);
+        }
+
+        $request->validate(['response' => 'required|in:Accepted,Rejected']);
+
+        $charge->update(['client_response' => $request->response]);
+
+        $msg = $request->response === 'Accepted'
+            ? 'អ្នកបានយល់ព្រមលើការគិតប្រាក់បន្ថែម!'
+            : 'អ្នកបានបដិសេធការគិតប្រាក់បន្ថែម!';
+
+        return redirect()->route('booking.track', [
+            'id' => $booking->booking_id, 'token' => $booking->access_token,
+        ])->with('extra_charge_response', $msg);
     }
 
     // ── Show payment form ──────────────────────────────────────────────────
@@ -467,6 +499,13 @@ class BookingController extends Controller
             $amount = round($booking->total_price * 0.5, 2);
             $label  = 'ការបង់ប្រាក់ 50% ដំបូង (Deposit)';
         } elseif ($booking->payment_status === 'deposit_paid' && $booking->status === 'completed') {
+            $hasPendingFinal = $booking->payments()
+                ->where('payment_stage', 'second')
+                ->where('verification_status', 'pending')
+                ->exists();
+            if ($hasPendingFinal) {
+                return redirect()->route('booking.track', ['id' => $id, 'token' => $booking->access_token]);
+            }
             $stage  = 'final';
             $amount = round($booking->total_price * 0.5, 2);
             $label  = 'ការបង់ប្រាក់ 50% ចុងក្រោយ (Final)';
@@ -482,7 +521,7 @@ class BookingController extends Controller
     // ── Process payment ────────────────────────────────────────────────────
     public function processPayment(Request $request, $id)
     {
-        $booking   = Booking::with('customer')->findOrFail($id);
+        $booking   = Booking::with(['customer', 'truck'])->findOrFail($id);
         $token     = $request->input('token') ?? session('booking_token_' . $id);
         $inSession = in_array((int)$id, session('my_booking_ids', []));
 
@@ -490,7 +529,19 @@ class BookingController extends Controller
             abort(403);
         }
 
-        $request->validate(['payment_method' => 'required|string|max:50']);
+        $request->validate([
+            'payment_method' => 'required|string|max:50',
+            'payment_proof'  => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
+        ], [
+            'payment_proof.required' => 'សូមបញ្ចូលរូបភាព ឬឯកសារភស្តុតាងការទូទាត់។',
+            'payment_proof.mimes'    => 'ឯកសារត្រូវតែជា JPG, PNG, ឬ PDF។',
+            'payment_proof.max'      => 'ឯកសារធំពេក (អតិបរមា 5MB)។',
+        ]);
+
+        $proofFile = $request->file('payment_proof');
+        $proofFilename = time() . '_' . $proofFile->getClientOriginalName();
+        $proofFile->move(public_path('uploads/payment-proofs'), $proofFilename);
+        $proofPath = 'uploads/payment-proofs/' . $proofFilename;
 
         if ($booking->payment_status === 'unpaid' && $booking->status === 'confirmed') {
             $amount = round($booking->total_price * 0.5, 2);
@@ -498,11 +549,13 @@ class BookingController extends Controller
                 'booking_id'            => $booking->booking_id,
                 'amount'                => $amount,
                 'payment_method'        => $request->payment_method,
+                'payment_stage'         => 'first',
                 'payment_date'          => today()->toDateString(),
                 'transaction_reference' => 'DEP-' . strtoupper(\Illuminate\Support\Str::random(8)),
+                'proof_file'            => $proofPath,
             ]);
-            $booking->update(['payment_status' => 'deposit_paid', 'status' => 'in_progress']);
-            $msg = 'ការបង់ប្រាក់ 50% ដំបូងបានជោគជ័យ! រថយន្តនឹងចាប់ផ្ដើមដំណើរការ។';
+            $booking->update(['payment_status' => 'deposit_paid']);
+            $msg = 'ការបង់ប្រាក់ 50% ដំបូងបានទទួល! សូមរង់ចាំការផ្ទៀងផ្ទាត់ពីអ្នកគ្រប់គ្រង។';
 
         } elseif ($booking->payment_status === 'deposit_paid' && $booking->status === 'completed') {
             $amount = round($booking->total_price * 0.5, 2);
@@ -510,11 +563,13 @@ class BookingController extends Controller
                 'booking_id'            => $booking->booking_id,
                 'amount'                => $amount,
                 'payment_method'        => $request->payment_method,
+                'payment_stage'         => 'second',
                 'payment_date'          => today()->toDateString(),
                 'transaction_reference' => 'FIN-' . strtoupper(\Illuminate\Support\Str::random(8)),
+                'proof_file'            => $proofPath,
+                'verification_status'   => 'pending',
             ]);
-            $booking->update(['payment_status' => 'fully_paid']);
-            $msg = 'ការបង់ប្រាក់ចុងក្រោយបានជោគជ័យ! អរគុណចំពោះការប្រើប្រាស់សេវាកម្មរបស់យើង!';
+            $msg = 'ការបង់ប្រាក់ 50% ចុងក្រោយបានទទួល! សូមរង់ចាំការផ្ទៀងផ្ទាត់ពីអ្នកគ្រប់គ្រង។';
 
         } else {
             return redirect()->route('booking.track', [

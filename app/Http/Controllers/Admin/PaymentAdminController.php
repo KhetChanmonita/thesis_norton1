@@ -15,8 +15,16 @@ class PaymentAdminController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('transaction_reference', 'like', "%{$search}%")
+
+            // Support typing the formatted ID shown on screen (e.g. LS2606-22)
+            // as well as the plain booking number (e.g. 22).
+            $bookingNumber = $search;
+            if (preg_match('/-(\d+)$/', $search, $m)) {
+                $bookingNumber = $m[1];
+            }
+
+            $query->where(function ($q) use ($search, $bookingNumber) {
+                $q->whereHas('booking', fn($b) => $b->where('booking_id', 'like', "%{$bookingNumber}%"))
                   ->orWhereHas('booking.customer', fn($c) =>
                         $c->where('full_name', 'like', "%{$search}%")
                   );
@@ -32,9 +40,9 @@ class PaymentAdminController extends Controller
         }
 
         $payments       = $query->latest()->paginate(10)->withQueryString();
-        $totalRevenue   = Payment::sum('amount');
-        $todayRevenue   = Payment::whereDate('payment_date', today())->sum('amount');
-        $totalCount     = Payment::count();
+        $totalRevenue   = Payment::where('verification_status', 'verified')->sum('amount');
+        $todayRevenue   = Payment::where('verification_status', 'verified')->whereDate('payment_date', today())->sum('amount');
+        $totalCount     = Payment::where('verification_status', 'verified')->count();
         $methods        = Payment::select('payment_method')
                             ->whereNotNull('payment_method')
                             ->distinct()->pluck('payment_method');
@@ -42,6 +50,37 @@ class PaymentAdminController extends Controller
         return view('admin.payments.index',
             compact('payments', 'totalRevenue', 'todayRevenue', 'totalCount', 'methods')
         );
+    }
+
+    public function verify(Payment $payment)
+    {
+        $payment->update(['verification_status' => 'verified']);
+
+        $booking = $payment->booking;
+        if ($booking) {
+            if ($payment->payment_stage === 'first') {
+                $booking->update(['status' => 'in_progress']);
+                if ($booking->truck) {
+                    $booking->truck->update(['status' => 'delivering']);
+                }
+            } elseif ($payment->payment_stage === 'second') {
+                $booking->update(['payment_status' => 'fully_paid']);
+            }
+        }
+
+        return back()->with('success', 'ការទូទាត់ត្រូវបានផ្ទៀងផ្ទាត់!');
+    }
+
+    public function reject(Payment $payment)
+    {
+        $payment->update(['verification_status' => 'rejected']);
+
+        $booking = $payment->booking;
+        if ($booking && $payment->payment_stage === 'first') {
+            $booking->update(['payment_status' => 'unpaid']);
+        }
+
+        return back()->with('success', 'ការទូទាត់ត្រូវបានបដិសេធ។ អតិថិជននឹងត្រូវដាក់ស្នើឡើងវិញ។');
     }
 
     public function destroy(Payment $payment)

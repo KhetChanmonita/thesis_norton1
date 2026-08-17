@@ -3,6 +3,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>អំពីឡាន | Trucking System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -82,28 +83,21 @@
                     <label for="truckType"><i class="fas fa-truck"></i> ប្រភេទរថយន្ត</label>
                     <select id="truckType" class="filter-select">
                         <option value="all">ទាំងអស់</option>
-                        <option value="fuso">Mitsubishi FUSO</option>
+                        @foreach($truckTypes as $type)
+                        <option value="{{ \Illuminate\Support\Str::slug($type) }}">{{ $type }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="filter-group">
                     <label for="truckSize"><i class="fas fa-weight-hanging"></i> ទម្ងន់</label>
                     <select id="truckSize" class="filter-select">
                         <option value="all">ទាំងអស់</option>
-                        <option value="small">តូច (១០-១២តោន)</option>
-                        <option value="medium">មធ្យម (១៣-១៥តោន)</option>
-                        <option value="large">ធំ (១៦តោន↑)</option>
+                        <option value="small">(១២-១៣តោន)</option>
+                        <option value="medium">(១៤-១៥តោន)</option>
+                        <option value="large">(១៦តោន↑)</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <label for="truckStatus"><i class="fas fa-circle"></i> ស្ថានភាព</label>
-                    <select id="truckStatus" class="filter-select">
-                        <option value="all">ទាំងអស់</option>
-                        <option value="available">អាចប្រើប្រាស់បាន</option>
-                        <option value="busy">រវល់</option>
-                        <option value="maintenance">កំពុងថែទាំ</option>
-                    </select>
-                </div>
-                <div class="filter-actions">
+<div class="filter-actions">
                     <button class="reset-filter">
                         <i class="fas fa-redo"></i> កំណត់ឡើងវិញ
                     </button>
@@ -115,10 +109,7 @@
         <div class="trucks-grid" id="trucksGrid">
             @forelse($trucks as $index => $truck)
             @php
-                $nameLower  = strtolower($truck->truck_name ?? '');
-                $typeKey    = str_contains($nameLower, 'fuso')  ? 'fuso'  :
-                              (str_contains($nameLower, 'isuzu') ? 'isuzu' :
-                              (str_contains($nameLower, 'hino')  ? 'hino'  : 'other'));
+                $typeKey    = \Illuminate\Support\Str::slug($truck->truck_name ?? 'other');
                 $cap        = (float)($truck->capacity_ton ?? 0);
                 $sizeKey    = $cap >= 15 ? 'large' : ($cap >= 12 ? 'medium' : 'small');
                 $isExtra    = $index >= 6;
@@ -152,9 +143,6 @@
                              alt="{{ $truck->truck_name }}" loading="lazy">
                     @endif
                     <span class="truck-status status-{{ $truckStatus }}">{{ $statusLabel }}</span>
-                    <button class="truck-favorite" onclick="toggleFavorite(this)">
-                        <i class="far fa-heart"></i>
-                    </button>
                 </div>
 
                 <div class="truck-content">
@@ -225,7 +213,7 @@
                 <i class="fas fa-plus-circle"></i>
                 មើលបន្ថែម &nbsp;
                 <span class="ts-see-more-badge">
-                    {{ $trucks->count() - 6 }} ទៀត
+                    {{ $trucks->count() - 6 }} <span>ទៀត</span>
                 </span>
             </button>
         </div>
@@ -241,20 +229,14 @@
                         <a href="/contact" class="cta-button primary">
                             <i class="fas fa-phone-alt"></i> ទាក់ទងយើងខ្ញុំ
                         </a>
-                        <a href="/services" class="cta-button secondary">
-                            <i class="fas fa-info-circle"></i> សេវាកម្មរបស់យើង
-                        </a>
                         
                         {{-- Or Option 2: Contact buttons that always work --}}
                         <div class="contact-info ts-contact-info-alt">
-                            <a href="tel:+85512345678" class="contact-link">
-                                <i class="fas fa-phone"></i> +855 12 345 678
+                            <a href="tel:0962679042" class="contact-link">
+                                <i class="fas fa-phone"></i> 096 267 9042
                             </a>
-                            <a href="https://wa.me/85512345678" target="_blank" class="contact-link">
-                                <i class="fab fa-whatsapp"></i> WhatsApp
-                            </a>
-                            <a href="mailto:info@trucking.com" class="contact-link">
-                                <i class="fas fa-envelope"></i> info@trucking.com
+                            <a href="https://t.me/+855962679042" target="_blank" class="contact-link">
+                                <i class="fab fa-telegram"></i> Telegram
                             </a>
                         </div>
                     </div>
@@ -293,13 +275,13 @@
                     </div>
                     <div class="booking-grid">
                         <div class="booking-field">
-                            <label>ឈ្មោះពេញ <span class="required">*</span></label>
+                            <label>ឈ្មោះពេញ</label>
                             <input type="text" name="full_name"
                                    value="{{ Auth::check() ? Auth::user()->user_name : '' }}"
                                    placeholder="បញ្ចូលឈ្មោះពេញ" required>
                         </div>
                         <div class="booking-field">
-                            <label>លេខទូរស័ព្ទ <span class="required">*</span></label>
+                            <label>លេខទូរស័ព្ទ</label>
                             <input type="tel" name="phone"
                                    value="{{ Auth::check() ? Auth::user()->phone : '' }}"
                                    placeholder="012 345 678" required>
@@ -328,7 +310,7 @@
                     </div>
                     <div class="booking-grid">
                         <div class="booking-field">
-                            <label>ប្រភេទការដឹកជញ្ជូន <span class="required">*</span></label>
+                            <label>ប្រភេទការដឹកជញ្ជូន</label>
                             <select name="booking_type" id="bookingTypeSelect" required onchange="toggleDateLabels(this.value)">
                                 <option value="">-- ជ្រើសរើស --</option>
                                 <option value="import">នាំចូល (Import)</option>
@@ -344,12 +326,27 @@
                                    class="ts-uppercase">
                             <small class="ts-hint-gray">ឧទាហរណ៍៖ TIIU1234567 (អក្សរ TII + U + លេខ ៧ខ្ទង់)</small>
                         </div>
+                        <div class="booking-field">
+                            <label>ទំហំកុងតឺន័រ</label>
+                            <select name="container_size">
+                                <option value="">-- ជ្រើសរើសទំហំ --</option>
+                                <option value="20F">20F</option>
+                                <option value="40F">40F</option>
+                                <option value="45F">45F</option>
+                            </select>
+                        </div>
                         <div class="booking-field" id="pickupLocationField">
-                            <label>ទីតាំងទទួល <span class="required">*</span></label>
-                            <input type="text" name="pickup_location" placeholder="ឧ. កំពង់ផែស្វ័យយ័តភ្នំពេញ" required>
+                            <label><span id="pickupLocationLabel">ទីតាំងទទួល</span></label>
+                            <input type="text" name="pickup_location" id="pickupLocationInput"
+                                   placeholder="ឧ. កំពង់ផែស្វ័យយ័តភ្នំពេញ" required>
+                            <select name="pickup_location" id="pickupLocationSelect" style="display:none;" disabled>
+                                <option value="">-- ជ្រើសរើសកំពង់ផែ --</option>
+                                <option value="កំពង់ផែស្វ័យយ័តព្រះសីហនុ">កំពង់ផែស្វ័យយ័តព្រះសីហនុ (SHV Port)</option>
+                                <option value="កំពង់ផែស្វ័យយ័តភ្នំពេញ">កំពង់ផែស្វ័យយ័តភ្នំពេញ (Phnom Penh Port)</option>
+                            </select>
                         </div>
                         <div class="booking-field" id="dropoffLocationField">
-                            <label>ទីតាំងដឹកទៅ <span class="required">*</span></label>
+                            <label><span id="dropoffLocationLabel">ទីតាំងដឹកទៅ</span></label>
                             <select name="dropoff_location" required>
                                 <option value="">-- ជ្រើសរើសខេត្ត/ក្រុង --</option>
                                 @foreach($provinces as $p)
@@ -367,18 +364,18 @@
                                    value="{{ old('dropoff_location_link') }}">
                         </div>
                         <div class="booking-field">
-                            <label><span id="pickUpDateLabel">កាលបរិច្ឆេទថ្ងៃដឹក</span> <span class="required">*</span></label>
+                            <label><span id="pickUpDateLabel">កាលបរិច្ឆេទថ្ងៃដឹក</span></label>
                             <input type="date" name="pick_up_date" id="pickUpDateInput" required
                                    min="{{ date('Y-m-d') }}"
                                    onchange="document.getElementById('dropOffDateInput').min = this.value;">
                         </div>
                         <div class="booking-field">
-                            <label><span id="dropOffDateLabel">កាលបរិច្ឆេទថ្ងៃទម្លាក់</span> <span class="required">*</span></label>
+                            <label><span id="dropOffDateLabel">កាលបរិច្ឆេទថ្ងៃទម្លាក់</span></label>
                             <input type="date" name="drop_off_date" id="dropOffDateInput" required
                                    min="{{ date('Y-m-d') }}">
                         </div>
                         <div class="booking-field">
-                            <label>ទម្ងន់ទំនិញ (គីឡូក្រាម) <span class="required">*</span></label>
+                            <label>ទម្ងន់ទំនិញ (គីឡូក្រាម)</label>
                             <input type="number" name="cargo_weight" placeholder="ឧ. 12000" min="1" step="0.01" required>
                         </div>
                         <div class="booking-field">
@@ -419,7 +416,7 @@
 
                 <div class="booking-modal-footer">
                     <span class="booking-footer-note">
-                        <i class="fas fa-info-circle"></i> វាលដែលមាន <span class="ts-required">*</span> ចាំបាច់ត្រូវបំពេញ
+                        <i class="fas fa-info-circle"></i> វាលដែលមាន ចាំបាច់ត្រូវបំពេញ
                     </span>
                     <div class="booking-footer-actions">
                         <button type="button" class="btn-cancel" onclick="closeBookingModal()">
@@ -481,67 +478,35 @@
     function filterTrucks() {
         const type = document.getElementById('truckType').value;
         const size = document.getElementById('truckSize').value;
-        const status = document.getElementById('truckStatus').value;
-        
+
         const trucks = document.querySelectorAll('.truck-card');
-        let visibleCount = 0;
-        
+
         trucks.forEach(truck => {
             const truckType = truck.getAttribute('data-type');
             const truckSize = truck.getAttribute('data-size');
-            const truckStatus = truck.getAttribute('data-status');
-            
+
             const typeMatch = type === 'all' || truckType === type;
             const sizeMatch = size === 'all' || truckSize === size;
-            const statusMatch = status === 'all' || truckStatus === status;
-            
-            if (typeMatch && sizeMatch && statusMatch) {
+
+            if (typeMatch && sizeMatch) {
                 truck.style.display = 'flex';
                 truck.style.animation = 'fadeIn 0.5s ease';
-                visibleCount++;
             } else {
                 truck.style.display = 'none';
             }
         });
-        
-        // Update available trucks counter
-        if (status === 'all') {
-            const availableTrucks = Array.from(trucks).filter(t => 
-                t.getAttribute('data-status') === 'available'
-            ).length;
-            document.getElementById('availableTrucks').textContent = availableTrucks;
-        } else if (status === 'available') {
-            document.getElementById('availableTrucks').textContent = visibleCount;
-        }
     }
 
     // Reset filters
     document.querySelector('.reset-filter').addEventListener('click', function() {
         document.getElementById('truckType').value = 'all';
         document.getElementById('truckSize').value = 'all';
-        document.getElementById('truckStatus').value = 'all';
         filterTrucks();
     });
 
     // Add event listeners to filters
     document.getElementById('truckType').addEventListener('change', filterTrucks);
     document.getElementById('truckSize').addEventListener('change', filterTrucks);
-    document.getElementById('truckStatus').addEventListener('change', filterTrucks);
-
-    // Toggle favorite
-    function toggleFavorite(button) {
-        const icon = button.querySelector('i');
-        button.classList.toggle('active');
-        
-        if (button.classList.contains('active')) {
-            icon.classList.remove('far');
-            icon.classList.add('fas');
-            showNotification('បានបន្ថែមទៅក្នុងបញ្ជីរថយន្តដែលអ្នកចូលចិត្ត');
-        } else {
-            icon.classList.remove('fas');
-            icon.classList.add('far');
-        }
-    }
 
     // Truck details from DB — prepared in PHP, passed as JSON
     const truckDetails = @json($trucksJson);
@@ -745,6 +710,38 @@
             pickupField.style.order  = '';
             dropoffField.style.order = '';
         }
+
+        var pickupLocLabel   = document.getElementById('pickupLocationLabel');
+        var dropoffLocLabel  = document.getElementById('dropoffLocationLabel');
+        var pickupInput      = document.getElementById('pickupLocationInput');
+        var pickupSelect     = document.getElementById('pickupLocationSelect');
+
+        if (type === 'import') {
+            pickupLocLabel.textContent  = 'ទីតាំងលើកទំនិញ';
+            dropoffLocLabel.textContent = 'ទីតាំងទម្លាក់ទំនិញ';
+        } else if (type === 'export') {
+            pickupLocLabel.textContent  = 'ទីតាំងទម្លាក់ទំនិញ';
+            dropoffLocLabel.textContent = 'ទីតាំងច្រកទំនិញ';
+        } else {
+            pickupLocLabel.textContent  = 'ទីតាំងទទួល';
+            dropoffLocLabel.textContent = 'ទីតាំងដឹកទៅ';
+        }
+
+        if (type === 'import' || type === 'export') {
+            pickupInput.style.display  = 'none';
+            pickupInput.disabled       = true;
+            pickupInput.required       = false;
+            pickupSelect.style.display = 'block';
+            pickupSelect.disabled      = false;
+            pickupSelect.required      = true;
+        } else {
+            pickupInput.style.display  = 'block';
+            pickupInput.disabled       = false;
+            pickupInput.required       = true;
+            pickupSelect.style.display = 'none';
+            pickupSelect.disabled      = true;
+            pickupSelect.required      = false;
+        }
     }
 
     // Quick book function (calendar icon on card)
@@ -771,45 +768,9 @@
         }
     }
 
-    // Notification function
-    function showNotification(message) {
-        const notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.textContent = message;
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 10000;
-            animation: slideIn 0.3s ease;
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-    }
-
     // Add animation keyframes
     const animationStyle = document.createElement('style');
     animationStyle.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }

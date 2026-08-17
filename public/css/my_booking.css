@@ -23,7 +23,7 @@ body {
 /* ── Page title ── */
 .page-title { margin-bottom: 28px; }
 .page-title h1 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
     font-size: 1.5rem;
     font-weight: 800;
     color: #1e293b;
@@ -81,7 +81,7 @@ body {
 
 /* ── Section header ── */
 .section-hdr {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
     font-size: 0.92rem;
     font-weight: 800;
     color: #1e293b;
@@ -123,7 +123,7 @@ body {
     gap: 8px;
 }
 .booking-id {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
     font-weight: 800;
     font-size: 0.92rem;
     color: #1e293b;
@@ -318,7 +318,7 @@ body {
     border: 1.5px solid #e2e8f0;
 }
 .lookup-title {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
     font-size: 0.88rem;
     font-weight: 800;
     color: #1e293b;
@@ -420,7 +420,7 @@ body {
     margin-bottom: 16px;
 }
 .empty-state h3 {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', 'Montserrat', sans-serif;
     font-size: 1.1rem;
     font-weight: 800;
     color: #94a3b8;
@@ -463,3 +463,22 @@ body {
     transition: all 0.2s;
 }
 .btn-new-booking:hover { transform: translateY(-2px); }
+
+/* ── Inline style replacements ── */
+.mybk-title-icon { color: #FF6B00; margin-right: 10px; }
+.mybk-cal-icon { margin-right: 3px; }
+.mybk-status-dot { font-size: 0.4rem; }
+.mybk-pay-icon { font-size: 0.65rem; }
+.mybk-pickup-icon { color: #FF6B00; font-size: 0.75rem; }
+.mybk-dropoff-icon { color: #10b981; font-size: 0.75rem; }
+.mybk-maps-link { color: #FF6B00; }
+.mybk-maps-icon { font-size: 0.7rem; }
+.mybk-price-val { color: #FF6B00; }
+.mybk-pay-meta { background: #f0fdf4; padding: 3px 8px; border-radius: 6px; color: #059669; }
+.mybk-history-hdr { margin-top: 8px; }
+.mybk-pay-id { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #FF6B00; background: #fff3e8; padding: 2px 8px; border-radius: 5px; font-size: 0.78rem; }
+.mybk-pay-amount { font-family: 'Montserrat', sans-serif; color: #10b981; font-size: 0.95rem; }
+.mybk-pay-method-icon { color: #FF6B00; margin-right: 5px; font-size: 0.75rem; }
+.mybk-pay-ref { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; color: #64748b; background: #f8fafc; padding: 2px 8px; border-radius: 5px; border: 1px solid #e2e8f0; }
+.mybk-pay-date { font-size: 0.8rem; color: #475569; }
+.mybk-bottom-center { text-align: center; margin-top: 8px; }

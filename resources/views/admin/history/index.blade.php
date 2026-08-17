@@ -2,21 +2,27 @@
 @section('title','ប្រវត្តិ')
 @section('page-title')<span>ប្រវត្តិ</span>ការដឹកជញ្ជូន@endsection
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/admin_history.css') }}">
+@endpush
+
 @section('content')
 
 {{-- ── Search by Container Number ── --}}
-<div style="margin-bottom:20px;">
-    <form method="GET" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+<div class="his-search-wrap">
+    <form method="GET" class="his-search-form">
         <div>
-            <label style="font-size:0.78rem;font-weight:700;color:#475569;display:block;margin-bottom:5px;">លេខកុងតឺន័រ</label>
-            <input type="text" name="container_number" value="{{ request('container_number') }}" placeholder="ស្វែងរកដោយលេខកុងតឺន័រ" style="padding:9px 14px;border:1.5px solid #e2e8f0;border-radius:9px;
-                          font-family:'Kantumruy Pro',sans-serif;font-size:0.85rem;width:240px;outline:none;">
+            <label class="his-search-label">លេខកុងតឺន័រ</label>
+            <input type="text" name="container_number"
+                   value="{{ request('container_number') }}"
+                   placeholder="ស្វែងរកដោយលេខកុងតឺន័រ"
+                   class="his-search-input">
         </div>
-        <button type="submit" class="btn btn-ghost" style="padding:9px 18px;">
+        <button type="submit" class="btn btn-ghost his-search-btn">
             <i class="fas fa-search"></i> ស្វែងរក
         </button>
         @if(request('container_number'))
-        <a href="{{ route('admin.history.index') }}" class="btn btn-ghost" style="padding:9px 14px;">
+        <a href="{{ route('admin.history.index') }}" class="btn btn-ghost his-clear-btn">
             <i class="fas fa-times"></i>
         </a>
         @endif
@@ -25,13 +31,19 @@
 
 <div class="card">
     <div class="card-header">
-        <div class="card-title"><i class="fas fa-history"></i> ប្រវត្តិការដឹក ({{ $histories->total() }})</div>
+        <div class="card-title">
+            <i class="fas fa-history"></i>
+            ប្រវត្តិការដឹក
+            <span class="his-count-badge">
+                {{ $histories->total() }}
+            </span>
+        </div>
     </div>
     <div class="table-wrap">
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ល.រ</th>
                     <th>Booking ID</th>
                     <th>អតិថិជន</th>
                     <th>ប្រភេទ</th>
@@ -44,33 +56,35 @@
             <tbody>
                 @forelse($histories as $h)
                 <tr>
-                    <td>{{ $h->history_id }}</td>
-                    <td><strong>#{{ $h->booking_id }}</strong></td>
-                    <td>{{ $h->booking->customer->full_name ?? '—' }}<br>
-                        <small style="color:#94a3b8;">{{ $h->booking->customer->phone ?? '' }}</small>
+                    <td>
+                        <span class="his-row-num">
+                            {{ ($histories->currentPage() - 1) * $histories->perPage() + $loop->iteration }}
+                        </span>
+                    </td>
+                    <td><strong>{{ $h->booking?->formatted_id ?? '#'.$h->booking_id }}</strong></td>
+                    <td>
+                        {{ $h->booking->customer->full_name ?? '—' }}<br>
+                        <small class="his-phone">{{ $h->booking->customer->phone ?? '' }}</small>
                     </td>
                     <td>{{ $h->booking->booking_type === 'import' ? 'នាំចូល' : 'នាំចេញ' }}</td>
                     <td>
                         @if($h->booking->container_number)
-                        <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;
-                                         color:#475569;background:#f8fafc;padding:3px 9px;
-                                         border-radius:6px;border:1px solid #e2e8f0;">
-                            {{ $h->booking->container_number }}
-                        </span>
+                        <span class="his-container-badge">{{ $h->booking->container_number }}</span>
                         @else — @endif
                     </td>
                     <td>
                         <small>{{ Str::limit($h->booking->pickup_location ?? '—', 18) }}</small><br>
-                        <small style="color:#94a3b8;">
+                        <small class="his-route-dropoff">
                             → {{ Str::limit($h->booking->dropoff_location ?? '—', 18) }}
                             @if($h->booking->dropoff_location_link)
-                            <a href="{{ $h->booking->dropoff_location_link }}" target="_blank" rel="noopener" style="color:#FF6B00;" title="មើលលើ Google Maps">
+                            <a href="{{ $h->booking->dropoff_location_link }}" target="_blank" rel="noopener"
+                               class="his-map-link" title="មើលលើ Google Maps">
                                 <i class="fas fa-external-link-alt"></i>
                             </a>
                             @endif
                         </small>
                     </td>
-                    <td><strong style="color:#10b981;">${{ number_format($h->total_price ?? 0, 2) }}</strong></td>
+                    <td><strong class="his-total">${{ number_format($h->total_price ?? 0, 2) }}</strong></td>
                     <td>
                         @if($h->completed_date)
                         <span class="badge badge-completed">
@@ -82,11 +96,11 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" style="text-align:center;color:#94a3b8;padding:32px;">
+                    <td colspan="8" class="his-empty-cell">
                         មិនមានប្រវត្តិ
                         @if(request('container_number'))
                         <br>
-                        <a href="{{ route('admin.history.index') }}" style="font-size:0.82rem;color:#FF6B00;margin-top:8px;display:inline-block;">
+                        <a href="{{ route('admin.history.index') }}" class="his-empty-link">
                             លុបការស្វែងរក
                         </a>
                         @endif
@@ -97,7 +111,7 @@
         </table>
     </div>
     @if($histories->hasPages())
-    <div style="padding:14px 22px;border-top:1px solid #f1f5f9;">{{ $histories->links() }}</div>
+    <div class="his-pagination">{{ $histories->links() }}</div>
     @endif
 </div>
 @endsection

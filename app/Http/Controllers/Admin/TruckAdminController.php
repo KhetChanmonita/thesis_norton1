@@ -10,10 +10,31 @@ use Illuminate\Support\Facades\Validator;
 
 class TruckAdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $trucks = Truck::latest()->paginate(10);
-        return view('admin.trucks.index', compact('trucks'));
+        $query = Truck::query();
+
+        if ($request->filled('search')) {
+            $search = strtoupper(trim($request->search));
+            $query->where(function ($q) use ($search) {
+                // Match full plate number (case-insensitive): e.g. 3A-9670
+                $q->whereRaw('UPPER(plate_number) LIKE ?', ['%' . $search . '%'])
+                  // Match last 4 digits after the dash: e.g. 9670
+                  ->orWhereRaw('UPPER(plate_number) LIKE ?', ['%-' . $search . '%']);
+            });
+        }
+
+        $trucks = $query->latest()->paginate(10)->withQueryString();
+
+        $total            = Truck::count();
+        $totalAvailable   = Truck::where('status', 'available')->orWhereNull('status')->count();
+        $totalInProgress  = Truck::where('status', 'in_progress')->count();
+        $totalDelivering  = Truck::where('status', 'delivering')->count();
+        $totalMaintenance = Truck::where('status', 'maintenance')->count();
+
+        return view('admin.trucks.index',
+            compact('trucks', 'total', 'totalAvailable', 'totalInProgress', 'totalDelivering', 'totalMaintenance')
+        );
     }
 
     public function store(Request $request)
@@ -100,8 +121,7 @@ class TruckAdminController extends Controller
             'status' => 'required|in:available,in_progress,delivering,maintenance',
         ]);
         $truck->update(['status' => $request->status]);
-        return redirect()->route('admin.trucks.index')
-                         ->with('success', 'ស្ថានភាពរថយន្តបានផ្លាស់ប្ដូរ!');
+        return back()->with('success', 'ស្ថានភាពរថយន្តបានផ្លាស់ប្ដូរ!');
     }
 
     public function destroy(Truck $truck)

@@ -68,13 +68,13 @@ body {
 }
 
 .au-hero-left h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 4rem;
+    font-family: 'Montserrat', 'Kantumruy Pro', sans-serif;
+    font-size: 2.6rem;
     font-weight: 900;
     color: #1e293b;
-    line-height: 1;
+    line-height: 1.25;
     margin-bottom: 16px;
-    letter-spacing: -2px;
+    letter-spacing: -1px;
 }
 
 .au-hero-line {
@@ -211,6 +211,145 @@ body {
     height: 55px;
     background: #f1f5f9;
     flex-shrink: 0;
+}
+
+/* ══ FEATURE BAR (below hero) ══ */
+.au-feature-bar {
+    display: flex;
+    align-items: flex-start;
+    background: white;
+    border: 1.5px solid #f1f5f9;
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+    padding: 32px 36px;
+    margin: -28px 0 0;
+    position: relative;
+    z-index: 10;
+    gap: 8px;
+}
+
+.au-feature-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    padding: 0 20px;
+}
+
+.au-feature-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ff8a00, #ffb347);
+    color: white;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 6px 16px rgba(255,138,0,0.28);
+}
+
+.au-feature-title {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.au-feature-desc {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.75;
+}
+
+.au-feature-sep {
+    width: 1px;
+    align-self: stretch;
+    background: #f1f5f9;
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+/* ══ ABOUT COMPANY ══ */
+.au-company-section { background: white; padding: 90px 0; }
+
+.au-company-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.au-company-tag {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.au-company-dash {
+    width: 40px;
+    height: 4px;
+    background: linear-gradient(90deg, #ff8a00, #ffb347);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+.au-company-left h2 {
+    font-family: 'Montserrat', 'Kantumruy Pro', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: #1e293b;
+    letter-spacing: -0.5px;
+}
+.au-company-left p {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.93rem;
+    color: #64748b;
+    line-height: 1.95;
+}
+
+.au-company-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+.au-company-stat {
+    background: #f8f9fa;
+    border-radius: 16px;
+    padding: 28px 20px;
+    text-align: center;
+    transition: all 0.3s;
+}
+.au-company-stat:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(255,138,0,0.12);
+}
+.au-company-stat-icon {
+    width: 54px;
+    height: 54px;
+    background: #fff3e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #ff8a00;
+    margin: 0 auto 14px;
+}
+.au-company-stat-num {
+    display: block;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: #ff8a00;
+    letter-spacing: -1px;
+}
+.au-company-stat-label {
+    display: block;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-top: 6px;
 }
 
 /* ══ MISSION/VISION/VALUES ══ */
@@ -402,7 +541,7 @@ body {
 .au-tl-card-active { border-top-color: #ff8a00; background: white; box-shadow: 0 6px 24px rgba(255,138,0,0.1); }
 
 .au-tl-year {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-size: 0.75rem; font-weight: 800;
     color: #ff8a00; background: #fff3e0;
     padding: 3px 12px; border-radius: 20px;
@@ -466,49 +605,176 @@ body {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-    transition: all 0.3s;
+    transition: all 0.35s;
 }
-.au-team-card:hover { transform: translateY(-8px); box-shadow: 0 16px 40px rgba(0,0,0,0.14); }
+.au-team-card:hover { transform: translateY(-10px); box-shadow: 0 24px 52px rgba(255,107,0,0.16), 0 8px 24px rgba(0,0,0,0.1); }
 
-.au-team-img { position: relative; height: 260px; overflow: hidden; }
-.au-team-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-.au-team-card:hover .au-team-img img { transform: scale(1.08); }
-
-.au-team-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(255,138,0,0.88), transparent);
-    display: flex; align-items: flex-end; justify-content: center;
-    padding-bottom: 20px;
-    opacity: 0; transition: opacity 0.3s;
+/* Dark gradient header with circular photo */
+.au-team-img {
+    position: relative;
+    background: linear-gradient(160deg, #1a1a2e 0%, #2a2f6e 60%, #1e293b 100%);
+    height: 200px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.au-team-card:hover .au-team-overlay { opacity: 1; }
 
-.au-team-socials { display: flex; gap: 10px; }
+/* Decorative subtle circles in background */
+.au-team-img::before {
+    content: '';
+    position: absolute;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,107,0,0.06);
+    top: -60px; right: -60px;
+}
+.au-team-img::after {
+    content: '';
+    position: absolute;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,107,0,0.05);
+    bottom: -40px; left: -30px;
+}
+
+.au-team-img img {
+    width: 148px;
+    height: 148px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 4px solid rgba(255,255,255,0.12);
+    box-shadow: 0 0 0 3px #FF6B00, 0 8px 28px rgba(0,0,0,0.35);
+    transition: transform 0.4s, box-shadow 0.4s;
+    position: relative;
+    z-index: 2;
+}
+.au-team-card:hover .au-team-img img {
+    transform: scale(1.07);
+    box-shadow: 0 0 0 4px #FF6B00, 0 12px 36px rgba(255,107,0,0.4);
+}
+
+.au-team-overlay { display: none; }
+
+.au-team-socials { display: flex; gap: 12px; }
 .au-team-socials a {
-    width: 36px; height: 36px;
-    background: white; color: #ff8a00;
+    width: 40px; height: 40px;
+    background: white; color: #FF6B00;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 0.85rem; text-decoration: none;
-    transition: transform 0.2s;
+    font-size: 0.9rem; text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
-.au-team-socials a:hover { transform: scale(1.15); }
+.au-team-socials a:hover { transform: scale(1.18); background: #fff3e8; }
 
-.au-team-info { padding: 22px; text-align: center; }
+.au-team-info { padding: 20px 22px 26px; text-align: center; }
 .au-team-info h4 {
     font-family: 'Kantumruy Pro', sans-serif;
-    font-size: 0.97rem; font-weight: 700; color: #1e293b; margin-bottom: 6px;
+    font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 8px;
 }
 .au-team-role {
     display: inline-block;
-    font-family: 'Poppins', 'Kantumruy Pro', sans-serif;
-    font-size: 0.72rem; font-weight: 600;
-    color: white; background: #ff8a00;
-    padding: 3px 14px; border-radius: 20px; margin-bottom: 10px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.73rem; font-weight: 700;
+    color: white;
+    background: linear-gradient(135deg, #FF6B00, #ff8c00);
+    padding: 4px 16px; border-radius: 20px; margin-bottom: 12px;
+    box-shadow: 0 3px 10px rgba(255,107,0,0.3);
 }
 .au-team-info p {
     font-family: 'Kantumruy Pro', sans-serif;
-    font-size: 0.8rem; color: #94a3b8; line-height: 1.7;
+    font-size: 0.8rem; color: #94a3b8; line-height: 1.75;
+}
+
+/* ══ STAFF ══ */
+.au-staff-section {
+    padding: 80px 0;
+    background: #f8fafc;
+}
+
+.au-staff-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 48px;
+}
+
+.au-staff-card {
+    flex: 0 0 220px;
+}
+
+.au-staff-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 20px 24px;
+    text-align: center;
+    border: 1.5px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.au-staff-card:hover {
+    box-shadow: 0 10px 32px rgba(255,138,0,0.12);
+    transform: translateY(-4px);
+}
+
+.au-staff-img-wrap {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 18px;
+}
+
+.au-staff-img-wrap img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.au-staff-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, #ff8a00, #ffb347);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 0.85rem;
+    border: 2px solid #fff;
+}
+
+.au-staff-name {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.au-staff-role {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.82rem;
+    color: #94a3b8;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .au-staff-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .au-staff-grid { grid-template-columns: 1fr; }
 }
 
 /* ══ CTA ══ */
@@ -534,6 +800,7 @@ body {
     font-family: 'Kantumruy Pro', sans-serif;
     font-size: 0.95rem; opacity: 0.85; line-height: 1.7;
 }
+.au-cta-highlight { color: #ffb347; }
 .au-cta-right { display: flex; gap: 14px; flex-shrink: 0; flex-wrap: wrap; }
 
 .au-cta-btn-primary {
@@ -561,16 +828,21 @@ body {
     .au-hero-left { padding: 30px 40px 30px 40px; }
     .au-mvv-grid, .au-why-grid, .au-team-grid { grid-template-columns: 1fr 1fr; }
     .au-stats-wrap { padding: 0 24px; }
+    .au-company-grid { grid-template-columns: 1fr; gap: 40px; }
 }
 
 @media (max-width: 768px) {
     .au-hero { grid-template-columns: 1fr; min-height: auto; }
     .au-hero-left { padding: 50px 24px 40px; order: 2; }
     .au-hero-right { height: 300px; order: 1; }
-    .au-hero-left h1 { font-size: 2.6rem; }
+    .au-hero-left h1 { font-size: 2.1rem; }
     .au-stats-bar { flex-wrap: wrap; gap: 20px; padding: 24px; margin: 0; border-radius: 0; border: none; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
     .au-stat-sep { display: none; }
     .au-stat-item { flex: 0 0 calc(50% - 20px); padding: 0; }
+    .au-feature-bar { flex-wrap: wrap; gap: 24px; padding: 24px; margin: 0; border-radius: 0; border: none; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .au-feature-sep { display: none; }
+    .au-feature-item { flex: 0 0 calc(50% - 12px); padding: 0; }
+    .au-company-stats { grid-template-columns: 1fr 1fr; }
     .au-mvv-grid, .au-why-grid, .au-team-grid { grid-template-columns: 1fr; }
     .au-timeline::before { left: 20px; }
     .au-tl-item { padding-right: 0; padding-left: 60px; justify-content: flex-start; }
@@ -582,7 +854,9 @@ body {
 }
 
 @media (max-width: 480px) {
-    .au-hero-left h1 { font-size: 2rem; }
+    .au-hero-left h1 { font-size: 1.7rem; }
     .au-stat-item { flex: 0 0 100%; }
-    .au-mvv-section, .au-why-section, .au-team-section, .au-timeline-section { padding: 60px 0; }
+    .au-feature-item { flex: 0 0 100%; }
+    .au-company-stats { grid-template-columns: 1fr; }
+    .au-mvv-section, .au-why-section, .au-team-section, .au-timeline-section, .au-company-section { padding: 60px 0; }
 }

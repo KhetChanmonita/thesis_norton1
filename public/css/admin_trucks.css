@@ -1,3 +1,8 @@
+/* ── Image upload hint ── */
+.trk-upload-hint-text { display: block; margin-top: 6px; color: #94a3b8; font-size: 0.78rem; }
+.trk-upload-folder-icon { color: #FF6B00; margin-right: 4px; }
+.trk-upload-code { color: #FF6B00; }
+
 /* ── Error alert ── */
 .trk-error-box {
     background: #fee2e2;
@@ -12,14 +17,59 @@
 .trk-error-icon { color: #dc2626; margin-top: 2px; flex-shrink: 0; }
 .trk-error-text { font-size: 0.85rem; color: #991b1b; font-weight: 600; }
 
+/* ── Table header ── */
+.trk-count-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-left: 4px;
+}
+
 /* ── Toolbar ── */
 .trk-toolbar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
+    gap: 14px;
     margin-bottom: 22px;
+    flex-wrap: wrap;
 }
-.trk-total-text { font-size: 0.85rem; color: #64748b; }
+
+.trk-toolbar-start {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.trk-filter-form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+.trk-filter-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #475569;
+    display: block;
+    margin-bottom: 6px;
+}
+.trk-search-input {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    width: 220px;
+    outline: none;
+}
+.trk-btn-search-pad { padding: 9px 18px; }
+.trk-btn-clear-pad { padding: 9px 14px; }
 
 /* ── Table ── */
 .trk-row-num { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #64748b; }
@@ -43,7 +93,16 @@
 .trk-empty-icon { font-size: 2rem; margin-bottom: 10px; display: block; opacity: 0.3; }
 
 /* ── Pagination ── */
-.trk-pagination-bar { padding: 14px 22px; border-top: 1px solid #f1f5f9; }
+.trk-pagination-bar {
+    padding: 14px 22px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.trk-pagination-info { font-size: 0.8rem; color: #94a3b8; }
+.trk-pagination-pages { display: flex; gap: 6px; }
+.trk-page-disabled { opacity: 0.4; cursor: default; }
 
 /* ── Modal forms ── */
 .trk-mb-20 { margin-bottom: 20px; }

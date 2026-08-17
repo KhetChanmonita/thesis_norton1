@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ចុះឈ្មោះ - LS Trucking Service</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,7 +14,7 @@
     @include('partials.header')
 
     <main class="register-container">
-        <div class="register-wrapper" style="max-width: 1200px;max-height: 1000px; margin: 40px auto;">
+        <div class="register-wrapper">
 
             <!-- Left panel -->
             <div class="register-left">

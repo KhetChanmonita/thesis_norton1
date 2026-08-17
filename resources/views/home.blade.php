@@ -93,7 +93,7 @@
 
                         <div class="hm-cell-br-bb">
                             <label class="hm-label">
-                                ឈ្មោះពេញ <span class="hm-required">*</span>
+                                ឈ្មោះពេញ
                             </label>
                             <input type="text" name="full_name" value="{{ old('full_name', Auth::check() ? Auth::user()->user_name : '') }}"
                                    placeholder="បញ្ចូលឈ្មោះពេញ" required
@@ -102,7 +102,7 @@
 
                         <div class="hm-cell-bb">
                             <label class="hm-label">
-                                លេខទូរស័ព្ទ <span class="hm-required">*</span>
+                                លេខទូរស័ព្ទ
                             </label>
                             <input type="tel" name="phone" value="{{ old('phone', Auth::check() ? Auth::user()->phone : '') }}"
                                    placeholder="012 345 678" required
@@ -122,7 +122,6 @@
                                    placeholder="ឈ្មោះក្រុមហ៊ុន (បើមាន)"
                                    class="hm-input">
                         </div>
-
                     </div>
                 </div>
 
@@ -134,7 +133,7 @@
 
                     <div class="hm-cell-bb">
                         <label class="hm-label">
-                            ប្រភេទសំណួរ <span class="hm-required">*</span>
+                            ប្រភេទសំណួរ
                         </label>
                         <select name="inquiry_type" required
                                 class="hm-input hm-select">
@@ -149,7 +148,7 @@
 
                     <div class="hm-cell">
                         <label class="hm-label">
-                            សារ / សំណួរ <span class="hm-required">*</span>
+                            សារ / សំណួរ
                         </label>
                         <textarea name="message" rows="4" required
                                   placeholder="សូមបញ្ចូលសំណួរ ឬព័ត៌មានដែលអ្នកចង់ដឹង..."
@@ -159,10 +158,7 @@
 
                 {{-- Footer --}}
                 <div class="hm-footer">
-                    <span class="hm-footer-note">
-                        <i class="fas fa-info-circle hm-icon-orange"></i>
-                        វាលដែលមាន <span class="hm-required-inline">*</span> ចាំបាច់ត្រូវបំពេញ
-                    </span>
+
                     <div class="hm-footer-actions">
                         <button type="button" id="cancelLearnMore" class="hm-btn-cancel">
                             <i class="fas fa-times"></i> បោះបង់

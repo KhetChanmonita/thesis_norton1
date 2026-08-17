@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('css/services_header.css') }}">
 
     {{-- Favicon --}}
-    <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
 </head>
 <body>
 
@@ -34,20 +34,6 @@
                     យើងផ្តល់ជូននូវដំណោះស្រាយដឹកជញ្ជូនពេញលេញ ពីការដឹកជញ្ជូនពីកំពង់ផែទៅរោងចក្រ
                     និងពីរោងចក្រទៅកំពង់ផែតាមគ្រប់ខេត្តក្រុង។
                 </p>
-                {{-- <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">98%</span>
-                        <span class="stat-label">អតិថិជនពេញចិត្ត</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">5000+</span>
-                        <span class="stat-label">ការដឹកជញ្ជូនបានសម្រេច</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">24/7</span>
-                        <span class="stat-label">សេវាកម្មគាំទ្រ</span>
-                    </div>
-                </div> --}}
             </div>
         </div>
 
@@ -76,7 +62,7 @@
                     <div class="category-icon">
                         <i class="fas fa-download"></i>
                     </div>
-                    <h3>ដឹកជញ្ជូននាំចូលពីកំពង់ផែស្វ័យយ័តព្រះសីហនុ</h3>
+                    <h3>នាំចូលពីកំពង់ផែស្វ័យយ័តព្រះសីហនុ</h3>
                     <div class="port-badges">
                         <span class="port-badge import-badge">
                             <i class="fas fa-file-import"></i> នាំចូល
@@ -98,7 +84,7 @@
                     <div class="category-icon">
                         <i class="fas fa-download"></i>
                     </div>
-                    <h3>ដឹកជញ្ជូននាំចូលពីកំពង់ផែស្វ័យយ័តភ្នំពេញ</h3>
+                    <h3>នាំចូលពីកំពង់ផែស្វ័យយ័តភ្នំពេញ</h3>
                     <div class="port-badges">
                         <span class="port-badge import-badge">
                             <i class="fas fa-file-import"></i> នាំចូល
@@ -120,7 +106,7 @@
                     <div class="category-icon">
                         <i class="fas fa-upload"></i>
                     </div>
-                    <h3>ដឹកជញ្ជូននាំចេញទៅកំពង់ផែស្វ័យយ័តព្រះសីហនុ</h3>
+                    <h3>នាំចេញទៅកំពង់ផែស្វ័យយ័តព្រះសីហនុ</h3>
                     <div class="port-badges">
                         <span class="port-badge export-badge">
                             <i class="fas fa-file-export"></i> នាំចេញ
@@ -142,7 +128,7 @@
                     <div class="category-icon">
                         <i class="fas fa-upload"></i>
                     </div>
-                    <h3>ដឹកជញ្ជូននាំចេញទៅកំពង់ផែស្វ័យយ័តភ្នំពេញ</h3>
+                    <h3>នាំចេញទៅកំពង់ផែស្វ័យយ័តភ្នំពេញ</h3>
                     <div class="port-badges">
                         <span class="port-badge export-badge">
                             <i class="fas fa-file-export"></i> នាំចេញ
@@ -164,86 +150,200 @@
 
     <!-- Detailed Services -->
     <section class="detailed-services">
+
+        {{-- Logistics Process Section --}}
+        <div class="sh-process-wrap">
+
+            {{-- Header Banner --}}
+            <div class="sh-proc-banner">
+                <div class="sh-proc-banner-inner container">
+                    <span class="sh-proc-tag">នាំចូល &amp; នាំចេញ</span>
+                    <h2 class="sh-proc-main-title">សកម្មភាពពេលដឹកជញ្ជូនទំនិញ</h2>
+                    <p class="sh-proc-sub">ដឹកជញ្ជូនទំនិញរបស់អ្នកដោយប្រុងប្រយ័ត្ន និងមានប្រសិទ្ធភាព</p>
+                    <div class="sh-proc-badges">
+                        <span class="sh-proc-badge">សុវត្ថិភាព</span>
+                        <span class="sh-proc-badge">គួរទុកចិត្ត</span>
+                        <span class="sh-proc-badge">មានប្រសិទ្ធភាព</span>
+                        <span class="sh-proc-badge">ទាន់ពេលវេលា</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- 5 Steps --}}
+            <div class="sh-proc-steps-wrap">
+                <div class="container">
+                    <div class="sh-proc-steps">
+
+                        <div class="sh-proc-step">
+                            <div class="sh-proc-step-img-wrap">
+                                <img src="{{ asset('images/import image/1.png') }}" alt="Pick up at port" class="sh-proc-step-img">
+                                <span class="sh-proc-step-num">01</span>
+                            </div>
+                            <div class="sh-proc-step-body">
+                                <div class="sh-proc-step-icon"><i class="fas fa-anchor"></i></div>
+                                <h4 class="sh-proc-step-title">លើកទូរកុងតឺន័រពីកំពង់ផែ</h4>
+                                <p class="sh-proc-step-desc">ចូលលើកទូរកុងតឺន័រពីកំពង់ផែនៅពេលដែលនាវាមកដល់។</p>
+                            </div>
+                        </div>
+
+                        <div class="sh-proc-connector"><i class="fas fa-chevron-right"></i></div>
+
+                        <div class="sh-proc-step">
+                            <div class="sh-proc-step-img-wrap">
+                                <img src="{{ asset('images/import image/2.png') }}" alt="Arrived at factory" class="sh-proc-step-img">
+                                <span class="sh-proc-step-num">02</span>
+                            </div>
+                            <div class="sh-proc-step-body">
+                                <div class="sh-proc-step-icon"><i class="fas fa-industry"></i></div>
+                                <h4 class="sh-proc-step-title">រថយន្តមកដល់រោងចក្រ ឬឃ្លាំងទំនិញ</h4>
+                                <p class="sh-proc-step-desc">ធ្វើការដឹកទំនិញទៅដល់រោងចក្រ ឬឃ្លាំងទំនិញរបស់អតិថិជន។</p>
+                            </div>
+                        </div>
+
+                        <div class="sh-proc-connector"><i class="fas fa-chevron-right"></i></div>
+
+                        <div class="sh-proc-step">
+                            <div class="sh-proc-step-img-wrap">
+                                <img src="{{ asset('images/import image/3.png') }}" alt="Cut seal drop cargo" class="sh-proc-step-img">
+                                <span class="sh-proc-step-num">03</span>
+                            </div>
+                            <div class="sh-proc-step-body">
+                                <div class="sh-proc-step-icon"><i class="fas fa-box-open"></i></div>
+                                <h4 class="sh-proc-step-title">កាត់ត្រា និទម្លាក់ទំនិញចុះ</h4>
+                                <p class="sh-proc-step-desc">កាត់ត្រាទំនិញ​ហើយទម្លាក់ទំនិញចុះនៅទីតាំងគោលដៅ។</p>
+                            </div>
+                        </div>
+
+                        <div class="sh-proc-connector"><i class="fas fa-chevron-right"></i></div>
+
+                        <div class="sh-proc-step">
+                            <div class="sh-proc-step-img-wrap">
+                                <img src="{{ asset('images/import image/4.png') }}" alt="Return empty container" class="sh-proc-step-img">
+                                <span class="sh-proc-step-num">04</span>
+                            </div>
+                            <div class="sh-proc-step-body">
+                                <div class="sh-proc-step-icon"><i class="fas fa-undo-alt"></i></div>
+                                <h4 class="sh-proc-step-title">យកទូរកុងតឺន័រទទេទៅទម្លាក់នៅដេប៉ូ</h4>
+                                <p class="sh-proc-step-desc">ត្រឡប់ Container ទទេទៅកំពង់ផែ ឬដេប៉ូវិញទាន់ពេលវេលា។</p>
+                            </div>
+                        </div>
+
+                        <div class="sh-proc-connector"><i class="fas fa-chevron-right"></i></div>
+
+                        <div class="sh-proc-step">
+                            <div class="sh-proc-step-img-wrap">
+                                <img src="{{ asset('images/import image/5.png') }}" alt="Receive receipt" class="sh-proc-step-img">
+                                <span class="sh-proc-step-num">05</span>
+                            </div>
+                            <div class="sh-proc-step-body">
+                                <div class="sh-proc-step-icon"><i class="fas fa-file-alt"></i></div>
+                                <h4 class="sh-proc-step-title">ទទួលវិក្កយបត្រទំនិញ</h4>
+                                <p class="sh-proc-step-desc">អតិថិជនទទួលបានវិក្កយបត្រ និងឯកសារបញ្ជាក់ការដឹកទំនិញផ្លូវការ។</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {{-- Features Bar --}}
+            <div class="sh-proc-features">
+                <div class="container">
+                    <div class="sh-proc-features-inner">
+                        <div class="sh-proc-feat-cols">
+                            <div class="sh-proc-feat-col">
+                                <div class="sh-proc-feat-icon"><i class="fas fa-shield-alt"></i></div>
+                                <div class="sh-proc-feat-text">
+                                    <strong>សុវត្ថិភាពជាមុន</strong>
+                                    <span>យើងផ្តល់អាទិភាពដល់សុវត្ថិភាពទំនិញរបស់អ្នក ជាងអ្វីទាំងអស់។</span>
+                                </div>
+                            </div>
+                            <div class="sh-proc-feat-col">
+                                <div class="sh-proc-feat-icon"><i class="fas fa-users"></i></div>
+                                <div class="sh-proc-feat-text">
+                                    <strong>ក្រុមការងារមានបទពិសោធន៍</strong>
+                                    <span>អ្នកបើករថយន្ត និងក្រុមការងាររបស់យើង មានបទពិសោធន៍ច្រើនឆ្នាំ។</span>
+                                </div>
+                            </div>
+                            <div class="sh-proc-feat-col">
+                                <div class="sh-proc-feat-icon"><i class="fas fa-clock"></i></div>
+                                <div class="sh-proc-feat-text">
+                                    <strong>ដឹកជញ្ជូនទាន់ពេលវេលា</strong>
+                                    <span>យើងប្តេជ្ញាដឹកទំនិញរបស់អ្នក ទៅដល់គោលដៅទាន់ពេលរៀងរាល់ដង។</span>
+                                </div>
+                            </div>
+                            <div class="sh-proc-feat-col">
+                                <div class="sh-proc-feat-icon"><i class="fas fa-file-contract"></i></div>
+                                <div class="sh-proc-feat-text">
+                                    <strong>ឯកសារត្រឹមត្រូវ</strong>
+                                    <span>ឯកសារ និងលិខិតបញ្ជាក់ទាំងអស់ ត្រូវបានដោះស្រាយដោយភាពត្រឹមត្រូវ។</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sh-proc-feat-truck">
+                            <img src="{{ asset('images/trucks/1781847524_9115.png') }}" alt="LS Trucking">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
         <div class="container">
             <div class="section-header center">
-                <h6 class="section-subtitle">សេវាកម្មលម្អិត</h6>
+                
                 <h2 class="section-title">សេវាកម្មដឹកជញ្ជូនពិសេស</h2>
                 <p class="section-description">
                     ស្វែងយល់ពីសេវាកម្មដឹកជញ្ជូនរបស់យើងដែលត្រូវបានរចនាឡើងសម្រាប់តម្រូវការរបស់អ្នក។
                 </p>
             </div>
 
-            <div class="services-tabs">
+            <div class="svc-cards-grid">
+
+                <a href="{{ route('service.detail', 'import-shv') }}" class="svc-card svc-import">
+                    <div class="svc-card-icon"><i class="fas fa-anchor"></i></div>
+                    <div class="svc-card-body">
+                        <span class="svc-card-badge import">នាំចូល</span>
+                        <h4 class="svc-card-title">ពីកំពង់ផែស្វ័យយ័ត<br>ព្រះសីហនុ</h4>
+                    </div>
+                    <div class="svc-card-arrow"><i class="fas fa-arrow-right"></i></div>
+                </a>
+
+                <a href="{{ route('service.detail', 'import-pp') }}" class="svc-card svc-import">
+                    <div class="svc-card-icon"><i class="fas fa-ship"></i></div>
+                    <div class="svc-card-body">
+                        <span class="svc-card-badge import">នាំចូល</span>
+                        <h4 class="svc-card-title">ពីកំពង់ផែស្វ័យយ័ត<br>ភ្នំពេញ</h4>
+                    </div>
+                    <div class="svc-card-arrow"><i class="fas fa-arrow-right"></i></div>
+                </a>
+
+                <a href="{{ route('service.detail', 'export-shv') }}" class="svc-card svc-export">
+                    <div class="svc-card-icon"><i class="fas fa-anchor"></i></div>
+                    <div class="svc-card-body">
+                        <span class="svc-card-badge export">នាំចេញ</span>
+                        <h4 class="svc-card-title">ទៅកំពង់ផែស្វ័យយ័ត<br>ព្រះសីហនុ</h4>
+                    </div>
+                    <div class="svc-card-arrow"><i class="fas fa-arrow-right"></i></div>
+                </a>
+
+                <a href="{{ route('service.detail', 'export-pp') }}" class="svc-card svc-export">
+                    <div class="svc-card-icon"><i class="fas fa-ship"></i></div>
+                    <div class="svc-card-body">
+                        <span class="svc-card-badge export">នាំចេញ</span>
+                        <h4 class="svc-card-title">ទៅកំពង់ផែស្វ័យយ័ត<br>ភ្នំពេញ</h4>
+                    </div>
+                    <div class="svc-card-arrow"><i class="fas fa-arrow-right"></i></div>
+                </a>
+
+            </div>
+
+            <div class="services-tabs" style="display:none;">
                 <div class="tab-buttons">
-                    <button class="tab-btn active" data-tab="shv-import" onclick="openTab('shv-import')">
-                        <i class="fas fa-file-import"></i>
-                        នាំចូលពីស្វ័យយ័តព្រះសីហនុ
-                    </button>
-                    <button class="tab-btn" data-tab="pp-import" onclick="openTab('pp-import')">
-                        <i class="fas fa-file-import"></i>
-                        នាំចូលពីកំពង់ផែស្វ័យយ័តភ្នំពេញ
-                    </button>
-                    <button class="tab-btn" data-tab="shv-export" onclick="openTab('shv-export')">
-                        <i class="fas fa-file-export"></i>
-                        នាំចេញទៅស្វ័យយ័តព្រះសីហនុ
-                    </button>
-                    <button class="tab-btn" data-tab="pp-export" onclick="openTab('pp-export')">
-                        <i class="fas fa-file-export"></i>
-                        នាំចេញទៅកំពង់ផែស្វ័យយ័តភ្នំពេញ
-                    </button>
-                </div>
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="shv-import">
-                        <div class="tab-pane-content">
-                            <div class="tab-image">
-                                <img src="https://i.pinimg.com/736x/38/59/30/38593081598d640c22f8ca34b6739e11.jpg" alt="Import from Sihanoukville Port">
-                                <div class="image-badge">
-                                    <span><i class="fas fa-anchor"></i> កំពង់ផែស្វ័យយ័តព្រះសីហនុ</span>
-                                </div>
-                            </div>
-                            <div class="tab-info">
-                                <h3>ដឹកជញ្ជូននាំចូលពីកំពង់ផែស្វ័យយ័តព្រះសីហនុ</h3>
-                                <p>
-                                    សេវាកម្មដឹកជញ្ជូនទំនិញនាំចូលពីកំពង់ផែស្វ័យយ័តព្រះសីហនុទៅរោងចក្រតាមខេត្តនីមួយៗ។
-                                    យើងផ្តល់ជូននូវដំណោះស្រាយដឹកជញ្ជូនពេញលេញ ពីការដោះស្រាយឯកសារពន្ធដាររហូតដល់ការដឹកជញ្ជូនទៅកន្លែងដែលត្រូវការ។
-                                </p>
-                                <div class="features-grid">
-                                    <div class="feature-item">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-passport"></i>
-                                        </div>
-                                        <h4>ដោះស្រាយឯកសារពន្ធដារ</h4>
-                                        <p>ការដោះស្រាយឯកសារពន្ធដារនាំចូលដោយអ្នកជំនាញ</p>
-                                    </div>
-                                    <div class="feature-item">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-shield-alt"></i>
-                                        </div>
-                                        <h4>ការធានាសុវត្ថិភាព</h4>
-                                        <p>ប្រព័ន្ធតាមដានជូន និងការធានាសុវត្ថិភាពទំនិញ</p>
-                                    </div>
-                                    <div class="feature-item">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-clock"></i>
-                                        </div>
-                                        <h4>ពេលវេលាដឹកជញ្ជូន</h4>
-                                        <p>ធានាពេលវេលាដឹកជញ្ជូនទៅគ្រប់ខេត្ត</p>
-                                    </div>
-                                    <div class="feature-item">
-                                        <div class="feature-icon">
-                                            <i class="fas fa-headset"></i>
-                                        </div>
-                                        <h4>សេវាកម្មគាំទ្រ 24/7</h4>
-                                        <p>ក្រុមជំនួយការត្រៀមខ្លួនជានិច្ចសម្រាប់ការតាមដាន</p>
-                                    </div>
-                                </div>
-                                <button onclick="showServiceDetails('shv-import')" class="cta-button">
-                                    <span>ស្នើសុំការប្រឹក្សាយោបល់</span>
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Will be loaded dynamically -->
                     </div>
 
                     <!-- Other tab panes will be loaded dynamically -->
@@ -270,7 +370,7 @@
                 <h6 class="section-subtitle">ហេតុអ្វីត្រូវជ្រើសរើសយើង</h6>
                 <h2 class="section-title">អត្ថប្រយោជន៍នៃការធ្វើការជាមួយយើង</h2>
                 <p class="section-description">
-                    ក្រុមហ៊ុនដឹកជញ្ជូនរបស់យើងមានបទពិសោធន៍ជាង ២ឆ្នាំក្នុងវិស័យដឹកជញ្ជូន។
+                    ក្រុមហ៊ុនដឹកជញ្ជូនរបស់យើងមានបទពិសោធន៍ជាង 3ឆ្នាំក្នុងវិស័យដឹកជញ្ជូន។
                 </p>
             </div>
 
@@ -433,14 +533,10 @@
                     ទាក់ទងយើងខ្ញុំសម្រាប់ការប្រឹក្សាយោបល់ដោយឥតគិតថ្លៃ និងទទួលបានតម្លៃប្រកួតប្រជែងសម្រាប់តម្រូវការដឹកជញ្ជូនរបស់អ្នក។
                 </p>
                 <div class="cta-buttons">
-                    <button onclick="showContactModal()" class="cta-button primary">
+                    <a href="{{ route('contact') }}" class="cta-button primary">
                         <i class="fas fa-phone-alt"></i>
                         ទូរស័ព្ទទៅយើងខ្ញុំ
-                    </button>
-                    <button onclick="showEmailModal()" class="cta-button secondary">
-                        <i class="fas fa-envelope"></i>
-                        ផ្ញើអ៊ីមែល
-                    </button>
+                    </a>
                 </div>
                 <div class="contact-info">
                     <div class="contact-item">
@@ -804,7 +900,7 @@
                                 <div class="features-grid">
                                     ${featuresHTML}
                                 </div>
-                                <button onclick="showServiceDetails('${tabId}')" class="cta-button">
+                                <button onclick="window.location.href='{{ route('contact') }}'" class="cta-button">
                                     <span>ស្នើសុំការប្រឹក្សាយោបល់</span>
                                     <i class="fas fa-arrow-right"></i>
                                 </button>

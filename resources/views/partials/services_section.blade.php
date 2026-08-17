@@ -23,7 +23,7 @@
                     <span class="title-number">01</span>
                     Import From SHV Port
                 </h3>
-                <p class="service-description">សេវាកម្មដឹកជញ្ជូនកុងតឺន័រដែលអាចទុកចិត្តបានពី​ កំពង់ផែស្វយ័តព្រះសីហនុ ទៅកាន់គោលដៅដោយប្រើប្រាស់ដំណោះស្រាយដឹកជញ្ជូនប្រកបដោយវិជ្ជាជីវៈ។</p>
+                <p class="service-description">សេវាកម្មដឹកជញ្ជូនកុងតឺន័រដែលអាចទុកចិត្តបានពី​ កំពង់ផែស្វយ័តព្រះសីហនុទៅកាន់គោលដៅ ដោយប្រើប្រាស់ដំណោះស្រាយដឹកជញ្ជូនប្រកបដោយវិជ្ជាជីវៈ។</p>
                 <a href="{{ route('service.detail', 'import-shv') }}" class="service-detail-btn">
                     <i class="fas fa-book-open"></i> មើលព័ត៌មានលម្អិត <i class="fas fa-arrow-right"></i>
                 </a>
@@ -57,7 +57,7 @@
                     <span class="title-number">03</span>
                     Import From PP Port
                 </h3>
-                <p class="service-description">សេវាកម្មដឹកជញ្ជូនកុងតឺន័រដែលអាចទុកចិត្តបានពី កំពង់ផែស្វយ័តអន្តរជាតិភ្នំពេញ ទៅកាន់គោលដៅដោយប្រើប្រាស់ដំណោះស្រាយដឹកជញ្ជូនប្រកបដោយវិជ្ជាជីវៈ។</p>
+                <p class="service-description">សេវាកម្មដឹកជញ្ជូនកុងតឺន័រដែលអាចទុកចិត្តបានពី កំពង់ផែស្វយ័តអន្តរជាតិភ្នំពេញទៅកាន់គោលដៅ ដោយប្រើប្រាស់ដំណោះស្រាយដឹកជញ្ជូនប្រកបដោយវិជ្ជាជីវៈ។</p>
                 <a href="{{ route('service.detail', 'import-pp') }}" class="service-detail-btn">
                     <i class="fas fa-book-open"></i> មើលព័ត៌មានលម្អិត <i class="fas fa-arrow-right"></i>
                 </a>

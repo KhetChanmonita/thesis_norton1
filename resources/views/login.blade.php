@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>ចូលគណនី | LS Trucking Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Kantumruy+Pro:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -25,7 +26,7 @@
                         {{-- <div class="brand-name">TRUCKING<br>SERVICE</div> --}}
                     </div>
                     
-                    <h1 style="color: white;margin-bottom: 30px;"> <br> សូមស្វាគមន៍<br>មកកាន់ប្រព័ន្ធ</h1>
+                    <h1> <br> សូមស្វាគមន៍<br>មកកាន់ប្រព័ន្ធ</h1>
                     <p>ប្រព័ន្ធគ្រប់គ្រងសេវាកម្មដឹកជញ្ជូនដែលជឿជាក់បំផុតនៅកម្ពុជា</p>
                     <ul class="features-list">
                         <li><i class="fas fa-shield-alt"></i> គណនីដែលមានសុវត្ថិភាពខ្ពស់</li>
@@ -105,8 +106,7 @@
                         </button>
                     </form>
 
-                    <div class="register-link" style
-                    ="margin-top: 20px; text-align: center; font-size: 14px; color: #555;">
+                    <div class="register-link">
                         មិនទាន់មានគណនីទេ? <a href="{{ route('register') }}">ចុះឈ្មោះឥឡូវនេះ</a>
                     </div>
                 </div>

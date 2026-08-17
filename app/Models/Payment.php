@@ -16,8 +16,11 @@ class Payment extends Model
         'booking_id',
         'amount',
         'payment_method',
+        'payment_stage',
         'payment_date',
         'transaction_reference',
+        'proof_file',
+        'verification_status',
         'date',
     ];
 

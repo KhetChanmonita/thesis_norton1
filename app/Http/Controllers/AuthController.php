@@ -166,6 +166,7 @@ class AuthController extends Controller
 
         $record = DB::table('password_reset_tokens')
                      ->where('email', $request->email)
+                     ->orderByDesc('created_at')
                      ->first();
 
         if (!$record || !Hash::check($request->token, $record->token)) {

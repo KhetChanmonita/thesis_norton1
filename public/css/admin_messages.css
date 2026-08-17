@@ -1,0 +1,80 @@
+/* ── Stats ── */
+.msg-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 24px;
+}
+
+/* ── Search / Filter ── */
+.msg-filter-wrap { margin-bottom: 20px; }
+.msg-filter-form { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.msg-filter-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #475569;
+    display: block;
+    margin-bottom: 5px;
+}
+.msg-filter-input {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    width: 240px;
+    outline: none;
+}
+.msg-filter-select {
+    padding: 9px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 9px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.85rem;
+    background: #fff;
+    outline: none;
+}
+.msg-btn-search-pad { padding: 9px 18px; }
+.msg-btn-clear-pad  { padding: 9px 14px; }
+
+/* ── Count badge ── */
+.msg-count-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 10px;
+    border-radius: 50px;
+    margin-left: 4px;
+}
+
+/* ── Table ── */
+.msg-actions-th { text-align: center; }
+.msg-row-num { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #64748b; }
+.msg-sender-name { color: #1e293b; }
+.msg-company { color: #94a3b8; }
+.msg-phone-row { font-size: 0.83rem; }
+.msg-email-row { font-size: 0.75rem; color: #94a3b8; }
+.msg-phone-icon { color: #FF6B00; font-size: 0.7rem; }
+.msg-icon-sm { font-size: 0.7rem; }
+.msg-message-td { max-width: 320px; white-space: normal; font-size: 0.83rem; color: #475569; }
+.msg-status-select { padding: 5px 10px; font-size: 0.78rem; width: auto; }
+.msg-time-td { font-size: 0.8rem; color: #475569; white-space: nowrap; }
+.msg-action-cell { display: flex; justify-content: center; }
+
+/* ── Empty state ── */
+.msg-empty-td { text-align: center; padding: 52px; color: #94a3b8; }
+.msg-empty-icon { font-size: 2.5rem; display: block; margin-bottom: 12px; opacity: 0.25; }
+.msg-empty-text { font-size: 0.9rem; }
+.msg-empty-link { font-size: 0.82rem; color: #FF6B00; margin-top: 8px; display: inline-block; }
+
+/* ── Pagination ── */
+.msg-pagination {
+    padding: 14px 22px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.msg-pagination-info { font-size: 0.8rem; color: #94a3b8; }
+.msg-pagination-pages { display: flex; gap: 6px; }
+.msg-page-disabled { opacity: 0.4; cursor: default; }

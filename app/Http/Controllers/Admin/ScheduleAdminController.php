@@ -12,7 +12,9 @@ class ScheduleAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Schedule::with(['truck', 'driver']);
+        $query = Schedule::with(['truck.bookings' => function ($q) {
+            $q->whereIn('status', ['pending', 'confirmed', 'in_progress'])->latest()->with('customer');
+        }, 'driver']);
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -28,26 +30,27 @@ class ScheduleAdminController extends Controller
             $query->whereDate('date_of_truck_available', $request->date);
         }
 
-        $schedules    = $query->latest()->paginate(10)->withQueryString();
-        $trucks       = Truck::all();
-        $drivers      = Driver::where('status', 'active')->get();
-        $total        = Schedule::count();
-        $todayCount   = Schedule::whereDate('date_of_truck_available', today())->count();
-        $upcomingCount= Schedule::whereDate('date_of_truck_available', '>', today())->count();
-        $pastCount    = Schedule::whereDate('date_of_truck_available', '<', today())->count();
+        $schedules  = $query->latest()->paginate(10)->withQueryString();
+        $trucks     = Truck::all();
+        $drivers    = Driver::where('status', 'active')->get();
+        $total      = Schedule::count();
+        $todayCount = Schedule::whereDate('date_of_truck_available', today())->count();
 
         return view('admin.schedules.index',
-            compact('schedules', 'trucks', 'drivers', 'total', 'todayCount', 'upcomingCount', 'pastCount')
+            compact('schedules', 'trucks', 'drivers', 'total', 'todayCount')
         );
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'truck_id'                => 'required|exists:tbl_truck,truck_id',
-            'driver_id'               => 'required|exists:tbl_driver,driver_id',
+            'truck_id'                => 'required|exists:tbl_truck,truck_id|unique:tbl_schedule,truck_id',
+            'driver_id'               => 'required|exists:tbl_driver,driver_id|unique:tbl_schedule,driver_id',
             'location_truck'          => 'nullable|string|max:200',
             'date_of_truck_available' => 'nullable|date',
+        ], [
+            'truck_id.unique'  => 'រថយន្តនេះមានកាលវិភាគរួចហើយ!',
+            'driver_id.unique' => 'អ្នកបើកបរនេះមានកាលវិភាគរួចហើយ!',
         ]);
 
         Schedule::create($request->only('truck_id', 'driver_id', 'location_truck', 'date_of_truck_available'));
@@ -58,10 +61,13 @@ class ScheduleAdminController extends Controller
     public function update(Request $request, Schedule $schedule)
     {
         $request->validate([
-            'truck_id'                => 'required|exists:tbl_truck,truck_id',
-            'driver_id'               => 'required|exists:tbl_driver,driver_id',
+            'truck_id'                => 'required|exists:tbl_truck,truck_id|unique:tbl_schedule,truck_id,' . $schedule->schedule_id . ',schedule_id',
+            'driver_id'               => 'required|exists:tbl_driver,driver_id|unique:tbl_schedule,driver_id,' . $schedule->schedule_id . ',schedule_id',
             'location_truck'          => 'nullable|string|max:200',
             'date_of_truck_available' => 'nullable|date',
+        ], [
+            'truck_id.unique'  => 'រថយន្តនេះមានកាលវិភាគរួចហើយ!',
+            'driver_id.unique' => 'អ្នកបើកបរនេះមានកាលវិភាគរួចហើយ!',
         ]);
 
         $schedule->update($request->only('truck_id', 'driver_id', 'location_truck', 'date_of_truck_available'));

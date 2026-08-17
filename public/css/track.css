@@ -48,10 +48,17 @@ body {
 }
 
 .card-header h2 {
-    font-family: 'Montserrat', sans-serif;
     font-size: 1.1rem;
     font-weight: 800;
     margin-bottom: 4px;
+}
+
+.trk-title-text {
+    font-family: 'Kantumruy Pro', sans-serif;
+}
+
+.trk-booking-id {
+    font-family: 'Montserrat', sans-serif;
 }
 
 .card-header p {
@@ -71,18 +78,23 @@ body {
 
 .tl-step {
     display: flex;
+    align-items: flex-start;
     gap: 16px;
     position: relative;
 }
 
-.tl-step:not(:last-child) .tl-line {
+.tl-line {
     position: absolute;
     left: 19px;
     top: 40px;
     bottom: 0;
     width: 2px;
-    background: #e2e8f0;
+    background: transparent;
     z-index: 0;
+}
+
+.tl-step:not(:last-child) .tl-line {
+    background: #e2e8f0;
 }
 
 .tl-step:not(:last-child).done .tl-line {
@@ -300,3 +312,85 @@ body {
     font-size: 0.83rem;
     color: #92400e;
 }
+
+/* ── Extra charges ── */
+.extra-charge-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+}
+
+.extra-charge-row:last-child { border-bottom: none; }
+
+.extra-charge-info { flex: 1; min-width: 160px; }
+
+.extra-charge-reason {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.extra-charge-date {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.extra-charge-amount {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    color: #FF6B00;
+    font-size: 0.95rem;
+}
+
+.extra-charge-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.ec-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ec-btn-accept { background: #d1fae5; color: #065f46; }
+.ec-btn-accept:hover { background: #a7f3d0; }
+
+.ec-btn-reject { background: #fee2e2; color: #991b1b; }
+.ec-btn-reject:hover { background: #fca5a5; }
+
+/* ── Inline style replacements ── */
+.trk-hdr-icon { margin-right: 8px; color: #FF6B00; }
+.trk-status-dot { font-size: 0.45rem; }
+.trk-pickup-icon { color: #FF6B00; margin-right: 4px; font-size: 0.75rem; }
+.trk-dropoff-icon { color: #10b981; margin-right: 4px; font-size: 0.75rem; }
+.trk-maps-link { margin-left: 6px; color: #FF6B00; }
+.trk-price-val { color: #FF6B00; font-family: 'Montserrat', sans-serif; font-weight: 800; }
+.trk-card-mb { margin-bottom: 24px; }
+.trk-charge-icon { margin-right: 8px; color: #FF6B00; }
+.trk-notify-mb { margin-bottom: 24px; }
+.trk-notify-completed { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #bbf7d0; }
+.trk-notify-completed .icon { background: #10b981; }
+.trk-notify-completed .text h4 { color: #065f46; }
+.trk-notify-completed .text p { color: #166534; }
+.trk-section-h3 { font-family: 'Kantumruy Pro', sans-serif; font-size: 0.95rem; font-weight: 800; color: #1e293b; margin-bottom: 20px; }
+.trk-route-icon { color: #FF6B00; margin-right: 8px; }
+.trk-pay-center { text-align: center; margin-top: 8px; }
+.trk-fully-paid { display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; background: #d1fae5; border-radius: 12px; color: #065f46; font-weight: 700; }
+.trk-paid-icon { font-size: 1.2rem; }
+.trk-back-center { text-align: center; margin-top: 20px; }
+.trk-back-link { color: #64748b; font-size: 0.83rem; text-decoration: none; }
+.trk-back-icon { margin-right: 5px; }
+.trk-amount-orange { color: #c2410c; }

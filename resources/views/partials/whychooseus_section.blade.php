@@ -27,7 +27,6 @@
         <div class="image-column animate__animated animate__fadeInLeft">
             <div class="image-container">
                 <img src="/images/choose-us.jpg" alt="សេវាកម្មដឹកជញ្ជូនប្រកបដោយវិជ្ជាជីវៈ" class="asset-image">
-                <div class="image-badge"></div>
                 <div class="image-overlay"></div>
             </div>
         </div>
@@ -107,15 +106,8 @@
             <div class="stat-item">
                 <div class="stat-icon"><i class="fas fa-award"></i></div>
                 <div class="stat-content">
-                    <h3 class="stat-number">2+</h3>
+                    <h3 class="stat-number">5+</h3>
                     <p class="stat-label">ឆ្នាំបទពិសោធន៍</p>
-                </div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon"><i class="fas fa-user-check"></i></div>
-                <div class="stat-content">
-                    <h3 class="stat-number">90+</h3>
-                    <p class="stat-label">អតិថិជនពេញចិត្ត</p>
                 </div>
             </div>
         </div>
@@ -132,7 +124,7 @@
                 </a>
                 <a href="/services_header" class="cta-button secondary-btn">
                     <span>សេវាកម្មរបស់យើង</span>
-                    <i class="fas fa-info-circle"></i>
+                   
                 </a>
             </div>
         </div>

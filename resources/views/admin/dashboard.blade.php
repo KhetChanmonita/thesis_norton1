@@ -3,6 +3,10 @@
 @section('title', 'Dashboard')
 @section('page-title')<span>ផ្ទាំង</span>គ្រប់គ្រង@endsection
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/admin_dashboard.css') }}">
+@endpush
+
 @section('content')
 
 {{-- Stats Grid --}}
@@ -73,22 +77,22 @@
 </div>
 
 {{-- Booking status bar --}}
-<div class="card" style="margin-bottom:28px;">
+<div class="card dsh-status-card">
     <div class="card-header">
         <div class="card-title"><i class="fas fa-chart-bar"></i> ស្ថានភាពការកក់</div>
     </div>
-    <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;">
+    <div class="card-body dsh-status-body">
         @foreach(['pending'=>['label'=>'រង់ចាំ','color'=>'#f59e0b'],'confirmed'=>['label'=>'បានបញ្ជាក់','color'=>'#3b82f6'],'in_progress'=>['label'=>'កំពុងដឹក','color'=>'#10b981'],'completed'=>['label'=>'បញ្ចប់','color'=>'#059669'],'cancelled'=>['label'=>'បានបោះបង់','color'=>'#ef4444']] as $key=>$info)
-        <div style="flex:1;min-width:140px;background:#f8fafc;border-radius:12px;padding:16px;text-align:center;border:1px solid #e2e8f0;">
-            <div style="font-family:'Montserrat',sans-serif;font-size:1.6rem;font-weight:800;color:{{ $info['color'] }};">{{ $stats[$key] ?? 0 }}</div>
-            <div style="font-size:0.78rem;color:#64748b;margin-top:4px;">{{ $info['label'] }}</div>
+        <div class="dsh-status-item">
+            <div class="dsh-status-val" style="color:{{ $info['color'] }};">{{ $stats[$key] ?? 0 }}</div>
+            <div class="dsh-status-lbl">{{ $info['label'] }}</div>
         </div>
         @endforeach
     </div>
 </div>
 
 {{-- Two columns --}}
-<div style="display:grid;grid-template-columns:1fr 380px;gap:22px;align-items:start;">
+<div class="dsh-two-col">
 
     {{-- Recent Bookings --}}
     <div class="card">
@@ -111,7 +115,7 @@
                 <tbody>
                     @forelse($recentBookings as $b)
                     <tr>
-                        <td><strong>#{{ $b->booking_id }}</strong></td>
+                        <td><strong>{{ $b->formatted_id }}</strong></td>
                         <td>{{ $b->customer->full_name ?? '—' }}</td>
                         <td>{{ $b->booking_type === 'import' ? 'នាំចូល' : 'នាំចេញ' }}</td>
                         <td>{{ $b->cargo_weight ? number_format($b->cargo_weight).' kg' : '—' }}</td>
@@ -119,7 +123,7 @@
                         <td>{{ $b->booking_date ? \Carbon\Carbon::parse($b->booking_date)->format('d/m/Y') : '—' }}</td>
                     </tr>
                     @empty
-                    <tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:24px;">មិនមានទិន្នន័យ</td></tr>
+                    <tr><td colspan="6" class="dsh-empty-cell">មិនមានទិន្នន័យ</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -144,12 +148,12 @@
                 <tbody>
                     @forelse($recentPayments as $p)
                     <tr>
-                        <td>#{{ $p->booking_id }}<br><small style="color:#94a3b8;">{{ $p->booking->customer->full_name ?? '' }}</small></td>
-                        <td><strong style="color:#10b981;">${{ number_format($p->amount, 2) }}</strong></td>
+                        <td>{{ $p->booking?->formatted_id ?? '#'.$p->booking_id }}<br><small class="dsh-sub-text">{{ $p->booking->customer->full_name ?? '' }}</small></td>
+                        <td><strong class="dsh-amount">${{ number_format($p->amount, 2) }}</strong></td>
                         <td>{{ $p->payment_method ?? '—' }}</td>
                     </tr>
                     @empty
-                    <tr><td colspan="3" style="text-align:center;color:#94a3b8;padding:24px;">មិនមានទិន្នន័យ</td></tr>
+                    <tr><td colspan="3" class="dsh-empty-cell">មិនមានទិន្នន័យ</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -159,7 +163,7 @@
 </div>
 
 {{-- Recent Contact Messages --}}
-<div class="card" style="margin-top:22px;" id="recent-messages">
+<div class="card dsh-msg-card" id="recent-messages">
     <div class="card-header">
         <div class="card-title"><i class="fas fa-envelope"></i> សារទាក់ទងថ្មីៗ</div>
     </div>
@@ -192,18 +196,18 @@
                 @endphp
                 @forelse($recentMessages as $m)
                 <tr>
-                    <td><strong>{{ $m->full_name }}</strong>@if($m->company_name)<br><small style="color:#94a3b8;">{{ $m->company_name }}</small>@endif</td>
+                    <td><strong>{{ $m->full_name }}</strong>@if($m->company_name)<br><small class="dsh-sub-text">{{ $m->company_name }}</small>@endif</td>
                     <td>
                         {{ $m->phone }}
-                        @if($m->email)<br><small style="color:#94a3b8;">{{ $m->email }}</small>@endif
+                        @if($m->email)<br><small class="dsh-sub-text">{{ $m->email }}</small>@endif
                     </td>
                     <td>{{ $inquiryLabel[$m->inquiry_type] ?? $m->inquiry_type }}</td>
-                    <td style="max-width:320px;">{{ Str::limit($m->message, 80) }}</td>
+                    <td class="dsh-msg-cell">{{ Str::limit($m->message, 80) }}</td>
                     <td><span class="badge badge-{{ $m->status }}">{{ $statusLabel[$m->status] ?? $m->status }}</span></td>
                     <td>{{ $m->created_at->format('d/m/Y H:i') }}</td>
                 </tr>
                 @empty
-                <tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:24px;">មិនមានសារ</td></tr>
+                <tr><td colspan="6" class="dsh-empty-cell">មិនមានសារ</td></tr>
                 @endforelse
             </tbody>
         </table>

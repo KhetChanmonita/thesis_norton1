@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin') — LS Trucking Admin</title>
@@ -17,8 +18,7 @@
     <div class="sidebar-brand">
         <div class="brand-logo">LS</div>
         <div class="brand-text">
-            <div class="name">LS Trucking</div>
-            <div class="sub">Admin Panel</div>
+            <div class="name">LS Trucking Service</div>
         </div>
     </div>
 
@@ -30,7 +30,7 @@
             <i class="fas fa-chart-pie"></i> ផ្ទាំងគ្រប់គ្រង
         </a>
 
-        <div class="nav-section" style="margin-top:8px;">
+        <div class="nav-section">
             <div class="nav-section-label">ការគ្រប់គ្រង</div>
         </div>
         <a href="{{ route('admin.trucks.index') }}" class="nav-item {{ request()->routeIs('admin.trucks*') ? 'active' : '' }}">
@@ -53,7 +53,7 @@
             @endif
         </a>
 
-        <div class="nav-section" style="margin-top:8px;">
+        <div class="nav-section">
             <div class="nav-section-label">ការដឹកជញ្ជូន</div>
         </div>
         <a href="{{ route('admin.bookings.index') }}" class="nav-item {{ request()->routeIs('admin.bookings*') ? 'active' : '' }}">
@@ -76,28 +76,13 @@
             <i class="fas fa-file-invoice-dollar"></i> របាយការណ៍ចំណាយ
         </a>
 
-        <div class="nav-section" style="margin-top:8px;">
+        <div class="nav-section">
             <div class="nav-section-label">ប្រព័ន្ធ</div>
         </div>
         <a href="{{ route('home') }}" class="nav-item" target="_blank">
             <i class="fas fa-globe"></i> មើលវែបសាយ
         </a>
     </nav>
-
-    <div class="sidebar-footer">
-        <div class="sidebar-user">
-            @if(Auth::user()->profile_picture)
-                <img src="{{ asset(Auth::user()->profile_picture) }}" alt="avatar"
-                     style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;">
-            @else
-                <div class="user-ava">{{ strtoupper(substr(Auth::user()->user_name, 0, 2)) }}</div>
-            @endif
-            <div class="user-info">
-                <div class="uname">{{ Auth::user()->user_name }}</div>
-                <div class="urole">អ្នកគ្រប់គ្រង</div>
-            </div>
-        </div>
-    </div>
 </aside>
 
 {{-- ── MAIN ── --}}
@@ -108,16 +93,16 @@
             <a href="{{ route('home') }}" class="topbar-btn" title="វែបសាយ" target="_blank">
                 <i class="fas fa-external-link-alt"></i>
             </a>
-            <a href="{{ route('profile') }}" class="topbar-user" title="កែប្រែគណនី" style="text-decoration:none;">
+            <a href="{{ route('profile') }}" class="topbar-user" title="កែប្រែគណនី">
                 @if(Auth::user()->profile_picture)
                     <img src="{{ asset(Auth::user()->profile_picture) }}" alt="avatar"
-                         style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;">
+                         width="32" height="32" class="topbar-user-avatar">
                 @else
                     <div class="ava">{{ strtoupper(substr(Auth::user()->user_name, 0, 2)) }}</div>
                 @endif
                 <span class="uname">{{ Auth::user()->user_name }}</span>
             </a>
-            <form id="adminLogoutForm" method="POST" action="{{ route('logout') }}" style="margin:0;">
+            <form id="adminLogoutForm" method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="button" class="topbar-btn" title="ចាកចេញ" onclick="document.getElementById('logoutModal').classList.add('open')">
                     <i class="fas fa-sign-out-alt"></i>
@@ -127,25 +112,24 @@
     </header>
 
     {{-- Logout confirm modal --}}
-    <div class="modal-overlay" id="logoutModal" style="align-items:center;">
-        <div class="modal-box" style="max-width:380px;text-align:center;">
-            <div class="modal-body" style="padding:32px 24px 20px;">
-                <div style="width:64px;height:64px;border-radius:50%;background:#fff3e8;
-                            display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
-                    <i class="fas fa-sign-out-alt" style="font-size:1.6rem;color:#FF6B00;"></i>
+    <div class="modal-overlay confirm-overlay" id="logoutModal">
+        <div class="modal-box confirm-modal-box">
+            <div class="modal-body confirm-modal-body">
+                <div class="confirm-icon-circle confirm-icon-circle-orange">
+                    <i class="fas fa-sign-out-alt"></i>
                 </div>
-                <div style="font-family:var(--font-head);font-size:1.05rem;font-weight:800;color:#1e293b;margin-bottom:8px;">
+                <div class="confirm-title">
                     ចាកចេញពីគណនី?
                 </div>
-                <p style="font-size:0.88rem;color:#64748b;margin:0;">
+                <p class="confirm-subtitle">
                     តើអ្នកពិតជាចង់ចាកចេញពីគណនីនេះមែនទេ?
                 </p>
             </div>
-            <div class="modal-footer" style="justify-content:center;">
-                <button type="button" class="btn btn-ghost" onclick="document.getElementById('logoutModal').classList.remove('open')" style="flex:1;justify-content:center;">
+            <div class="modal-footer confirm-modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('logoutModal').classList.remove('open')">
                     <i class="fas fa-times"></i> បោះបង់
                 </button>
-                <button type="button" class="btn btn-orange" onclick="document.getElementById('adminLogoutForm').submit()" style="flex:1;justify-content:center;">
+                <button type="button" class="btn btn-orange" onclick="document.getElementById('adminLogoutForm').submit()">
                     <i class="fas fa-sign-out-alt"></i> ចាកចេញ
                 </button>
             </div>

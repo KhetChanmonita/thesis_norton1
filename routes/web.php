@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\BookingAdminController;
 use App\Http\Controllers\Admin\PaymentAdminController;
 use App\Http\Controllers\Admin\ContactAdminController;
 use App\Http\Controllers\Admin\ExpenseAdminController;
+use App\Http\Controllers\Admin\CostSheetAdminController;
 use App\Models\Truck;
 
 // Main routes
@@ -28,6 +29,7 @@ Route::get('/my-bookings',          [BookingController::class, 'myBookings'])->n
 Route::get('/booking/{id}/status',  [BookingController::class, 'trackBooking'])->name('booking.track');
 Route::get('/booking/{id}/pay',     [BookingController::class, 'showPayment'])->name('booking.pay');
 Route::post('/booking/{id}/pay',    [BookingController::class, 'processPayment'])->name('booking.pay.process');
+Route::post('/booking/extra-charges/{extraCharge}/respond', [BookingController::class, 'respondExtraCharge'])->name('booking.extra-charge.respond');
 Route::get('/contact',  [ContactController::class, 'show'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/services_header', fn() => view('services_header'))->name('services_header');
@@ -45,12 +47,14 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register',[AuthController::class, 'register']);
 
-    // Forgot / Reset password
-    Route::get('/forgot-password',         [AuthController::class, 'showForgotPassword'])->name('password.request');
-    Route::post('/forgot-password',        [AuthController::class, 'sendPasswordResetLink'])->name('password.email');
-    Route::get('/reset-password/{token}',  [AuthController::class, 'showResetPassword'])->name('password.reset');
-    Route::post('/reset-password',         [AuthController::class, 'resetPassword'])->name('password.update');
+    // Forgot password (guest only)
+    Route::get('/forgot-password',  [AuthController::class, 'showForgotPassword'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendPasswordResetLink'])->name('password.email');
 });
+
+// Reset password (accessible whether logged in or not)
+Route::get('/reset-password/{token}',  [AuthController::class, 'showResetPassword'])->name('password.reset');
+Route::post('/reset-password',         [AuthController::class, 'resetPassword'])->name('password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected routes
@@ -120,11 +124,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/bookings',                    [BookingAdminController::class, 'index'])->name('bookings.index');
     Route::patch('/bookings/{booking}/status', [BookingAdminController::class, 'updateStatus'])->name('bookings.status');
     Route::delete('/bookings/{booking}',       [BookingAdminController::class, 'destroy'])->name('bookings.destroy');
+    Route::post('/bookings/{booking}/extra-charges', [BookingAdminController::class, 'storeExtraCharge'])->name('bookings.extra-charge.store');
 
     // Payments & History
-    Route::get('/payments',              [PaymentAdminController::class, 'index'])->name('payments.index');
-    Route::delete('/payments/{payment}', [PaymentAdminController::class, 'destroy'])->name('payments.destroy');
-    Route::get('/history',               [PaymentAdminController::class, 'history'])->name('history.index');
+    Route::get('/payments',                          [PaymentAdminController::class, 'index'])->name('payments.index');
+    Route::post('/payments/{payment}/verify',        [PaymentAdminController::class, 'verify'])->name('payments.verify');
+    Route::post('/payments/{payment}/reject',        [PaymentAdminController::class, 'reject'])->name('payments.reject');
+    Route::delete('/payments/{payment}',             [PaymentAdminController::class, 'destroy'])->name('payments.destroy');
+    Route::get('/history',                           [PaymentAdminController::class, 'history'])->name('history.index');
 
     // Shipping Rates
     Route::get('/shipping-rates',        [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'index'])->name('shipping.index');
@@ -137,6 +144,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // Expense Report
     Route::get('/reports',           [ExpenseAdminController::class, 'index'])->name('reports.index');
+    Route::get('/reports/revenue',   [ExpenseAdminController::class, 'revenue'])->name('reports.revenue');
+    Route::get('/reports/revenue/print', [ExpenseAdminController::class, 'revenuePrint'])->name('reports.revenue.print');
+    Route::get('/reports/profit',    [ExpenseAdminController::class, 'profit'])->name('reports.profit');
+    Route::get('/reports/profit/print', [ExpenseAdminController::class, 'profitPrint'])->name('reports.profit.print');
+    Route::get('/reports/cost-sheet',                      [CostSheetAdminController::class, 'index'])->name('reports.cost-sheet');
+    Route::post('/reports/cost-sheet/{booking}',           [CostSheetAdminController::class, 'update'])->name('reports.cost-sheet.update');
+    Route::get('/reports/cost-sheet/{booking}/invoice',    [CostSheetAdminController::class, 'invoice'])->name('reports.invoice');
     Route::post('/reports',          [ExpenseAdminController::class, 'store'])->name('reports.store');
     Route::put('/reports/{expense}', [ExpenseAdminController::class, 'update'])->name('reports.update');
     Route::delete('/reports/{expense}', [ExpenseAdminController::class, 'destroy'])->name('reports.destroy');

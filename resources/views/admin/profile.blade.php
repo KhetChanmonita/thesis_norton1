@@ -105,7 +105,7 @@
             <div class="apf-divider"></div>
 
             <div class="apf-section-title">
-                <i class="fas fa-lock"></i> ផ្លាស់ប្ដូរពាក្យសម្ងាត់ <span class="apf-optional">(ស្រេចចិត្ត)</span>
+                <i class="fas fa-lock"></i> ផ្លាស់ប្ដូរពាក្យសម្ងាត់
             </div>
 
             <div class="apf-form-group">

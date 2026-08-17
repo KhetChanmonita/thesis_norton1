@@ -41,15 +41,15 @@
         
         <div class="footer-col">
             <h4>ទំនាក់ទំនង</h4>
-            <div class="contact-info">
+            <div class="footer-contact">
                 <p><i class="fas fa-map-marker-alt"></i> ផ្លូវបឹងទទឹងថ្ងៃ២ ផ្ទះលេខ ៩៨៣​ ខណ្ឌ ជ្រោយចង្វា រាជធានីភ្នំពេញ</p>
-                <p><i class="fas fa-phone"></i> +855 12 345 678</p>
-                <p><i class="fas fa-envelope"></i> lstrucking@gmail.com</p>
+                <p><i class="fas fa-phone"></i> 096 267 9042</p>
+                <p><i class="fas fa-envelope"></i> khetchanmonita3@gmail.com</p>
             </div>
         </div>
     </div>
     
     <div class="footer-bottom">
-        <p>© 2026 ប្រព័ន្ធគ្រប់គ្រងដឹកជញ្ជូន | រក្សាសិទ្ធិគ្រប់យ៉ាង</p>
+        <p>ប្រព័ន្ធគ្រប់គ្រងដឹកជញ្ជូន | រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ LS TRUCKING SERVICE</p>
     </div>
 </footer>

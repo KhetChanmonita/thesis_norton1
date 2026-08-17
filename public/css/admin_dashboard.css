@@ -1,0 +1,64 @@
+/* ── Booking status bar ── */
+.dsh-status-card {
+    margin-bottom: 28px;
+}
+
+.dsh-status-body {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.dsh-status-item {
+    flex: 1;
+    min-width: 140px;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.dsh-status-val {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.dsh-status-lbl {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+/* ── Two-column layout ── */
+.dsh-two-col {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 22px;
+    align-items: start;
+}
+
+/* ── Table cells ── */
+.dsh-empty-cell {
+    text-align: center;
+    color: #94a3b8;
+    padding: 24px;
+}
+
+.dsh-sub-text {
+    color: #94a3b8;
+}
+
+.dsh-amount {
+    color: #10b981;
+}
+
+.dsh-msg-cell {
+    max-width: 320px;
+}
+
+/* ── Messages card ── */
+.dsh-msg-card {
+    margin-top: 22px;
+}

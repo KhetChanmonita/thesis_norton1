@@ -3,6 +3,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>កក់សេវានាំចូល | Trucking System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -33,7 +34,7 @@
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="origin_port_id"><i class="fas fa-ship"></i> កំពង់ផែចាប់ផ្តើម <span class="required">*</span></label>
+                            <label for="origin_port_id"><i class="fas fa-ship"></i> កំពង់ផែចាប់ផ្តើម</label>
                             <select id="origin_port_id" name="origin_port_id" required>
                                 <option value="">-- ជ្រើសរើសកំពង់ផែ --</option>
                                 @foreach($ports as $port)
@@ -43,7 +44,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="destination_province_id"><i class="fas fa-map-pin"></i> ខេត្តគោលដៅ <span class="required">*</span></label>
+                            <label for="destination_province_id"><i class="fas fa-map-pin"></i> ខេត្តគោលដៅ</label>
                             <select id="destination_province_id" name="destination_province_id" required>
                                 <option value="">-- ជ្រើសរើសខេត្ត --</option>
                                 @foreach($provinces as $province)
@@ -63,7 +64,7 @@
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="container_size"><i class="fas fa-box"></i> ទំហំកុងតឺន័រ <span class="required">*</span></label>
+                            <label for="container_size"><i class="fas fa-box"></i> ទំហំកុងតឺន័រ</label>
                             <select id="container_size" name="container_size" required>
                                 <option value="">-- ជ្រើសរើសទំហំ --</option>
                                 <option value="45HC">45HC</option>
@@ -74,7 +75,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="weight"><i class="fas fa-weight-hanging"></i> ទម្ងន់ទំនិញ (គីឡូក្រាម) <span class="required">*</span></label>
+                            <label for="weight"><i class="fas fa-weight-hanging"></i> ទម្ងន់ទំនិញ (គីឡូក្រាម)</label>
                             <input type="number" id="weight" name="weight" min="1" placeholder="ឧ. 25000" required>
                             <small class="form-text">ប្រសិនបើលើសពី ២៣តោន ថ្លៃបន្ថែម ៣០$/តោន</small>
                         </div>
@@ -82,12 +83,12 @@
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="pickup_date"><i class="fas fa-calendar"></i> កាលបរិច្ឆេទយកទំនិញ <span class="required">*</span></label>
+                            <label for="pickup_date"><i class="fas fa-calendar"></i> កាលបរិច្ឆេទយកទំនិញ</label>
                             <input type="date" id="pickup_date" name="pickup_date" min="{{ date('Y-m-d') }}" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="delivery_date"><i class="fas fa-calendar-check"></i> កាលបរិច្ឆេទបញ្ជូនទំនិញ <span class="required">*</span></label>
+                            <label for="delivery_date"><i class="fas fa-calendar-check"></i> កាលបរិច្ឆេទបញ្ជូនទំនិញ</label>
                             <input type="date" id="delivery_date" name="delivery_date" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
                         </div>
                     </div>
@@ -101,7 +102,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="container_release_file"><i class="fas fa-file-upload"></i> បញ្ចូលឯកសារ Container Release <span class="required">*</span></label>
+                        <label for="container_release_file"><i class="fas fa-file-upload"></i> បញ្ចូលឯកសារ Container Release</label>
                         <div class="file-upload-area">
                             <input type="file" id="container_release_file" name="container_release_file" accept=".pdf,.jpg,.jpeg,.png" required>
                             <div class="file-upload-placeholder">
@@ -113,7 +114,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="empty_return_depot"><i class="fas fa-warehouse"></i> ទីតាំងប្រគល់កុងតឺន័រវិញ <span class="required">*</span></label>
+                        <label for="empty_return_depot"><i class="fas fa-warehouse"></i> ទីតាំងប្រគល់កុងតឺន័រវិញ</label>
                         <select id="empty_return_depot" name="empty_return_depot" required>
                             <option value="">-- ជ្រើសរើសទីតាំង --</option>
                             @foreach($depots as $depot)

@@ -14,7 +14,7 @@ body {
 .page-wrap {
     max-width: 660px;
     margin: 0 auto;
-    padding: 28px 16px 60px;
+    padding: 100px 16px 60px;
 }
 
 .back-link {
@@ -323,9 +323,133 @@ body {
     transform: translateY(-2px);
 }
 
+.proof-upload-section {
+    padding: 20px 28px 8px;
+}
+
+.proof-upload-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-direction: column;
+    margin-top: 10px;
+    padding: 24px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.proof-upload-box:hover {
+    border-color: #FF6B00;
+    background: #fff7ed;
+}
+
+.proof-upload-box i {
+    font-size: 1.8rem;
+    color: #cbd5e1;
+}
+
+.proof-upload-box span {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.proof-upload-box.has-file {
+    border-color: #10b981;
+    border-style: solid;
+    background: #f0fdf4;
+}
+
+.proof-upload-box.has-file i {
+    color: #10b981;
+}
+
+.proof-upload-box.has-file span {
+    color: #065f46;
+}
+
 .form-footer {
     padding: 0 28px 24px;
 }
+
+.pv-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.pv-modal {
+    background: #fff;
+    border-radius: 22px;
+    padding: 36px 32px 28px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    animation: pvSlideUp 0.22s ease;
+}
+
+@keyframes pvSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.pv-icon-circle {
+    width: 68px;
+    height: 68px;
+    background: #fff1f2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.pv-icon-circle i {
+    font-size: 1.7rem;
+    color: #ef4444;
+}
+
+.pv-title {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.pv-msg {
+    font-size: 0.88rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.pv-btn-ok {
+    width: 100%;
+    padding: 13px;
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.pv-btn-ok:hover { opacity: 0.88; }
 
 .security-note {
     display: flex;
@@ -335,3 +459,34 @@ body {
     font-size: 0.73rem;
     color: #94a3b8;
 }
+
+/* ── Summary section ── */
+.pay-stage-icon { margin-right: 5px; }
+.pay-summary-pad { padding: 16px 24px; }
+.pay-pickup-icon { color: #FF6B00; margin-right: 5px; font-size: 0.7rem; }
+.pay-dropoff-icon { color: #10b981; margin-right: 5px; font-size: 0.7rem; }
+.pay-maps-link { color: #FF6B00; margin-left: 6px; }
+.pay-maps-icon { font-size: 0.7rem; }
+.pay-price-val { color: #FF6B00; font-family: 'Montserrat', sans-serif; }
+
+/* ── KHQR section ── */
+.pay-khqr-icon { color: #c0392b; margin-right: 6px; }
+.pay-qr-placeholder { width: 300px; height: 380px; background: #1a3a5c; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+.pay-qr-placeholder-icon { font-size: 5rem; color: rgba(255,255,255,0.3); }
+.pay-qr-placeholder-text { color: rgba(255,255,255,0.6); font-size: 0.82rem; text-align: center; padding: 0 20px; }
+.pay-qr-code { color: #f59e0b; }
+.app-icon-acleda { color: #c0392b; border-color: #fecaca; }
+.app-icon-aba { color: #d97706; border-color: #fde68a; }
+.app-icon-wing { color: #4f46e5; border-color: #c7d2fe; }
+.app-icon-khqr { color: #475569; }
+
+/* ── Payment form ── */
+.pay-form-card { margin-top: 16px; }
+.pay-method-acleda { color: #c0392b; }
+.pay-method-aba { color: #f59e0b; }
+.pay-method-wing { color: #4f46e5; }
+.pay-method-cash { color: #10b981; }
+.pay-method-transfer { color: #3b82f6; }
+.pay-method-qr { color: #64748b; }
+.pay-error-msg { color: #ef4444; font-size: 0.8rem; margin-top: 10px; }
+.pay-hidden { display: none; }

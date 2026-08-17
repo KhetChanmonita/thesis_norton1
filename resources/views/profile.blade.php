@@ -2,6 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>គណនីរបស់ខ្ញុំ | LS Trucking Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Kantumruy+Pro:wght@400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -18,7 +19,7 @@
 
                 {{-- Clickable avatar header --}}
                 <div class="profile-header">
-                    <form id="avatarForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" style="display:none;">
+                    <form id="avatarForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="prf-avatar-form">
                         @csrf
                         <input type="hidden" name="user_name" value="{{ $user->user_name }}">
                         <input type="hidden" name="email"     value="{{ $user->email }}">
@@ -37,7 +38,7 @@
                     <span class="profile-role-badge">
                         {{ $user->role === 'admin' ? 'អ្នកគ្រប់គ្រង' : 'អ្នកប្រើប្រាស់' }}
                     </span>
-                    <div class="img-hint"><i class="fas fa-camera" style="margin-right:4px;"></i>ចុចលើរូបភាពដើម្បីផ្លាស់ប្ដូរ</div>
+                    <div class="img-hint"><i class="fas fa-camera"></i>ចុចលើរូបភាពដើម្បីផ្លាស់ប្ដូរ</div>
                 </div>
 
                 <div class="profile-body">
@@ -62,7 +63,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="prf-main-form">
                         @csrf
 
                         <div class="section-title">
@@ -97,15 +98,15 @@
                         <div class="divider"></div>
 
                         <div class="section-title">
-                            <i class="fas fa-lock"></i> ផ្លាស់ប្ដូរពាក្យសម្ងាត់ <span style="font-weight:400;color:#94a3b8;font-size:0.78rem;margin-left:4px;">(ស្រេចចិត្ត)</span>
+                            <i class="fas fa-lock"></i> ផ្លាស់ប្ដូរពាក្យសម្ងាត់
                         </div>
 
                         <div class="form-group">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                                <label style="margin-bottom:0;">ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
+                            <div class="prf-pw-label-row">
+                                <label>ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
                                 <button type="button" onclick="document.getElementById('forgotPwModal').style.display='flex'"
-                                        style="background:none;border:none;padding:0;font-family:'Kantumruy Pro',sans-serif;font-size:0.78rem;font-weight:600;color:#ff6b00;cursor:pointer;text-decoration:underline;">
-                                    <i class="fas fa-key" style="margin-right:3px;font-size:0.7rem;"></i>ភ្លេចពាក្យសម្ងាត់?
+                                        class="prf-forgot-btn">
+                                    <i class="fas fa-key"></i>ភ្លេចពាក្យសម្ងាត់?
                                 </button>
                             </div>
                             <div class="pw-toggle">
@@ -139,7 +140,7 @@
 
                         <div class="divider"></div>
                         <button type="submit" class="btn-save">
-                            <i class="fas fa-save" style="margin-right:8px;"></i> រក្សាទុក
+                            <i class="fas fa-save"></i> រក្សាទុក
                         </button>
                     </form>
                 </div>
@@ -148,62 +149,47 @@
     </div>
 
     {{-- Forgot Password Modal --}}
-    <div id="forgotPwModal"
-         style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999999;
-                align-items:center;justify-content:center;padding:20px;">
-        <div style="background:#fff;border-radius:20px;width:100%;max-width:420px;
-                    box-shadow:0 20px 60px rgba(0,0,0,0.25);overflow:hidden;">
+    <div id="forgotPwModal" class="prf-modal-overlay" style="display:none;">
+        <div class="prf-modal-box">
 
             {{-- Modal header --}}
-            <div style="background:linear-gradient(135deg,#ff6b00,#e55a00);padding:22px 24px;
-                        display:flex;align-items:center;justify-content:space-between;">
-                <div style="display:flex;align-items:center;gap:14px;color:#fff;">
-                    <div style="width:44px;height:44px;background:rgba(255,255,255,0.2);border-radius:12px;
-                                display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">
+            <div class="prf-modal-header">
+                <div class="prf-modal-header-left">
+                    <div class="prf-modal-key-icon">
                         <i class="fas fa-key"></i>
                     </div>
                     <div>
-                        <div style="font-weight:700;font-size:1rem;font-family:'Kantumruy Pro',sans-serif;">ភ្លេចពាក្យសម្ងាត់</div>
-                        <div style="font-size:0.78rem;opacity:0.85;font-family:'Kantumruy Pro',sans-serif;">កំណត់ពាក្យសម្ងាត់ឡើងវិញតាមអ៊ីមែល</div>
+                        <div class="prf-modal-title">ភ្លេចពាក្យសម្ងាត់</div>
+                        <div class="prf-modal-subtitle">កំណត់ពាក្យសម្ងាត់ឡើងវិញតាមអ៊ីមែល</div>
                     </div>
                 </div>
                 <button onclick="document.getElementById('forgotPwModal').style.display='none'"
                         type="button"
-                        style="background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.35);
-                               color:#fff;width:34px;height:34px;border-radius:50%;font-size:14px;
-                               cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        class="prf-modal-close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
             {{-- Modal body --}}
-            <div style="padding:28px 24px;">
-                <div style="background:#fff8f3;border:1.5px solid #fed7aa;border-radius:12px;
-                            padding:16px;margin-bottom:22px;font-family:'Kantumruy Pro',sans-serif;font-size:0.88rem;color:#7c2d12;">
-                    <i class="fas fa-envelope" style="color:#ff6b00;margin-right:6px;"></i>
+            <div class="prf-modal-body">
+                <div class="prf-modal-info">
+                    <i class="fas fa-envelope"></i>
                     យើងនឹងផ្ញើតំណភ្ជាប់កំណត់ពាក្យសម្ងាត់ទៅអ៊ីមែល<br>
-                    <strong style="color:#ff6b00;word-break:break-all;">{{ Auth::user()->email }}</strong><br>
-                    <span style="font-size:0.8rem;opacity:0.8;margin-top:4px;display:inline-block;">
-                        <i class="fas fa-clock" style="margin-right:3px;"></i>តំណភ្ជាប់មានសុពលភាព ៦០ នាទី
+                    <strong class="prf-modal-email">{{ Auth::user()->email }}</strong><br>
+                    <span class="prf-modal-note">
+                        <i class="fas fa-clock"></i>តំណភ្ជាប់មានសុពលភាព ៦០ នាទី
                     </span>
                 </div>
 
-                <div style="display:flex;gap:10px;">
+                <div class="prf-modal-actions">
                     <button type="button"
                             onclick="document.getElementById('forgotPwModal').style.display='none'"
-                            style="flex:1;padding:12px;background:transparent;border:2px solid #e2e8f0;
-                                   border-radius:10px;font-family:'Kantumruy Pro',sans-serif;font-size:0.87rem;
-                                   font-weight:600;color:#64748b;cursor:pointer;">
-                        <i class="fas fa-times" style="margin-right:5px;"></i>បោះបង់
+                            class="prf-modal-btn-cancel">
+                        <i class="fas fa-times"></i>បោះបង់
                     </button>
-                    <form method="POST" action="{{ route('profile.forgot-password') }}" style="flex:1;">
+                    <form method="POST" action="{{ route('profile.forgot-password') }}" class="prf-modal-form">
                         @csrf
-                        <button type="submit"
-                                style="width:100%;padding:12px;background:linear-gradient(135deg,#ff6b00,#e55a00);
-                                       border:none;border-radius:10px;font-family:'Kantumruy Pro',sans-serif;
-                                       font-size:0.87rem;font-weight:700;color:#fff;cursor:pointer;
-                                       display:flex;align-items:center;justify-content:center;gap:8px;
-                                       box-shadow:0 4px 14px rgba(255,107,0,0.35);">
+                        <button type="submit" class="prf-modal-btn-submit">
                             <i class="fas fa-paper-plane"></i>ផ្ញើអ៊ីមែល
                         </button>
                     </form>

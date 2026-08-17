@@ -148,9 +148,10 @@ body {
     font-size: 1.9rem;
     font-weight: 700;
     line-height: 1.35;
-    margin-bottom: 14px;
+    margin-bottom: 30px;
     position: relative;
     z-index: 1;
+    color: white;
 }
 
 .login-left > p,
@@ -423,6 +424,7 @@ body {
     text-align: center;
     color: #64748B;
     font-size: 14px;
+    margin-top: 20px;
 }
 
 .register-link a {

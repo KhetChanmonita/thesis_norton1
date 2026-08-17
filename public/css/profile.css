@@ -24,12 +24,14 @@ body {
     border-radius: 20px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
     overflow: hidden;
+    margin-top: 50px;
 }
 
 .profile-header {
     background: linear-gradient(135deg, #ff6b00, #e55a00);
     padding: 36px 32px 28px;
     text-align: center;
+    
 }
 
 .avatar-wrap {
@@ -102,7 +104,11 @@ body {
 }
 
 .profile-body {
-    padding: 32px;
+    padding:20px;
+}
+
+.prf-main-form {
+    margin-top: 30px;
 }
 
 .section-title {
@@ -234,3 +240,42 @@ body {
     color: rgba(255, 255, 255, 0.75);
     margin-top: 6px;
 }
+.img-hint i { margin-right: 4px; }
+
+/* ── Avatar hidden form ── */
+.prf-avatar-form { display: none; }
+
+/* ── Section title optional tag ── */
+.prf-optional { font-weight: 400; color: #94a3b8; font-size: 0.78rem; margin-left: 4px; }
+
+/* ── Password label row ── */
+.prf-pw-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.prf-pw-label-row label { margin-bottom: 0; }
+
+/* ── Forgot password link-button ── */
+.prf-forgot-btn { background: none; border: none; padding: 0; font-family: 'Kantumruy Pro', sans-serif; font-size: 0.78rem; font-weight: 600; color: #ff6b00; cursor: pointer; text-decoration: underline; }
+.prf-forgot-btn i { margin-right: 3px; font-size: 0.7rem; }
+
+/* ── Save button icon ── */
+.btn-save i { margin-right: 8px; }
+
+/* ── Forgot password modal ── */
+.prf-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 999999; align-items: center; justify-content: center; padding: 20px; }
+.prf-modal-box { background: #fff; border-radius: 20px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); overflow: hidden; }
+.prf-modal-header { background: linear-gradient(135deg, #ff6b00, #e55a00); padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; }
+.prf-modal-header-left { display: flex; align-items: center; gap: 14px; color: #fff; }
+.prf-modal-key-icon { width: 44px; height: 44px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.prf-modal-title { font-weight: 700; font-size: 1rem; font-family: 'Kantumruy Pro', sans-serif; }
+.prf-modal-subtitle { font-size: 0.78rem; opacity: 0.85; font-family: 'Kantumruy Pro', sans-serif; }
+.prf-modal-close { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.35); color: #fff; width: 34px; height: 34px; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.prf-modal-body { padding: 28px 24px; }
+.prf-modal-info { background: #fff8f3; border: 1.5px solid #fed7aa; border-radius: 12px; padding: 16px; margin-bottom: 22px; font-family: 'Kantumruy Pro', sans-serif; font-size: 0.88rem; color: #7c2d12; }
+.prf-modal-info i { color: #ff6b00; margin-right: 6px; }
+.prf-modal-email { color: #ff6b00; word-break: break-all; }
+.prf-modal-note { font-size: 0.8rem; opacity: 0.8; margin-top: 4px; display: inline-block; }
+.prf-modal-note i { margin-right: 3px; }
+.prf-modal-actions { display: flex; gap: 10px; }
+.prf-modal-btn-cancel { flex: 1; padding: 12px; background: transparent; border: 2px solid #e2e8f0; border-radius: 10px; font-family: 'Kantumruy Pro', sans-serif; font-size: 0.87rem; font-weight: 600; color: #64748b; cursor: pointer; }
+.prf-modal-btn-cancel i { margin-right: 5px; }
+.prf-modal-form { flex: 1; }
+.prf-modal-btn-submit { width: 100%; padding: 12px; background: linear-gradient(135deg, #ff6b00, #e55a00); border: none; border-radius: 10px; font-family: 'Kantumruy Pro', sans-serif; font-size: 0.87rem; font-weight: 700; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(255,107,0,0.35); }
