@@ -17,6 +17,10 @@
                 <input type="text" name="search" class="form-control" placeholder="ឈ្មោះ / ទូរស័ព្ទ" value="{{ request('search') }}">
             </div>
             <div class="form-group bkg-filter-field-sm">
+                <label class="form-label">លេខការកក់</label>
+                <input type="text" name="booking_code" class="form-control" placeholder="ឧ. LS2608-1" value="{{ request('booking_code') }}">
+            </div>
+            <div class="form-group bkg-filter-field-sm">
                 <label class="form-label">ស្ថានភាព</label>
                 <select name="status" class="form-control">
                     <option value="">ទាំងអស់</option>
@@ -87,8 +91,14 @@
                         <small>ដឹង: {{ $b->drop_off_date ? \Carbon\Carbon::parse($b->drop_off_date)->format('d/m/Y') : '—' }}</small>
                     </td>
                     <td>{{ $b->cargo_weight ? number_format($b->cargo_weight) : '—' }}</td>
-                    <td>{{ $b->total_price ? '$'.number_format($b->total_price,2) : '—' }}</td>
-                    <td><span class="badge badge-{{ $b->status }}">{{ $b->status }}</span></td>
+                    <td>
+                        @php
+                            $secondSum = $b->extraCharges->where('stage','second')->sum('amount');
+                            $trueTotal = ($b->total_price ?? 0) + $secondSum;
+                        @endphp
+                        {{ $trueTotal > 0 ? '$'.number_format($trueTotal,2) : '—' }}
+                    </td>
+                    <td><span class="badge badge-{{ $b->status }}">{{ ['pending'=>'រង់ចាំ','confirmed'=>'បានអនុម័ត','in_progress'=>'កំពុងដឹក','completed'=>'បានបញ្ចប់','cancelled'=>'បានលុប'][$b->status] ?? $b->status }}</span></td>
                     <td>
                         <div class="bkg-action-btns">
                             <button class="btn btn-ghost btn-sm" onclick='showBookingDetail(@json($b))' title="មើលលម្អិត">
@@ -103,9 +113,15 @@
                                 <i class="fas fa-exchange-alt"></i>
                             </button>
                             @endif
+                            @if($b->status === 'completed')
+                            <button class="btn btn-ghost btn-sm bkg-btn-disabled" disabled title="ការកក់បានបញ្ចប់ — មិនអាចបន្ថែមការគិតប្រាក់បន្ថែមទៀតបានទេ">
+                                <i class="fas fa-lock"></i>
+                            </button>
+                            @else
                             <button class="btn btn-ghost btn-sm" onclick="openExtraChargeModal({{ $b->booking_id }})" title="ការគិតប្រាក់បន្ថែម">
                                 <i class="fas fa-money-bill-wave"></i>
                             </button>
+                            @endif
                             <button class="btn btn-danger btn-sm" title="លុប"
                                     onclick="confirmDeleteBooking({{ $b->booking_id }})">
                                 <i class="fas fa-trash"></i>
@@ -120,7 +136,7 @@
         </table>
     </div>
     @if($bookings->hasPages())
-    <div class="bkg-pagination">{{ $bookings->links() }}</div>
+    <div class="bkg-pagination">{{ $bookings->links('vendor.pagination.custom') }}</div>
     @endif
 </div>
 
@@ -242,12 +258,52 @@
                     </div>
                 </div>
 
-                {{-- Completion notice --}}
+                {{-- Completion notice + optional extra charge --}}
                 <div id="completedNotice" class="bkg-hidden">
                     <div class="bkg-completed-box">
                         <div class="bkg-completed-box-inner">
                             <i class="fas fa-bell"></i>
                             អតិថិជននឹងទទួលបានការជូនដំណឹងដើម្បីបង់ 50% ចុងក្រោយ
+                        </div>
+                    </div>
+
+                    <div style="margin-top:14px;border:1px dashed #e2a96a;border-radius:10px;padding:14px;background:#fffbf5;">
+                        <div style="font-size:0.82rem;font-weight:700;color:#b45309;margin-bottom:10px;">
+                            <i class="fas fa-plus-circle"></i> បន្ថែមការគិតប្រាក់បន្ថែម                        </div>
+
+                        <div class="form-group bkg-modal-form-group" style="margin-bottom:10px;">
+                            <label class="form-label" style="font-size:0.8rem;">ប្រភេទការគិតប្រាក់</label>
+                            <select name="completion_charge_type" id="completionChargeType" class="form-control"
+                                    style="font-family:'Kantumruy Pro',sans-serif;"
+                                    onchange="toggleCompletionCharge(this.value)">
+                                <option value="">— មិនបន្ថែម —</option>
+                                <option value="standby">ឈប់រង់ចាំ (Standby — $50/ថ្ងៃ)</option>
+                                <option value="extra_charge">ការគិតប្រាក់បន្ថែម (Extra Charge)</option>
+                                <option value="empty_return">ត្រឡប់ទទេ (Empty Return)</option>
+                                <option value="overweight">ទម្ងន់លើស (Over Weight)</option>
+                            </select>
+                        </div>
+
+                        <div id="completionDaysField" class="form-group bkg-modal-form-group bkg-hidden" style="margin-bottom:10px;">
+                            <label class="form-label" style="font-size:0.8rem;">ចំនួនថ្ងៃឈប់រង់ចាំ</label>
+                            <input type="number" name="completion_days" id="completionDaysInput"
+                                   class="form-control" placeholder="ឧ. 2" min="1" step="1"
+                                   oninput="updateCompletionTotal(this.value)">
+                            <p class="bkg-standby-hint">
+                                សរុប: <strong id="completionTotalDisplay" class="bkg-standby-total">$0.00</strong>
+                            </p>
+                        </div>
+
+                        <div id="completionAmountField" class="form-group bkg-modal-form-group bkg-hidden" style="margin-bottom:10px;">
+                            <label class="form-label" style="font-size:0.8rem;">ចំនួនទឹកប្រាក់ (USD)</label>
+                            <input type="number" name="completion_amount" id="completionAmountInput"
+                                   class="form-control" placeholder="ឧ. 25.00" min="0" step="0.01">
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label class="form-label" style="font-size:0.8rem;">កំណត់ចំណាំ (ស្រេចចិត្ត)</label>
+                            <textarea name="completion_note" class="form-control" rows="2"
+                                      placeholder="ព័ត៌មានបន្ថែម..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -382,6 +438,29 @@ function updateStandbyTotal(days) {
     document.getElementById('standbyTotalDisplay').textContent = '$' + total.toFixed(2);
 }
 
+function toggleCompletionCharge(type) {
+    var daysField   = document.getElementById('completionDaysField');
+    var amountField = document.getElementById('completionAmountField');
+    var daysInput   = document.getElementById('completionDaysInput');
+    var amtInput    = document.getElementById('completionAmountInput');
+    daysField.classList.add('bkg-hidden');
+    amountField.classList.add('bkg-hidden');
+    daysInput.required = false;
+    amtInput.required  = false;
+    if (type === 'standby') {
+        daysField.classList.remove('bkg-hidden');
+        daysInput.required = true;
+    } else if (type !== '') {
+        amountField.classList.remove('bkg-hidden');
+        amtInput.required = true;
+    }
+}
+
+function updateCompletionTotal(days) {
+    var total = (parseInt(days) || 0) * 50;
+    document.getElementById('completionTotalDisplay').textContent = '$' + total.toFixed(2);
+}
+
 var paymentStatusLabel = {
     'unpaid':       'មិនទាន់បង់ប្រាក់',
     'deposit_paid': 'បានបង់ប្រាក់កក់ 50%',
@@ -418,9 +497,18 @@ function showBookingDetail(b) {
         fileEl.textContent = '—';
     }
 
-    document.getElementById('bd_price').textContent     = b.total_price ? '$' + Number(b.total_price).toLocaleString(undefined,{minimumFractionDigits:2}) : '—';
+    var secondExtraSum = (b.extra_charges || []).filter(function(c){ return c.stage === 'second'; }).reduce(function(s,c){ return s + parseFloat(c.amount||0); }, 0);
+    var trueTotal = (parseFloat(b.total_price||0)) + secondExtraSum;
+    document.getElementById('bd_price').textContent = trueTotal > 0 ? '$' + trueTotal.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) : '—';
+    var statusLabel = {
+        'pending':     'កំពុងរងចាំ',
+        'confirmed':   'បានអនុម័ត',
+        'in_progress': 'កំពុងដឹក',
+        'completed':   'បានបញ្ចប់',
+        'cancelled':   'បានលុប',
+    };
     document.getElementById('bd_paystatus').textContent = paymentStatusLabel[b.payment_status] || (b.payment_status || '—');
-    document.getElementById('bd_status').textContent    = b.status || '—';
+    document.getElementById('bd_status').textContent    = statusLabel[b.status] || b.status || '—';
     document.getElementById('bd_bookdate').textContent  = b.booking_date ? new Date(b.booking_date).toLocaleDateString('en-GB') : '—';
 
     var chargeRespLabel = { 'Pending': 'រង់ចាំការឆ្លើយតប', 'Accepted': 'យល់ព្រម', 'Rejected': 'បដិសេធ' };
@@ -450,6 +538,11 @@ function changeStatus(id, currentStatus) {
     document.getElementById('statusSelect').value = currentStatus;
     document.getElementById('totalPriceInput').value = '';
     document.getElementById('halfPrice').textContent = '0.00';
+    document.getElementById('completionChargeType').value = '';
+    document.getElementById('completionDaysInput').value = '';
+    document.getElementById('completionAmountInput').value = '';
+    document.getElementById('completionTotalDisplay').textContent = '$0.00';
+    toggleCompletionCharge('');
     togglePriceField(currentStatus);
     document.getElementById('statusModal').classList.add('open');
 }

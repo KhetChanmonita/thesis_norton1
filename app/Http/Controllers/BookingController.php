@@ -427,7 +427,7 @@ class BookingController extends Controller
             }
         }
 
-        $totalPaid    = $bookings->flatMap->payments->sum('amount');
+        $totalPaid    = $bookings->flatMap->payments->filter(fn($p) => $p->verification_status !== 'rejected')->sum('amount');
         $pendingCount = $bookings->whereIn('payment_status', ['unpaid', 'deposit_paid'])
                                  ->where('status', '!=', 'cancelled')->count();
 
@@ -486,7 +486,7 @@ class BookingController extends Controller
     // ── Show payment form ──────────────────────────────────────────────────
     public function showPayment(Request $request, $id)
     {
-        $booking   = Booking::with('customer')->findOrFail($id);
+        $booking   = Booking::with(['customer', 'secondStageCharges'])->findOrFail($id);
         $token     = $request->query('token') ?? session('booking_token_' . $id);
         $inSession = in_array((int)$id, session('my_booking_ids', []));
 
@@ -507,8 +507,8 @@ class BookingController extends Controller
                 return redirect()->route('booking.track', ['id' => $id, 'token' => $booking->access_token]);
             }
             $stage  = 'final';
-            $amount = round($booking->total_price * 0.5, 2);
-            $label  = 'ការបង់ប្រាក់ 50% ចុងក្រោយ (Final)';
+            $amount = $booking->final_payment_amount;
+            $label  = 'ការបង់ប្រាក់ចុងក្រោយ (Final)';
         } else {
             return redirect()->route('booking.track', [
                 'id' => $id, 'token' => $booking->access_token,
@@ -521,7 +521,7 @@ class BookingController extends Controller
     // ── Process payment ────────────────────────────────────────────────────
     public function processPayment(Request $request, $id)
     {
-        $booking   = Booking::with(['customer', 'truck'])->findOrFail($id);
+        $booking   = Booking::with(['customer', 'truck', 'secondStageCharges'])->findOrFail($id);
         $token     = $request->input('token') ?? session('booking_token_' . $id);
         $inSession = in_array((int)$id, session('my_booking_ids', []));
 
@@ -558,7 +558,7 @@ class BookingController extends Controller
             $msg = 'ការបង់ប្រាក់ 50% ដំបូងបានទទួល! សូមរង់ចាំការផ្ទៀងផ្ទាត់ពីអ្នកគ្រប់គ្រង។';
 
         } elseif ($booking->payment_status === 'deposit_paid' && $booking->status === 'completed') {
-            $amount = round($booking->total_price * 0.5, 2);
+            $amount = $booking->final_payment_amount;
             \App\Models\Payment::create([
                 'booking_id'            => $booking->booking_id,
                 'amount'                => $amount,

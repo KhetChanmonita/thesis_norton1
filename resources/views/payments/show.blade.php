@@ -1,4 +1,4 @@
-{{-- resources/views/payments/show.blade.php --}}
+﻿{{-- resources/views/payments/show.blade.php --}}
 <!DOCTYPE html>
 <html lang="km">
 <head>
@@ -130,27 +130,9 @@
                                 </div>
                             </label>
 
-                            <label class="payment-method">
-                                <input type="radio" name="payment_method" value="pi_pay">
-                                <div class="method-content">
-                                    <img src="{{ asset('images/pi-pay-logo.png') }}" alt="Pi Pay">
-                                    <div class="method-info">
-                                        <h4>Pi Pay</h4>
-                                        <p>ទូទាត់តាមរយៈកម្មវិធី Pi Pay</p>
-                                    </div>
-                                </div>
-                            </label>
+                           
 
-                            <label class="payment-method">
-                                <input type="radio" name="payment_method" value="wing">
-                                <div class="method-content">
-                                    <img src="{{ asset('images/wing-logo.png') }}" alt="Wing">
-                                    <div class="method-info">
-                                        <h4>Wing</h4>
-                                        <p>ទូទាត់តាមរយៈ Wing</p>
-                                    </div>
-                                </div>
-                            </label>
+                          
                         </div>
                     </div>
                 </div>
@@ -240,6 +222,7 @@
         });
     });
 </script>
+
 
 </body>
 </html>

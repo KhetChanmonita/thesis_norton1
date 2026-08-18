@@ -34,7 +34,11 @@
     }
     /* Route: fall back to booking pickup→dropoff when cost sheet has none */
     $invRoute = $cs?->route ?: collect(array_filter([$booking->pickup_location, $booking->dropoff_location]))->implode(' → ');
-    $total    = array_sum($vals);
+
+    /* Extra charges from tbl_extra_charge — second-stage are NOT in total_price so add to total */
+    $extraCharges     = $booking->extraCharges ?? collect();
+    $secondExtraTotal = $extraCharges->where('stage', 'second')->sum('amount');
+    $total            = array_sum($vals) + $secondExtraTotal;
 @endphp
 
 {{-- Toolbar --}}
@@ -168,16 +172,39 @@
             <tbody>
                 @foreach($rows as $ri => $row)
                 @php $val = $vals[$row['field']]; @endphp
-                <tr class="{{ $val == 0 ? 'inv-row-zero' : '' }}">
+                @if($val > 0)
+                <tr>
                     <td>
                         <div class="inv-row-label">
-                            <div class="inv-row-dot {{ $val == 0 ? 'zero' : '' }}"></div>
+                            <div class="inv-row-dot"></div>
                             <div>
                                 <div style="font-weight:600;color:#1e293b;font-family:'Kantumruy Pro',sans-serif;">{{ $row['label_km'] }}</div>
                             </div>
                         </div>
                     </td>
                     <td>${{ number_format($val, 2) }}</td>
+                </tr>
+                @endif
+                @endforeach
+
+                @foreach($extraCharges as $ec)
+                <tr>
+                    <td>
+                        <div class="inv-row-label">
+                            <div class="inv-row-dot" style="background:{{ $ec->stage === 'second' ? '#b45309' : '#0369a1' }};"></div>
+                            <div>
+                                <div style="font-weight:600;color:#1e293b;font-family:'Kantumruy Pro',sans-serif;">{{ $ec->reason }}</div>
+                                @if($ec->stage === 'first')
+                                <div style="font-size:0.72rem;color:#64748b;">(រួមបញ្ចូលក្នុងតម្លៃ 50% / included in deposit)</div>
+                                @else
+                                <div style="font-size:0.72rem;color:#b45309;">(ទូទាត់ពេញ / paid in full on final payment)</div>
+                                @endif
+                            </div>
+                        </div>
+                    </td>
+                    <td style="color:{{ $ec->stage === 'second' ? '#b45309' : '#0369a1' }};font-weight:700;">
+                        +${{ number_format($ec->amount, 2) }}
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

@@ -105,7 +105,7 @@ class HomeController extends Controller
         }
 
         $bookings     = $query->latest()->get();
-        $totalPaid    = $bookings->flatMap->payments->sum('amount');
+        $totalPaid    = $bookings->flatMap->payments->filter(fn($p) => $p->verification_status !== 'rejected')->sum('amount');
         $pendingCount = $bookings->whereIn('payment_status', ['unpaid', 'deposit_paid'])
                                  ->where('status', '!=', 'cancelled')->count();
 

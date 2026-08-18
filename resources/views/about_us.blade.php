@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -370,5 +370,6 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.au-tl-item').forEach(el => observer.observe(el));
 });
 </script>
+
 </body>
 </html>

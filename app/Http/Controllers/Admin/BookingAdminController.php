@@ -31,6 +31,17 @@ class BookingAdminController extends Controller
             );
         }
 
+        if ($request->filled('booking_code')) {
+            $code = trim($request->booking_code);
+            if (str_contains($code, '-')) {
+                $parts = explode('-', $code);
+                $id = (int) end($parts);
+                if ($id > 0) $query->where('booking_id', $id);
+            } elseif (is_numeric($code)) {
+                $query->where('booking_id', (int) $code);
+            }
+        }
+
         $bookings = $query->latest()->paginate(10)->withQueryString();
         return view('admin.bookings.index', compact('bookings'));
     }
@@ -42,8 +53,12 @@ class BookingAdminController extends Controller
         }
 
         $request->validate([
-            'status'      => 'required|in:pending,confirmed,in_progress,completed,cancelled',
-            'total_price' => 'nullable|numeric|min:0',
+            'status'                  => 'required|in:pending,confirmed,in_progress,completed,cancelled',
+            'total_price'             => 'nullable|numeric|min:0',
+            'completion_charge_type'  => 'nullable|in:extra_charge,empty_return,overweight,standby',
+            'completion_days'         => 'nullable|integer|min:1',
+            'completion_amount'       => 'nullable|numeric|min:0.01',
+            'completion_note'         => 'nullable|string|max:500',
         ]);
 
         $data = ['status' => $request->status];
@@ -61,6 +76,33 @@ class BookingAdminController extends Controller
                 $booking->truck->update(['status' => 'in_progress']);
             } elseif (in_array($request->status, ['completed', 'cancelled'])) {
                 $booking->truck->update(['status' => 'available']);
+            }
+        }
+
+        // Handle optional extra charge added at completion time (stage='second', NOT added to total_price)
+        if ($request->status === 'completed' && $request->filled('completion_charge_type')) {
+            $chargeType = $request->completion_charge_type;
+            $chargeAmount = $chargeType === 'standby'
+                ? $request->completion_days * 50
+                : $request->completion_amount;
+
+            if ($chargeAmount > 0) {
+                $reason = self::CHARGE_TYPE_LABELS[$chargeType];
+                if ($chargeType === 'standby') {
+                    $reason .= ' — ' . $request->completion_days . ' ថ្ងៃ x $50';
+                }
+                if ($request->filled('completion_note')) {
+                    $reason .= ' (' . $request->completion_note . ')';
+                }
+
+                ExtraCharge::create([
+                    'booking_id' => $booking->booking_id,
+                    'stage'      => 'second',
+                    'amount'     => $chargeAmount,
+                    'reason'     => $reason,
+                    'date'       => now()->toDateString(),
+                ]);
+                // Do NOT add to total_price — second-stage charges are added in full to the final payment
             }
         }
 
@@ -110,18 +152,26 @@ class BookingAdminController extends Controller
             $reason .= ' (' . $request->note . ')';
         }
 
+        // Charges added after delivery (completed) are second-stage and NOT split 50/50
+        $stage = $booking->status === 'completed' ? 'second' : 'first';
+
         ExtraCharge::create([
             'booking_id' => $booking->booking_id,
+            'stage'      => $stage,
             'amount'     => $amount,
             'reason'     => $reason,
             'date'       => now()->toDateString(),
         ]);
 
-        // Extra charges add directly to the booking total, so the customer's
-        // remaining 50% payment reflects the new cost.
-        $newTotal = ($booking->total_price ?? 0) + $amount;
-        $booking->update(['total_price' => $newTotal]);
+        if ($stage === 'first') {
+            // First-stage charges are folded into total_price so the 50/50 split includes them
+            $newTotal = ($booking->total_price ?? 0) + $amount;
+            $booking->update(['total_price' => $newTotal]);
+            return back()->with('success', 'ការគិតប្រាក់បន្ថែមត្រូវបានបន្ថែម! តម្លៃសរុបថ្មី = $' . number_format($newTotal, 2));
+        }
 
-        return back()->with('success', 'ការគិតប្រាក់បន្ថែមត្រូវបានបន្ថែម! តម្លៃសរុបថ្មី = $' . number_format($newTotal, 2));
+        // Second-stage: customer pays this in full on top of remaining 50%
+        $secondTotal = $booking->extraCharges()->where('stage', 'second')->sum('amount');
+        return back()->with('success', 'ការគិតប្រាក់បន្ថែម (ការទូទាត់ចុងក្រោយ) ត្រូវបានបន្ថែម! សរុបការទូទាត់ចុងក្រោយ = $' . number_format(round($booking->total_price * 0.5, 2) + $secondTotal, 2));
     }
 }

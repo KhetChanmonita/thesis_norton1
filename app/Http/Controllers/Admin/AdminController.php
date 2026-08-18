@@ -26,7 +26,7 @@ class AdminController extends Controller
             'completed'    => Booking::where('status', 'completed')->count(),
             'cancelled'    => Booking::where('status', 'cancelled')->count(),
             'payments'     => Payment::count(),
-            'total_revenue'=> Payment::sum('amount'),
+            'total_revenue'=> Payment::where('verification_status', 'verified')->sum('amount'),
             'users'        => User::count(),
             'schedules'    => Schedule::count(),
             'new_messages' => Contact::where('status', 'new')->count(),

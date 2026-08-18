@@ -24,7 +24,7 @@ class TruckAdminController extends Controller
             });
         }
 
-        $trucks = $query->latest()->paginate(10)->withQueryString();
+        $trucks = $query->with('drivers')->latest()->paginate(10)->withQueryString();
 
         $total            = Truck::count();
         $totalAvailable   = Truck::where('status', 'available')->orWhereNull('status')->count();

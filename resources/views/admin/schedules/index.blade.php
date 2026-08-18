@@ -30,10 +30,10 @@
         </div>
     </div>
     <div class="stat-card">
-        <div class="stat-icon orange"><i class="fas fa-calendar-day"></i></div>
+        <div class="stat-icon orange"><i class="fas fa-truck"></i></div>
         <div class="stat-info">
             <div class="val">{{ $todayCount }}</div>
-            <div class="lbl">ថ្ងៃនេះ</div>
+            <div class="lbl">កំពុងដឹកទំនិញ</div>
         </div>
     </div>
 </div>
@@ -50,7 +50,7 @@
         <button type="submit" class="btn btn-ghost sch-btn-search-pad">
             <i class="fas fa-search"></i> ស្វែងរក
         </button>
-        @if(request('search') || request('date'))
+        @if(request('search'))
         <a href="{{ route('admin.schedules.index') }}" class="btn btn-ghost sch-btn-clear-pad">
             <i class="fas fa-times"></i>
         </a>
@@ -216,8 +216,7 @@
                                         {{ $s->schedule_id }},
                                         {{ $s->truck_id }},
                                         {{ $s->driver_id }},
-                                        {{ json_encode($s->location_truck) }},
-                                        {{ json_encode($s->date_of_truck_available ? \Carbon\Carbon::parse($s->date_of_truck_available)->format('Y-m-d') : null) }}
+                                        {{ json_encode($s->location_truck) }}
                                     )"
                                     title="កែប្រែ">
                                 <i class="fas fa-edit"></i>
@@ -234,7 +233,7 @@
                     <td colspan="7" class="sch-empty-cell">
                         <i class="fas fa-calendar-alt sch-empty-icon"></i>
                         <div class="sch-empty-text">មិនមានកាលវិភាគ</div>
-                        @if(request('search') || request('date'))
+                        @if(request('search'))
                         <a href="{{ route('admin.schedules.index') }}" class="sch-empty-clear-link">
                             លុបការស្វែងរក
                         </a>
@@ -411,7 +410,7 @@ function confirmDeleteSchedule(id, label) {
     document.getElementById('deleteScheduleModal').classList.add('open');
 }
 
-function openEditSchedule(id, truckId, driverId, location, date) {
+function openEditSchedule(id, truckId, driverId, location) {
     document.getElementById('editScheduleForm').action = '{{ url("/admin/schedules") }}/' + id;
     document.getElementById('es_truck').value  = truckId  || '';
     document.getElementById('es_driver').value = driverId || '';

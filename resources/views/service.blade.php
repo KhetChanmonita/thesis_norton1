@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -16,5 +16,6 @@
     @include('partials.header')
     @include('partials.services_section')
     @include('partials.whychooseus_section', ['truckCount' => \App\Models\Truck::count()])
+
 </body>
 </html>

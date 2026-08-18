@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -220,7 +220,7 @@
     @endforeach
 
     {{-- Payment history table --}}
-    @php $allPayments = $bookings->flatMap->payments->sortByDesc('payment_date'); @endphp
+    @php $allPayments = $bookings->flatMap->payments->filter(fn($p) => $p->verification_status !== 'rejected')->sortByDesc('payment_date'); @endphp
     @if($allPayments->isNotEmpty())
     <div class="section-hdr mybk-history-hdr">
         <i class="fas fa-history"></i> ប្រវត្តិការទូទាត់
@@ -310,5 +310,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
 </body>
 </html>

@@ -1,4 +1,4 @@
-
+﻿
 {{-- resources/views/payments/success.blade.php --}}
 <!DOCTYPE html>
 <html lang="km">
@@ -84,6 +84,7 @@
 </div>
 
 @include('partials.footer')
+
 
 </body>
 </html>

@@ -106,6 +106,7 @@
                     <th>ចំនួនភ្លៅរថយន្ត</th>
                     <th>ពណ៌រថយន្ត</th>
                     <th>ទម្ងន់រថយន្ត (តោន)</th>
+                    <th>អ្នកបើកបរ</th>
                     <th>ធ្វើបច្ចុប្បន្នភាព</th>
                     <th>ស្ថានភាពរថយន្ត</th>
                 </tr>
@@ -140,6 +141,17 @@
                     <td>{{ $t->truck_size ?? '—' }}</td>
                     <td>{{ $t->truck_color ?? '—' }}</td>
                     <td>{{ $t->capacity_ton ? number_format($t->capacity_ton, 2).' T' : '—' }}</td>
+
+                    {{-- Driver --}}
+                    <td>
+                        @if($t->drivers->isEmpty())
+                            មិនទាន់មានអ្នកបើកបរ
+                        @else
+                            @foreach($t->drivers as $d)
+                                {{ $d->full_name }}@if(!$loop->last), @endif
+                            @endforeach
+                        @endif
+                    </td>
 
                     {{-- Edit / Delete actions --}}
                     <td>
@@ -184,7 +196,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="9" class="trk-empty-cell">
+                    <td colspan="10" class="trk-empty-cell">
                         <i class="fas fa-truck trk-empty-icon"></i>
                         មិនមានរថយន្តទេ
                     </td>

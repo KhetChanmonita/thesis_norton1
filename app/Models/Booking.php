@@ -66,6 +66,19 @@ class Booking extends Model
         return $this->hasMany(ExtraCharge::class, 'booking_id', 'booking_id');
     }
 
+    public function secondStageCharges()
+    {
+        return $this->hasMany(ExtraCharge::class, 'booking_id', 'booking_id')->where('stage', 'second');
+    }
+
+    // Total amount due for the final (second) payment
+    public function getFinalPaymentAmountAttribute(): float
+    {
+        $base        = round(($this->total_price ?? 0) * 0.5, 2);
+        $secondExtra = (float) $this->secondStageCharges()->sum('amount');
+        return round($base + $secondExtra, 2);
+    }
+
     public function statusHistory()
     {
         return $this->hasMany(BookingStatusHistory::class, 'booking_id', 'booking_id');

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -25,16 +25,9 @@
     <div class="lookup-box">
         <div class="lookup-title">
             <i class="fas fa-search"></i>
-            ស្វែងរកការកក់ដោយលេខទូរស័ព្ទ ឬ លេខកុងតឺន័រ
+            ស្វែងរកការកក់ដោយលេខទូរកុងតឺន័រ
         </div>
         <form method="GET" action="{{ route('my.bookings') }}" class="lookup-form">
-            <div class="lookup-input-wrap">
-                <i class="fas fa-phone"></i>
-                <input type="tel" name="phone" value="{{ $searchPhone }}"
-                       placeholder="បញ្ចូលលេខទូរស័ព្ទ ឧ. 015558586"
-                       class="lookup-input">
-            </div>
-            <span class="lookup-or">ឬ</span>
             <div class="lookup-input-wrap">
                 <i class="fas fa-box"></i>
                 <input type="text" name="container_number" value="{{ $searchContainer }}"
@@ -44,7 +37,7 @@
             <button type="submit" class="lookup-btn">
                 <i class="fas fa-search"></i> ស្វែងរក
             </button>
-            @if($searchPhone || $searchContainer)
+            @if($searchContainer)
             <a href="{{ route('my.bookings') }}" class="lookup-clear">
                 <i class="fas fa-times"></i>
             </a>
@@ -53,11 +46,7 @@
         @if($searched && $bookings->isEmpty())
         <div class="lookup-not-found">
             <i class="fas fa-exclamation-triangle"></i>
-            @if($searchContainer)
-                មិនមានការកក់សម្រាប់លេខកុងតឺន័រ <strong>{{ $searchContainer }}</strong>
-            @else
-                មិនមានការកក់សម្រាប់លេខ <strong>{{ $searchPhone }}</strong>
-            @endif
+            មិនមានការកក់សម្រាប់លេខកុងតឺន័រ <strong>{{ $searchContainer }}</strong>
         </div>
         @endif
     </div>
@@ -235,7 +224,7 @@
     @endforeach
 
     {{-- Payment history --}}
-    @php $allPayments = $bookings->flatMap->payments->sortByDesc('payment_date'); @endphp
+    @php $allPayments = $bookings->flatMap->payments->filter(fn($p) => $p->verification_status !== 'rejected')->sortByDesc('payment_date'); @endphp
     @if($allPayments->isNotEmpty())
     <div class="section-hdr mybk-history-hdr">
         <i class="fas fa-history"></i> ប្រវត្តិការទូទាត់
@@ -297,5 +286,6 @@
     @endif {{-- end !$bookings->isEmpty() --}}
 
 </div>
+
 </body>
 </html>

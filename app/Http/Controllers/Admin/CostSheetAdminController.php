@@ -14,7 +14,7 @@ class CostSheetAdminController extends Controller
         $month = $request->input('month', now()->format('Y-m'));
         [$year, $monthNum] = explode('-', $month);
 
-        $query = Booking::with(['customer', 'truck', 'costSheet'])
+        $query = Booking::with(['customer', 'truck', 'costSheet', 'extraCharges'])
             ->whereYear('booking_date', $year)
             ->whereMonth('booking_date', $monthNum);
 
@@ -57,7 +57,7 @@ class CostSheetAdminController extends Controller
 
     public function invoice(Booking $booking)
     {
-        $booking->load(['customer', 'truck', 'costSheet']);
+        $booking->load(['customer', 'truck', 'costSheet', 'extraCharges']);
         return view('admin.reports.invoice', compact('booking'));
     }
 }

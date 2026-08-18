@@ -55,7 +55,6 @@
         {{-- Determine which cost-sheet columns have at least one non-empty value --}}
         @php
             $col        = $bookings->getCollection();
-            $showRoute  = $col->contains(fn($b) => ($b->costSheet?->route) || $b->pickup_location || $b->dropoff_location);
             $showSize   = $col->contains(fn($b) => (bool)($b->costSheet?->size) || (bool)$b->container_size);
             $showPrice  = $col->contains(fn($b) => ($b->costSheet && $b->costSheet->price > 0) || $b->total_price > 0);
             $showLolo   = $col->contains(fn($b) => $b->costSheet && $b->costSheet->lolo > 0);
@@ -66,10 +65,11 @@
             $showST     = $col->contains(fn($b) => $b->costSheet && $b->costSheet->standby_truck > 0);
             $showRepair = $col->contains(fn($b) => $b->costSheet && $b->costSheet->repair > 0);
             $showTotal  = $showPrice || $showLolo || $showOW || $showEW || $showExtra || $showER || $showST || $showRepair;
+            $showDesc   = $col->contains(fn($b) => $b->extraCharges->isNotEmpty());
             $emptyColspan = 14
-                + (int)$showRoute + (int)$showSize  + (int)$showPrice  + (int)$showLolo
+                + (int)$showSize  + (int)$showPrice  + (int)$showLolo
                 + (int)$showOW    + (int)$showEW    + (int)$showExtra  + (int)$showER
-                + (int)$showST    + (int)$showRepair + (int)$showTotal + 1;
+                + (int)$showST    + (int)$showRepair + (int)$showTotal + (int)$showDesc + 1;
         @endphp
 
         <table class="cs-table">
@@ -89,7 +89,7 @@
                     <th>ទំងន់ (kg)</th>
                     <th>ស្ថានភាព</th>
                     <th>ការបង់ប្រាក់</th>
-                    @if($showRoute)<th>ទឺតាំង</th>@endif
+                    @if($showDesc)<th>ការអធិប្បាយ / Description</th>@endif
                     @if($showSize)<th>Size</th>@endif
                     @if($showPrice)<th>Price</th>@endif
                     @if($showLolo)<th>LoLo</th>@endif
@@ -107,8 +107,6 @@
                 @forelse($bookings as $i => $b)
                 @php
                     $cs = $b->costSheet;
-                    $routeFallback = collect(array_filter([$b->pickup_location, $b->dropoff_location]))->implode(' → ');
-                    $routeDefault  = ($cs && $cs->route)    ? $cs->route : $routeFallback;
                     $priceDefault  = ($cs && $cs->price > 0) ? $cs->price : ($b->total_price ?? '');
                     $sizeDefault   = ($cs && $cs->size)     ? $cs->size  : ($b->container_size ?? '');
                 @endphp
@@ -145,7 +143,21 @@
                         @endphp
                         <span class="cs-badge {{ $pm[1] }}">{{ $pm[0] }}</span>
                     </td>
-                    @if($showRoute)<td><input type="text" class="cs-input cs-text" data-field="route" value="{{ $routeDefault }}"></td>@endif
+                    @php
+                        $secondExtraSum = $b->extraCharges->where('stage', 'second')->sum('amount');
+                        $trueTotal      = ($b->total_price ?? 0) + $secondExtraSum;
+                    @endphp
+                    @if($showDesc)
+                    <td class="cs-desc-cell">
+                        @foreach($b->extraCharges as $ec)
+                        <div class="cs-desc-item {{ $ec->stage === 'second' ? 'cs-desc-second' : 'cs-desc-first' }}">
+                            <span class="cs-desc-label">{{ $ec->reason }}</span>
+                            <span class="cs-desc-amt">+${{ number_format($ec->amount, 2) }}</span>
+                            @if($ec->stage === 'second')<span class="cs-desc-tag">ចុងក្រោយ</span>@endif
+                        </div>
+                        @endforeach
+                    </td>
+                    @endif
                     @if($showSize)<td><input type="text" class="cs-input cs-text cs-size" data-field="size" value="{{ $sizeDefault }}"></td>@endif
                     @if($showPrice)<td><input type="number" step="0.01" min="0" class="cs-input cs-num" data-field="price" value="{{ $priceDefault }}"></td>@endif
                     @if($showLolo)<td><input type="number" step="0.01" min="0" class="cs-input cs-num" data-field="lolo" value="{{ $cs->lolo ?? '' }}"></td>@endif
@@ -155,7 +167,7 @@
                     @if($showER)<td><input type="number" step="0.01" min="0" class="cs-input cs-num" data-field="empty_return" value="{{ $cs->empty_return ?? '' }}"></td>@endif
                     @if($showST)<td><input type="number" step="0.01" min="0" class="cs-input cs-num" data-field="standby_truck" value="{{ $cs->standby_truck ?? '' }}"></td>@endif
                     @if($showRepair)<td><input type="number" step="0.01" min="0" class="cs-input cs-num" data-field="repair" value="{{ $cs->repair ?? '' }}"></td>@endif
-                    @if($showTotal)<td class="cs-total">${{ number_format($cs->total ?? 0, 2) }}</td>@endif
+                    @if($showTotal)<td class="cs-total">${{ number_format($trueTotal, 2) }}</td>@endif
                     <td class="cs-td-invoice">
                         <a href="{{ route('admin.reports.invoice', $b->booking_id) }}"
                            class="cs-invoice-btn"

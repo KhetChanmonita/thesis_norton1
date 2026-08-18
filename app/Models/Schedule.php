@@ -16,11 +16,6 @@ class Schedule extends Model
         'truck_id',
         'driver_id',
         'location_truck',
-        'date_of_truck_available',
-    ];
-
-    protected $casts = [
-        'date_of_truck_available' => 'date',
     ];
 
     public function truck()

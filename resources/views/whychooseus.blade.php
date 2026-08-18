@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -12,5 +12,6 @@
 </head>
 <body>
     @include('partials.whychooseus_section', ['truckCount' => $truckCount])
+
 </body>
 </html>

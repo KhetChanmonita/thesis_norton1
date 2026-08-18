@@ -1,4 +1,4 @@
-{{-- resources/views/bookings/create-import.blade.php --}}
+﻿{{-- resources/views/bookings/create-import.blade.php --}}
 <!DOCTYPE html>
 <html lang="km">
 <head>
@@ -475,6 +475,7 @@
         });
     });
 </script>
+
 
 </body>
 </html>

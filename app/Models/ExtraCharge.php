@@ -14,6 +14,7 @@ class ExtraCharge extends Model
 
     protected $fillable = [
         'booking_id',
+        'stage',
         'amount',
         'reason',
         'client_response',

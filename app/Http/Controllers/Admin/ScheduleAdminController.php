@@ -26,15 +26,11 @@ class ScheduleAdminController extends Controller
             });
         }
 
-        if ($request->filled('date')) {
-            $query->whereDate('date_of_truck_available', $request->date);
-        }
-
-        $schedules  = $query->latest()->paginate(10)->withQueryString();
-        $trucks     = Truck::all();
-        $drivers    = Driver::where('status', 'active')->get();
-        $total      = Schedule::count();
-        $todayCount = Schedule::whereDate('date_of_truck_available', today())->count();
+        $schedules      = $query->latest()->paginate(10)->withQueryString();
+        $trucks         = Truck::all();
+        $drivers        = Driver::where('status', 'active')->get();
+        $total          = Schedule::count();
+        $todayCount     = Schedule::whereHas('truck', fn($q) => $q->where('status', 'delivering'))->count();
 
         return view('admin.schedules.index',
             compact('schedules', 'trucks', 'drivers', 'total', 'todayCount')
@@ -46,14 +42,13 @@ class ScheduleAdminController extends Controller
         $request->validate([
             'truck_id'                => 'required|exists:tbl_truck,truck_id|unique:tbl_schedule,truck_id',
             'driver_id'               => 'required|exists:tbl_driver,driver_id|unique:tbl_schedule,driver_id',
-            'location_truck'          => 'nullable|string|max:200',
-            'date_of_truck_available' => 'nullable|date',
+            'location_truck' => 'nullable|string|max:200',
         ], [
             'truck_id.unique'  => 'រថយន្តនេះមានកាលវិភាគរួចហើយ!',
             'driver_id.unique' => 'អ្នកបើកបរនេះមានកាលវិភាគរួចហើយ!',
         ]);
 
-        Schedule::create($request->only('truck_id', 'driver_id', 'location_truck', 'date_of_truck_available'));
+        Schedule::create($request->only('truck_id', 'driver_id', 'location_truck'));
 
         return back()->with('success', 'កាលវិភាគបានបន្ថែមដោយជោគជ័យ!');
     }
@@ -63,14 +58,13 @@ class ScheduleAdminController extends Controller
         $request->validate([
             'truck_id'                => 'required|exists:tbl_truck,truck_id|unique:tbl_schedule,truck_id,' . $schedule->schedule_id . ',schedule_id',
             'driver_id'               => 'required|exists:tbl_driver,driver_id|unique:tbl_schedule,driver_id,' . $schedule->schedule_id . ',schedule_id',
-            'location_truck'          => 'nullable|string|max:200',
-            'date_of_truck_available' => 'nullable|date',
+            'location_truck' => 'nullable|string|max:200',
         ], [
             'truck_id.unique'  => 'រថយន្តនេះមានកាលវិភាគរួចហើយ!',
             'driver_id.unique' => 'អ្នកបើកបរនេះមានកាលវិភាគរួចហើយ!',
         ]);
 
-        $schedule->update($request->only('truck_id', 'driver_id', 'location_truck', 'date_of_truck_available'));
+        $schedule->update($request->only('truck_id', 'driver_id', 'location_truck'));
 
         return back()->with('success', 'កាលវិភាគបានកែប្រែ!');
     }

@@ -262,14 +262,14 @@
                                 <form method="POST" action="{{ route('admin.payments.verify', $p->payment_id) }}">
                                     @csrf
                                     <button type="submit" title="ផ្ទៀងផ្ទាត់"
-                                            style="padding:5px 12px;background:#d1fae5;color:#065f46;border:none;border-radius:7px;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                                            style="padding:5px 12px;background:#d1fae5;color:#065f46;border:none;border-radius:7px;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:'Kantumruy Pro',sans-serif;">
                                         <i class="fas fa-check"></i> ផ្ទៀង
                                     </button>
                                 </form>
                                 <form method="POST" action="{{ route('admin.payments.reject', $p->payment_id) }}">
                                     @csrf
                                     <button type="submit" title="បដិសេធ"
-                                            style="padding:5px 12px;background:#fee2e2;color:#991b1b;border:none;border-radius:7px;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+                                            style="padding:5px 12px;background:#fee2e2;color:#991b1b;border:none;border-radius:7px;font-size:0.78rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font-family:'Kantumruy Pro',sans-serif;">
                                         <i class="fas fa-times"></i> បដិសេធ
                                     </button>
                                 </form>

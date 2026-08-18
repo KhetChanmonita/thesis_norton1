@@ -1,4 +1,4 @@
-{{-- resources/views/trucks_section.blade.php --}}
+﻿{{-- resources/views/trucks_section.blade.php --}}
 <!DOCTYPE html>
 <html lang="km">
 <head>
@@ -111,7 +111,7 @@
             @php
                 $typeKey    = \Illuminate\Support\Str::slug($truck->truck_name ?? 'other');
                 $cap        = (float)($truck->capacity_ton ?? 0);
-                $sizeKey    = $cap >= 15 ? 'large' : ($cap >= 12 ? 'medium' : 'small');
+                $sizeKey    = $cap >= 16 ? 'large' : ($cap >= 14 ? 'medium' : ($cap >= 12 ? 'small' : 'other'));
                 $isExtra    = $index >= 6;
                 $truckStatus    = $truck->status ?? 'available';
                 $hasActiveDriver = $truck->drivers->where('status', 'active')->count() > 0;
@@ -795,6 +795,7 @@
     `;
     document.head.appendChild(animationStyle);
 </script>
+
 
 
 </body>

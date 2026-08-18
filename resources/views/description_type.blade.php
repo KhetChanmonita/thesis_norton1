@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -383,6 +383,7 @@ $s = $services[$type] ?? $services['import-shv'];
 </div>
 
 @include('partials.footer')
+
 
 </body>
 </html>

@@ -91,7 +91,7 @@ class PaymentAdminController extends Controller
 
     public function history(Request $request)
     {
-        $query = BookingStatusHistory::with('booking.customer');
+        $query = BookingStatusHistory::with('booking.customer', 'booking.extraCharges');
 
         if ($request->filled('container_number')) {
             $container = trim($request->container_number);

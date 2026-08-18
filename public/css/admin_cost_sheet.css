@@ -415,6 +415,15 @@
 .cs-total { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #1D6F42; text-align: right; background: #ecfdf5 !important; white-space: nowrap; }
 .cs-save-status { font-size: 0.8rem; color: #94a3b8; margin-left: auto; align-self: center; }
 
+/* ── Description / Extra-charge column ── */
+.cs-desc-cell { min-width: 220px; white-space: normal; padding: 5px 8px; vertical-align: top; }
+.cs-desc-item { display: flex; align-items: flex-start; gap: 6px; padding: 3px 0; font-size: 0.75rem; font-family: 'Kantumruy Pro', sans-serif; line-height: 1.4; }
+.cs-desc-first { color: #0369a1; }
+.cs-desc-second { color: #b45309; }
+.cs-desc-label { flex: 1; }
+.cs-desc-amt { font-family: 'Montserrat', sans-serif; font-weight: 700; white-space: nowrap; }
+.cs-desc-tag { display: inline-block; font-size: 0.66rem; padding: 1px 5px; border-radius: 10px; background: #fef3c7; color: #92400e; font-weight: 700; white-space: nowrap; margin-left: 2px; }
+
 /* ── Status / type / payment badges ── */
 .cs-badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; font-family: 'Kantumruy Pro', sans-serif; white-space: nowrap; }
 .cs-badge-import    { background: #fff3e8; color: #c2410c; }

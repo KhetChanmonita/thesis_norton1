@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -239,5 +239,6 @@
         if (e.target === this) this.style.display = 'none';
     });
     </script>
+
 </body>
 </html>

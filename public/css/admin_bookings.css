@@ -40,6 +40,19 @@
 .bkg-empty-cell { text-align: center; color: #94a3b8; padding: 32px; }
 .bkg-pagination { padding: 14px 22px; border-top: 1px solid #f1f5f9; }
 
+/* ── Pagination ── */
+.pag-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.pag-info { font-size: 0.8rem; color: #94a3b8; }
+.pag-pages { display: flex; gap: 6px; align-items: center; }
+.pag-disabled { opacity: 0.4; cursor: default; }
+.pag-dots { border: none !important; background: transparent !important; color: #94a3b8; cursor: default; }
+
 /* ── Modals ── */
 .bkg-modal-lg { max-width: 560px; }
 .bkg-modal-md { max-width: 440px; }

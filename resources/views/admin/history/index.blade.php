@@ -84,7 +84,13 @@
                             @endif
                         </small>
                     </td>
-                    <td><strong class="his-total">${{ number_format($h->total_price ?? 0, 2) }}</strong></td>
+                    <td>
+                        @php
+                            $secondSum = $h->booking?->extraCharges?->where('stage','second')->sum('amount') ?? 0;
+                            $trueTotal = ($h->total_price ?? 0) + $secondSum;
+                        @endphp
+                        <strong class="his-total">${{ number_format($trueTotal, 2) }}</strong>
+                    </td>
                     <td>
                         @if($h->completed_date)
                         <span class="badge badge-completed">

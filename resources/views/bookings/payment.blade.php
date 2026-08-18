@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
@@ -45,9 +45,27 @@
         </div>
         @if($booking->total_price)
         <div class="summary-row">
-            <span class="lbl">តម្លៃសរុប</span>
+            <span class="lbl">តម្លៃដឹកជញ្ជូនសរុប</span>
             <span class="val pay-price-val">${{ number_format($booking->total_price, 2) }}</span>
         </div>
+        @endif
+        @if($stage === 'final')
+        <div class="summary-row">
+            <span class="lbl">50% ចុងក្រោយ</span>
+            <span class="val pay-price-val">${{ number_format(round($booking->total_price * 0.5, 2), 2) }}</span>
+        </div>
+        @foreach($booking->secondStageCharges as $sc)
+        <div class="summary-row">
+            <span class="lbl" style="color:#b45309;">+ {{ $sc->reason }}</span>
+            <span class="val pay-price-val" style="color:#b45309;">+${{ number_format($sc->amount, 2) }}</span>
+        </div>
+        @endforeach
+        @if($booking->secondStageCharges->isNotEmpty())
+        <div class="summary-row" style="border-top:1px solid #e2e8f0;margin-top:6px;padding-top:6px;">
+            <span class="lbl" style="font-weight:700;">សរុបត្រូវបង់</span>
+            <span class="val pay-price-val" style="font-weight:700;color:#d97706;">${{ number_format($amount, 2) }}</span>
+        </div>
+        @endif
         @endif
     </div>
 </div>
@@ -71,11 +89,9 @@
         <div class="app-icons">
             <span class="app-icon app-icon-acleda"><i class="fas fa-university"></i> ACLEDA</span>
             <span class="app-icon app-icon-aba"><i class="fas fa-mobile-alt"></i> ABA</span>
-            <span class="app-icon app-icon-wing"><i class="fas fa-mobile-alt"></i> Wing</span>
-            <span class="app-icon app-icon-khqr"><i class="fas fa-th"></i> KHQR</span>
         </div>
         <div class="khqr-steps">
-            <div class="khqr-step"><div class="num">1</div><p>បើកកម្មវិធី <strong>ACLEDA, ABA, Wing</strong> ឬ កម្មវិធីណាមួយដែលគាំទ្រ KHQR</p></div>
+            <div class="khqr-step"><div class="num">1</div><p>បើកកម្មវិធី <strong>ACLEDA</strong> ឬ <strong>ABA</strong></p></div>
             <div class="khqr-step"><div class="num">2</div><p>ចុច <strong>Scan / ស្គែន QR</strong> រួចស្គែនលើ QR Code ខាងលើ</p></div>
             <div class="khqr-step"><div class="num">3</div><p>បញ្ចូលចំនួន <strong>${{ number_format($amount, 2) }}</strong> ហើយបញ្ជាក់ការទូទាត់</p></div>
             <div class="khqr-step"><div class="num green">4</div><p>បន្ទាប់ពីទូទាត់ហើយ ជ្រើសរើសវិធីទូទាត់ខាងក្រោម ហើយចុច <strong>"បញ្ជាក់"</strong></p></div>
@@ -96,14 +112,6 @@
                     <div class="method-card"><i class="fas fa-university pay-method-acleda"></i><span>ACLEDA</span></div></label>
                 <label><input type="radio" name="payment_method" value="aba" class="method-radio">
                     <div class="method-card"><i class="fas fa-mobile-alt pay-method-aba"></i><span>ABA</span></div></label>
-                <label><input type="radio" name="payment_method" value="wing" class="method-radio">
-                    <div class="method-card"><i class="fas fa-mobile-alt pay-method-wing"></i><span>Wing</span></div></label>
-                <label><input type="radio" name="payment_method" value="cash" class="method-radio">
-                    <div class="method-card"><i class="fas fa-money-bill-wave pay-method-cash"></i><span>សាច់ប្រាក់</span></div></label>
-                <label><input type="radio" name="payment_method" value="bank_transfer" class="method-radio">
-                    <div class="method-card"><i class="fas fa-exchange-alt pay-method-transfer"></i><span>ផ្ទេរប្រាក់</span></div></label>
-                <label><input type="radio" name="payment_method" value="khqr" class="method-radio">
-                    <div class="method-card"><i class="fas fa-qrcode pay-method-qr"></i><span>KHQR ផ្សេង</span></div></label>
             </div>
             @error('payment_method')
             <p class="pay-error-msg"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
@@ -191,5 +199,6 @@ document.querySelectorAll('input[name="payment_method"]').forEach(function(radio
     radio.addEventListener('change', hideAlert);
 });
 </script>
+
 </body>
 </html>
