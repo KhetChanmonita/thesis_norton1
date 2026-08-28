@@ -44,8 +44,9 @@ class TruckAdminController extends Controller
             'plate_number'  => 'required|string|max:20|unique:tbl_truck,plate_number',
             'truck_size'    => 'nullable|string|max:50',
             'truck_color'   => 'nullable|string|max:50',
-            'capacity_ton'  => 'nullable|numeric|min:0',
-            'truck_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'capacity_ton'    => 'nullable|numeric|min:0',
+            'truck_location'  => 'nullable|in:shv,pp,both',
+            'truck_picture'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'plate_number.unique' => 'រថយន្តដែលមានស្លាកលេខនេះមានរួចហើយក្នុងប្រព័ន្ធ!',
         ]);
@@ -58,7 +59,7 @@ class TruckAdminController extends Controller
                              ->withInput();
         }
 
-        $data = $request->only('truck_name', 'plate_number', 'truck_size', 'truck_color', 'capacity_ton');
+        $data = $request->only('truck_name', 'plate_number', 'truck_size', 'truck_color', 'capacity_ton', 'truck_location');
 
         if ($request->hasFile('truck_picture')) {
             $file = $request->file('truck_picture');
@@ -80,8 +81,9 @@ class TruckAdminController extends Controller
             'plate_number'  => 'required|string|max:20|unique:tbl_truck,plate_number,' . $truck->truck_id . ',truck_id',
             'truck_size'    => 'nullable|string|max:50',
             'truck_color'   => 'nullable|string|max:50',
-            'capacity_ton'  => 'nullable|numeric|min:0',
-            'truck_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'capacity_ton'    => 'nullable|numeric|min:0',
+            'truck_location'  => 'nullable|in:shv,pp,both',
+            'truck_picture'   => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'plate_number.unique' => 'រថយន្តដែលមានស្លាកលេខនេះមានរួចហើយក្នុងប្រព័ន្ធ!',
         ]);
@@ -92,7 +94,7 @@ class TruckAdminController extends Controller
                              ->withInput();
         }
 
-        $data = $request->only('truck_name', 'plate_number', 'truck_size', 'truck_color', 'capacity_ton');
+        $data = $request->only('truck_name', 'plate_number', 'truck_size', 'truck_color', 'capacity_ton', 'truck_location');
 
         if ($request->hasFile('truck_picture')) {
             // Delete old image safely

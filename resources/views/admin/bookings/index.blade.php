@@ -926,45 +926,66 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                 </div>
                 @endif
 
-                {{-- Section 1: Staff Requester & Truck --}}
+                {{-- Section 1: Customer Info --}}
                 <div class="ab-step">
                     <div class="ab-step-num">1</div>
-                    <div class="ab-step-title"><i class="fas fa-user-tie" style="color:#FF6B00;margin-right:6px;"></i>ព័ត៌មានអ្នកស្នើ និងរថយន្ត</div>
+                    <div class="ab-step-title"><i class="fas fa-user-circle" style="color:#FF6B00;margin-right:6px;"></i>ព័ត៌មានអតិថិជន</div>
                     <div class="ab-step-rule"></div>
                 </div>
+
+                {{-- Customer info fields --}}
                 <div class="ab-row">
                     <div class="ab-group half">
-                        <label class="ab-label">អ្នកស្នើការដឹក <span style="color:#94a3b8;font-weight:400;">(បុគ្គលិកក្រុមហ៊ុន)</span></label>
-                        <select name="booked_by_user_id"
-                                class="ab-select {{ $errors->has('booked_by_user_id') ? 'is-err' : '' }}"
-                                required>
-                            <option value="">-- ជ្រើសរើសសិទ្ធិ / បុគ្គលិក --</option>
-                            @foreach($staffUsers as $u)
-                                @php
-                                    $roleLabel = ['admin'=>'Admin','operation'=>'Operation','accountant'=>'Accountant'][$u->role] ?? $u->role;
-                                @endphp
-                                <option value="{{ $u->user_id }}" {{ old('booked_by_user_id') == $u->user_id ? 'selected' : '' }}>
-                                    {{ $u->user_name }} — {{ $roleLabel }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('booked_by_user_id')<div class="ab-err-msg">{{ $message }}</div>@enderror
+                        <label class="ab-label">ឈ្មោះពេញ <span style="color:#ef4444;">*</span></label>
+                        <input type="text" name="customer_name"
+                               value="{{ old('customer_name') }}"
+                               class="ab-input {{ $errors->has('customer_name') ? 'is-err' : '' }}"
+                               placeholder="ឧ. សុខ វណ្ណារិទ្ធ" required>
+                        @error('customer_name')<div class="ab-err-msg">{{ $message }}</div>@enderror
                     </div>
                     <div class="ab-group half">
-                        <label class="ab-label">រថយន្ត</label>
-                        <select name="truck_id" class="ab-select {{ $errors->has('truck_id') ? 'is-err' : '' }}" required>
-                            <option value="">-- ជ្រើសរើសរថយន្ត --</option>
-                            @foreach($trucks as $t)
-                                <option value="{{ $t->truck_id }}" {{ old('truck_id') == $t->truck_id ? 'selected' : '' }}>
-                                    {{ $t->truck_name }} — {{ $t->plate_number }}
-                                    @if($t->capacity_ton) ({{ $t->capacity_ton }}T) @endif
-                                </option>
-                            @endforeach
-                        </select>
-                        @if($trucks->isEmpty())
-                            <div class="ab-truck-hint"><i class="fas fa-exclamation-circle" style="color:#f59e0b;"></i> រថយន្តទំនេរគ្មាននៅពេលនេះ</div>
-                        @endif
-                        @error('truck_id')<div class="ab-err-msg">{{ $message }}</div>@enderror
+                        <label class="ab-label">លេខទូរស័ព្ទ</label>
+                        <input type="text" name="customer_phone"
+                               value="{{ old('customer_phone') }}"
+                               class="ab-input"
+                               placeholder="ឧ. 012 345 678">
+                    </div>
+                    <div class="ab-group half">
+                        <label class="ab-label">អ៊ីមែល</label>
+                        <input type="email" name="customer_email"
+                               value="{{ old('customer_email') }}"
+                               class="ab-input"
+                               placeholder="ឧ. name@email.com">
+                    </div>
+                    <div class="ab-group half">
+                        <label class="ab-label">លេខក្រុមហ៊ុន</label>
+                        <input type="text" name="customer_company"
+                               value="{{ old('customer_company') }}"
+                               class="ab-input"
+                               placeholder="ឧ. ABC Import Co.">
+                    </div>
+                    <div class="ab-group full">
+                        <label class="ab-label">អាសយដ្ឋាន</label>
+                        <input type="text" name="customer_address"
+                               value="{{ old('customer_address') }}"
+                               class="ab-input"
+                               placeholder="ឧ. ភ្នំពេញ, កម្ពុជា">
+                    </div>
+                </div>
+
+                {{-- Booked-by staff badge --}}
+                <div style="margin:6px 0 4px;padding:10px 14px;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;display:flex;align-items:center;gap:10px;">
+                    <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#10b981,#34d399);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="fas fa-user-tie" style="color:#fff;font-size:.8rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-size:.7rem;color:#6b7280;margin-bottom:1px;">អ្នកកក់ជំនួសអតិថិជន (បុគ្គលិក)</div>
+                        <div style="font-weight:700;color:#065f46;font-size:.85rem;">
+                            {{ auth()->user()->user_name ?? auth()->user()->name ?? 'Admin' }}
+                            <span style="font-weight:400;color:#047857;font-size:.78rem;margin-left:6px;">
+                                — {{ ucfirst(auth()->user()->role ?? 'admin') }}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -1022,7 +1043,7 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                                placeholder="ឧ. កំពង់ផែស្វ័យយ័តភ្នំពេញ" required>
                         <select name="pickup_location" id="ab_pickupSelect"
                                 class="ab-select {{ $errors->has('pickup_location') ? 'is-err' : '' }}"
-                                style="display:none;" disabled onchange="abAdminLookupPrice()">
+                                style="display:none;" disabled onchange="abAdminLookupPrice(); abFilterTrucks(this.value);">
                             <option value="">-- ជ្រើសរើសកំពង់ផែ --</option>
                             <option value="កំពង់ផែស្វ័យយ័តព្រះសីហនុ" data-key="sihanoukville" {{ old('pickup_location')=='កំពង់ផែស្វ័យយ័តព្រះសីហនុ'?'selected':'' }}>
                                 កំពង់ផែស្វ័យយ័តព្រះសីហនុ (SHV Port)
@@ -1133,6 +1154,40 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                     </div>
                 </div>
 
+                {{-- Section 4: Truck Selection (last) --}}
+                <div class="ab-step">
+                    <div class="ab-step-num">4</div>
+                    <div class="ab-step-title"><i class="fas fa-truck" style="color:#FF6B00;margin-right:6px;"></i>ជ្រើសរើសរថយន្ត</div>
+                    <div class="ab-step-rule"></div>
+                </div>
+                <div class="ab-row">
+                    <div class="ab-group full">
+                        <label class="ab-label">
+                            រថយន្ត
+                            <span id="ab_truckPortHint" style="color:#94a3b8;font-weight:400;font-size:.75rem;display:none;">
+                                <i class="fas fa-filter"></i> <span id="ab_truckPortLabel"></span>
+                            </span>
+                        </label>
+                        <select name="truck_id" id="ab_truckSelect"
+                                class="ab-select {{ $errors->has('truck_id') ? 'is-err' : '' }}" required>
+                            <option value="">-- ជ្រើសរើសរថយន្ត --</option>
+                            @foreach($trucks as $t)
+                                <option value="{{ $t->truck_id }}"
+                                        data-loc="{{ $t->truck_location ?? 'both' }}"
+                                        {{ old('truck_id') == $t->truck_id ? 'selected' : '' }}>
+                                    {{ $t->truck_name }} — {{ $t->plate_number }}
+                                    @if($t->capacity_ton) ({{ $t->capacity_ton }}T) @endif
+                                    @if(($t->truck_location ?? 'both') !== 'both') [{{ strtoupper($t->truck_location) }}] @endif
+                                </option>
+                            @endforeach
+                        </select>
+                        @if($trucks->isEmpty())
+                            <div class="ab-truck-hint"><i class="fas fa-exclamation-circle" style="color:#f59e0b;"></i> រថយន្តទំនេរគ្មាននៅពេលនេះ</div>
+                        @endif
+                        @error('truck_id')<div class="ab-err-msg">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+
             </div>{{-- /.ab-modal-body --}}
 
             <div class="ab-modal-foot">
@@ -1182,39 +1237,81 @@ function abToggleType(type) {
         dropoffLabel.textContent = 'ទីតាំងទម្លាក់ទំនិញ';
         pickUpLbl.textContent    = 'ថ្ងៃដឹក (ថ្ងៃលើក)';
         dropOffLbl.textContent   = 'ថ្ងៃទម្លាក់ (ដល់ដៃ)';
-        // Switch pickup to port select
         pickupInput.style.display  = 'none';
         pickupInput.disabled       = true;
         pickupInput.required       = false;
         pickupSelect.style.display = 'block';
         pickupSelect.disabled      = false;
         pickupSelect.required      = true;
+        abFilterTrucks(pickupSelect.value);
     } else if (type === 'export') {
         pickupLabel.textContent  = 'ទីតាំងទម្លាក់ទំនិញ';
         dropoffLabel.textContent = 'ទីតាំងច្រកទំនិញ';
         pickUpLbl.textContent    = 'ថ្ងៃលើកទូរ';
         dropOffLbl.textContent   = 'ថ្ងៃឡើងទំនិញ';
-        // Switch pickup to port select
         pickupInput.style.display  = 'none';
         pickupInput.disabled       = true;
         pickupInput.required       = false;
         pickupSelect.style.display = 'block';
         pickupSelect.disabled      = false;
         pickupSelect.required      = true;
+        abFilterTrucks(pickupSelect.value);
     } else {
         pickupLabel.textContent  = 'ទីតាំងទទួល';
         dropoffLabel.textContent = 'ទីតាំងដឹកទៅ';
         pickUpLbl.textContent    = 'កាលបរិច្ឆេទថ្ងៃដឹក';
         dropOffLbl.textContent   = 'កាលបរិច្ឆេទថ្ងៃទម្លាក់';
-        // Switch pickup back to text input
         pickupInput.style.display  = 'block';
         pickupInput.disabled       = false;
         pickupInput.required       = true;
         pickupSelect.style.display = 'none';
         pickupSelect.disabled      = true;
         pickupSelect.required      = false;
+        abFilterTrucks('');
     }
 }
+
+// ===== Truck location filtering =====
+function abFilterTrucks(portValue) {
+    var sel   = document.getElementById('ab_truckSelect');
+    var hint  = document.getElementById('ab_truckPortHint');
+    var label = document.getElementById('ab_truckPortLabel');
+    if (!sel) return;
+
+    var locMap = {
+        'កំពង់ផែស្វ័យយ័តព្រះសីហនុ': 'shv',
+        'កំពង់ផែស្វ័យយ័តភ្នំពេញ':    'pp',
+    };
+    var filter = locMap[portValue] || '';
+
+    var opts       = sel.options;
+    var prevVal    = sel.value;
+    var firstValid = '';
+
+    for (var i = 0; i < opts.length; i++) {
+        if (i === 0) continue; // keep placeholder
+        var loc  = opts[i].dataset.loc || 'both';
+        var show = !filter || loc === filter || loc === 'both';
+        opts[i].hidden   = !show;
+        opts[i].disabled = !show;
+        if (show && !firstValid) firstValid = opts[i].value;
+    }
+
+    // Reset selection if current choice is now hidden
+    if (prevVal && sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].hidden) {
+        sel.value = '';
+    }
+
+    // Show/hide filter hint badge
+    if (filter) {
+        var portLabel = filter === 'shv' ? 'SHV Port — តម្រងរថយន្ត' : 'PP Port — តម្រងរថយន្ត';
+        label.textContent = portLabel;
+        hint.style.display = 'inline';
+    } else {
+        hint.style.display = 'none';
+    }
+}
+
 
 // ===== Admin booking: auto-price, container weight, overweight =====
 

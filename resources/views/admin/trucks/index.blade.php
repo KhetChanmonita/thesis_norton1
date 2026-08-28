@@ -106,6 +106,7 @@
                     <th>ចំនួនភ្លៅរថយន្ត</th>
                     <th>ពណ៌រថយន្ត</th>
                     <th>ទម្ងន់រថយន្ត (តោន)</th>
+                    <th>ទីតាំង</th>
                     <th>អ្នកបើកបរ</th>
                     <th>ធ្វើបច្ចុប្បន្នភាព</th>
                     <th>ស្ថានភាពរថយន្ត</th>
@@ -141,6 +142,13 @@
                     <td>{{ $t->truck_size ?? '—' }}</td>
                     <td>{{ $t->truck_color ?? '—' }}</td>
                     <td>{{ $t->capacity_ton ? number_format($t->capacity_ton, 2).' T' : '—' }}</td>
+                    <td>
+                        @php
+                            $locLabel = ['shv'=>'SHV','pp'=>'PP','both'=>'SHV+PP'][$t->truck_location ?? 'both'] ?? '—';
+                            $locColor = ['shv'=>'#3b82f6','pp'=>'#10b981','both'=>'#6b7280'][$t->truck_location ?? 'both'] ?? '#6b7280';
+                        @endphp
+                        <span style="font-size:.75rem;font-weight:700;color:{{ $locColor }};">{{ $locLabel }}</span>
+                    </td>
 
                     {{-- Driver --}}
                     <td>
@@ -283,9 +291,17 @@
                         <label class="form-label">ពណ៌រថយន្ត</label>
                         <input type="text" name="truck_color" class="form-control" placeholder="ពណ៌បៃតង">
                     </div>
-                    <div class="form-group form-full">
+                    <div class="form-group">
                         <label class="form-label">ទម្ងន់រថយន្ត (តោន)</label>
                         <input type="text" name="capacity_ton" class="form-control" placeholder="12.5" inputmode="decimal">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ទីតាំងរថយន្ត</label>
+                        <select name="truck_location" class="form-control">
+                            <option value="both">ទាំងពីរកន្លែង (SHV + PP)</option>
+                            <option value="shv">ព្រះសីហនុ (SHV)</option>
+                            <option value="pp">ភ្នំពេញ (PP)</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -365,9 +381,17 @@
                         <label class="form-label">ពណ៌រថយន្ត</label>
                         <input type="text" name="truck_color" id="et_color" class="form-control">
                     </div>
-                    <div class="form-group form-full">
+                    <div class="form-group">
                         <label class="form-label">ទម្ងន់រថយន្ត (តោន)</label>
                         <input type="text" name="capacity_ton" id="et_cap" class="form-control" inputmode="decimal">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ទីតាំងរថយន្ត</label>
+                        <select name="truck_location" id="et_location" class="form-control">
+                            <option value="both">ទាំងពីរកន្លែង (SHV + PP)</option>
+                            <option value="shv">ព្រះសីហនុ (SHV)</option>
+                            <option value="pp">ភ្នំពេញ (PP)</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -446,11 +470,12 @@ function previewAdd(input) {
 
 function editTruck(t) {
     document.getElementById('editTruckForm').action = '{{ url("/admin/trucks") }}/' + t.truck_id;
-    document.getElementById('et_name').value  = t.truck_name  || '';
-    document.getElementById('et_plate').value = t.plate_number || '';
-    document.getElementById('et_size').value  = t.truck_size   || '';
-    document.getElementById('et_color').value = t.truck_color  || '';
-    document.getElementById('et_cap').value   = t.capacity_ton || '';
+    document.getElementById('et_name').value     = t.truck_name   || '';
+    document.getElementById('et_plate').value    = t.plate_number || '';
+    document.getElementById('et_size').value     = t.truck_size   || '';
+    document.getElementById('et_color').value    = t.truck_color  || '';
+    document.getElementById('et_cap').value      = t.capacity_ton || '';
+    document.getElementById('et_location').value = t.truck_location || 'both';
 
     // Reset file input and filename label so old selection doesn't carry over
     document.getElementById('editTruckImage').value = '';

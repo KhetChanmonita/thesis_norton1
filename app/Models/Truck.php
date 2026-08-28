@@ -19,6 +19,7 @@ class Truck extends Model
         'truck_picture',
         'plate_number',
         'capacity_ton',
+        'truck_location',
         'status',
     ];
 

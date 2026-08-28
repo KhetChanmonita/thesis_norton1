@@ -29,7 +29,11 @@ class BookingAdminController extends Controller
         }
 
         $request->validate([
-            'booked_by_user_id' => 'required|exists:tbl_user,user_id',
+            'customer_name'     => 'required|string|max:150',
+            'customer_phone'    => 'nullable|string|max:30',
+            'customer_email'    => 'nullable|email|max:150',
+            'customer_company'  => 'nullable|string|max:150',
+            'customer_address'  => 'nullable|string|max:255',
             'truck_id'          => 'required|exists:tbl_truck,truck_id',
             'booking_type'     => 'required|in:import,export',
             'container_number' => ['nullable','string','max:50','regex:/^[A-Z]{3}U[0-9]{7}$/'],
@@ -43,8 +47,7 @@ class BookingAdminController extends Controller
             'total_price'      => 'nullable|numeric|min:0',
             'cargo_list_file'  => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
         ], [
-            'booked_by_user_id.required' => 'សូមជ្រើសរើសអ្នកស្នើការដឹក។',
-            'booked_by_user_id.exists'  => 'អ្នកប្រើប្រាស់ដែលបានជ្រើសរើសមិនត្រឹមត្រូវ។',
+            'customer_name.required'    => 'សូមបញ្ចូលឈ្មោះអតិថិជន។',
             'truck_id.required'         => 'សូមជ្រើសរើសរថយន្ត។',
             'booking_type.required'     => 'សូមជ្រើសរើសប្រភេទការដឹកជញ្ជូន។',
             'pickup_location.required'  => 'សូមបញ្ចូលទីតាំងទទួល។',
@@ -80,8 +83,18 @@ class BookingAdminController extends Controller
             $filePath = 'uploads/cargo/' . $filename;
         }
 
+        // Create customer record from admin-entered info
+        $customer = Customer::create([
+            'full_name'    => $request->customer_name,
+            'phone'        => $request->customer_phone ?: null,
+            'email'        => $request->customer_email ?: null,
+            'company_name' => $request->customer_company ?: null,
+            'address'      => $request->customer_address ?: null,
+        ]);
+
         $booking = Booking::create([
-            'booked_by_user_id'    => $request->booked_by_user_id,
+            'customer_id'          => $customer->customer_id,
+            'booked_by_user_id'    => auth()->id(),
             'truck_id'              => $request->truck_id,
             'booking_type'          => $request->booking_type,
             'container_number'      => $containerNumber,
@@ -134,13 +147,17 @@ class BookingAdminController extends Controller
         }
 
         $bookings   = $query->latest()->paginate(10)->withQueryString();
-        $customers  = Customer::orderBy('full_name')->get();
-        $staffUsers = User::whereIn('role', ['admin', 'operation', 'accountant'])
-                          ->orderBy('user_name')->get();
-        $trucks    = Truck::where('status', 'available')->orderBy('truck_name')->get();
+        $trucks     = Truck::where('status', 'available')->orderBy('truck_name')->get();
+        $trucksJson = $trucks->map(fn($t) => [
+            'id'  => $t->truck_id,
+            'name'=> $t->truck_name,
+            'plate'=> $t->plate_number,
+            'cap' => $t->capacity_ton,
+            'loc' => $t->truck_location ?? 'both',
+        ]);
         $provinces = ShippingRate::provinces();
         $ratesJson = ShippingRate::all(['type', 'origin', 'province_name_km', 'base_price']);
-        return view('admin.bookings.index', compact('bookings', 'customers', 'staffUsers', 'trucks', 'provinces', 'ratesJson'));
+        return view('admin.bookings.index', compact('bookings', 'trucks', 'trucksJson', 'provinces', 'ratesJson'));
     }
 
     public function updateStatus(Request $request, Booking $booking)
