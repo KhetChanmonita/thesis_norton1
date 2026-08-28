@@ -311,7 +311,7 @@
                     <div class="booking-grid">
                         <div class="booking-field">
                             <label>ប្រភេទការដឹកជញ្ជូន</label>
-                            <select name="booking_type" id="bookingTypeSelect" required onchange="toggleDateLabels(this.value)">
+                            <select name="booking_type" id="bookingTypeSelect" required onchange="toggleDateLabels(this.value); abLookupPrice();">
                                 <option value="">-- ជ្រើសរើស --</option>
                                 <option value="import">នាំចូល (Import)</option>
                                 <option value="export">នាំចេញ (Export)</option>
@@ -328,26 +328,27 @@
                         </div>
                         <div class="booking-field">
                             <label>ទំហំកុងតឺន័រ</label>
-                            <select name="container_size">
+                            <select name="container_size" id="containerSizeSelect" onchange="abOnContainerChange()">
                                 <option value="">-- ជ្រើសរើសទំហំ --</option>
                                 <option value="20F">20F</option>
                                 <option value="40F">40F</option>
                                 <option value="45F">45F</option>
                             </select>
+                            <div id="abContainerWeightBadge" class="ts-container-weight-badge" style="display:none;"></div>
                         </div>
                         <div class="booking-field" id="pickupLocationField">
                             <label><span id="pickupLocationLabel">ទីតាំងទទួល</span></label>
                             <input type="text" name="pickup_location" id="pickupLocationInput"
                                    placeholder="ឧ. កំពង់ផែស្វ័យយ័តភ្នំពេញ" required>
-                            <select name="pickup_location" id="pickupLocationSelect" style="display:none;" disabled>
+                            <select name="pickup_location" id="pickupLocationSelect" style="display:none;" disabled onchange="abLookupPrice()">
                                 <option value="">-- ជ្រើសរើសកំពង់ផែ --</option>
-                                <option value="កំពង់ផែស្វ័យយ័តព្រះសីហនុ">កំពង់ផែស្វ័យយ័តព្រះសីហនុ (SHV Port)</option>
-                                <option value="កំពង់ផែស្វ័យយ័តភ្នំពេញ">កំពង់ផែស្វ័យយ័តភ្នំពេញ (Phnom Penh Port)</option>
+                                <option value="កំពង់ផែស្វ័យយ័តព្រះសីហនុ" data-key="sihanoukville">កំពង់ផែស្វ័យយ័តព្រះសីហនុ (SHV Port)</option>
+                                <option value="កំពង់ផែស្វ័យយ័តភ្នំពេញ" data-key="phnom_penh">កំពង់ផែស្វ័យយ័តភ្នំពេញ (Phnom Penh Port)</option>
                             </select>
                         </div>
                         <div class="booking-field" id="dropoffLocationField">
                             <label><span id="dropoffLocationLabel">ទីតាំងដឹកទៅ</span></label>
-                            <select name="dropoff_location" required>
+                            <select name="dropoff_location" id="dropoffProvinceSelect" required onchange="abLookupPrice()">
                                 <option value="">-- ជ្រើសរើសខេត្ត/ក្រុង --</option>
                                 @foreach($provinces as $p)
                                 <option value="{{ $p['km'] }}">{{ $p['km'] }} ({{ $p['en'] }})</option>
@@ -376,11 +377,12 @@
                         </div>
                         <div class="booking-field">
                             <label>ទម្ងន់ទំនិញ (គីឡូក្រាម)</label>
-                            <input type="number" name="cargo_weight" placeholder="ឧ. 12000" min="1" step="0.01" required>
+                            <input type="number" name="cargo_weight" id="cargoWeightInput" placeholder="ឧ. 12000" min="1" step="0.01" required oninput="abUpdateOverweight()">
+                            <div id="abOverweightAlert" class="ts-ow-alert" style="display:none;"></div>
                         </div>
                         <div class="booking-field">
                             <label>តម្លៃដឹកជញ្ជូន (ដុល្លារ)</label>
-                            <input type="number" name="total_price" placeholder="ឧ. 500" min="0" step="0.01">
+                            <input type="number" name="total_price" id="totalPriceInput" placeholder="ឧ. 500" min="0" step="0.01">
                         </div>
                     </div>
                 </div>
@@ -766,6 +768,106 @@
             image.style.transform = 'scale(1)';
             button.innerHTML = '<i class="fas fa-search-plus"></i>';
         }
+    }
+
+    // ===== BOOKING PROCESS: auto-price, container weight, overweight =====
+
+    const abRates = @json($ratesJson);
+
+    const AB_CONTAINER_WEIGHT = { '20F': 2000, '40F': 4000, '45F': 4500 };
+    const AB_TRUCK_TARE_KG    = 12000; // standard heavy truck tare weight
+    const AB_OW_THRESHOLD     = 40000; // 40 T in kg
+    const AB_OW_TIERS = [
+        { max: 41000, charge: 30  },
+        { max: 42000, charge: 60  },
+        { max: 43000, charge: 90  },
+        { max: 44000, charge: 120 },
+        { max: Infinity, charge: 150 },
+    ];
+
+    let abBasePrice = 0; // base shipping rate, updated by abLookupPrice
+
+    function abGetOwCharge() {
+        const cargoWeight     = parseFloat(document.getElementById('cargoWeightInput')?.value) || 0;
+        const size            = document.getElementById('containerSizeSelect').value;
+        const containerWeight = AB_CONTAINER_WEIGHT[size] || 0;
+        const totalWeight     = cargoWeight + containerWeight + AB_TRUCK_TARE_KG;
+        if (totalWeight <= AB_OW_THRESHOLD || cargoWeight <= 0) return { charge: 0, totalWeight, overKg: 0 };
+        let charge = 150;
+        for (const tier of AB_OW_TIERS) {
+            if (totalWeight <= tier.max) { charge = tier.charge; break; }
+        }
+        return { charge, totalWeight, overKg: totalWeight - AB_OW_THRESHOLD };
+    }
+
+    function abRefreshTotal() {
+        const cargoWeight = parseFloat(document.getElementById('cargoWeightInput')?.value) || 0;
+        const size        = document.getElementById('containerSizeSelect').value;
+        const { charge, totalWeight, overKg } = abGetOwCharge();
+        const total = abBasePrice + charge;
+
+        const priceInput = document.getElementById('totalPriceInput');
+        if (priceInput) priceInput.value = (abBasePrice > 0 || charge > 0) ? total.toFixed(2) : '';
+
+        const alertEl = document.getElementById('abOverweightAlert');
+        if (!alertEl) return;
+
+        if (cargoWeight <= 0 && !size) { alertEl.style.display = 'none'; return; }
+
+        if (charge > 0) {
+            alertEl.className = 'ts-ow-alert ts-ow-warn';
+            alertEl.style.display = '';
+            alertEl.innerHTML =
+                `<i class="fas fa-exclamation-triangle"></i>` +
+                ` ទម្ងន់សរុប <strong>${(totalWeight/1000).toFixed(2)} T</strong>` +
+                ` (លើស <strong>${(overKg/1000).toFixed(2)} T</strong>) —` +
+                ` ថ្លៃដឹក <strong>$${abBasePrice.toFixed(2)}</strong>` +
+                ` + ថ្លៃលើសសំណន់ <strong>$${charge}</strong>` +
+                ` = <strong style="color:#c2410c;">$${total.toFixed(2)}</strong>`;
+        } else if (totalWeight > 0) {
+            alertEl.className = 'ts-ow-alert ts-ow-ok';
+            alertEl.style.display = '';
+            alertEl.innerHTML =
+                `<i class="fas fa-check-circle"></i>` +
+                ` ទម្ងន់សរុប <strong>${(totalWeight/1000).toFixed(2)} T</strong> — ស្ថិតក្នុងដែន 40T`;
+        } else {
+            alertEl.style.display = 'none';
+        }
+    }
+
+    function abLookupPrice() {
+        const type     = document.getElementById('bookingTypeSelect').value;
+        const portSel  = document.getElementById('pickupLocationSelect');
+        const portOpt  = portSel.options[portSel.selectedIndex];
+        const portKey  = portOpt ? (portOpt.dataset.key || '') : '';
+        const province = document.getElementById('dropoffProvinceSelect').value;
+
+        const rate = abRates.find(r =>
+            r.type === type &&
+            r.origin === portKey &&
+            r.province_name_km === province
+        );
+        abBasePrice = (type && portKey && province && rate) ? parseFloat(rate.base_price) : 0;
+        abRefreshTotal();
+    }
+
+    function abOnContainerChange() {
+        const size   = document.getElementById('containerSizeSelect').value;
+        const badge  = document.getElementById('abContainerWeightBadge');
+        const weight = AB_CONTAINER_WEIGHT[size];
+        if (badge) {
+            if (weight) {
+                badge.textContent = `ទម្ងន់កុងតឺន័រ ${size}: ${weight.toLocaleString()} kg`;
+                badge.style.display = '';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+        abRefreshTotal();
+    }
+
+    function abUpdateOverweight() {
+        abRefreshTotal();
     }
 
     // Add animation keyframes

@@ -11,7 +11,7 @@ class PaymentAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Payment::with('booking.customer');
+        $query = Payment::with('booking.customer', 'booking.bookedByUser');
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -91,7 +91,7 @@ class PaymentAdminController extends Controller
 
     public function history(Request $request)
     {
-        $query = BookingStatusHistory::with('booking.customer', 'booking.extraCharges');
+        $query = BookingStatusHistory::with('booking.customer', 'booking.bookedByUser', 'booking.extraCharges');
 
         if ($request->filled('container_number')) {
             $container = trim($request->container_number);

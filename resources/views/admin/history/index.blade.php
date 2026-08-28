@@ -63,8 +63,13 @@
                     </td>
                     <td><strong>{{ $h->booking?->formatted_id ?? '#'.$h->booking_id }}</strong></td>
                     <td>
-                        {{ $h->booking->customer->full_name ?? '—' }}<br>
-                        <small class="his-phone">{{ $h->booking->customer->phone ?? '' }}</small>
+                        {{ $h->booking?->customer?->full_name
+                            ?? $h->booking?->bookedByUser?->user_name
+                            ?? '—' }}<br>
+                        <small class="his-phone">
+                            {{ $h->booking?->customer?->phone
+                                ?? ($h->booking?->bookedByUser ? ucfirst($h->booking->bookedByUser->role) : '') }}
+                        </small>
                     </td>
                     <td>{{ $h->booking->booking_type === 'import' ? 'នាំចូល' : 'នាំចេញ' }}</td>
                     <td>

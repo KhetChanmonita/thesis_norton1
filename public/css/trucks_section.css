@@ -1505,3 +1505,54 @@
         border-radius: 16px;
     }
 }
+
+/* ===== Booking Process: container weight badge & overweight alert ===== */
+
+.ts-container-weight-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    padding: 4px 10px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1d4ed8;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+}
+
+.ts-ow-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 0.78rem;
+    border-radius: 8px;
+    line-height: 1.5;
+}
+
+.ts-ow-alert i {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 0.85rem;
+}
+
+.ts-ow-ok {
+    color: #065f46;
+    background: #d1fae5;
+    border: 1px solid #6ee7b7;
+}
+
+.ts-ow-ok i { color: #059669; }
+
+.ts-ow-warn {
+    color: #7c2d12;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+}
+
+.ts-ow-warn i { color: #ea580c; }

@@ -40,6 +40,10 @@ class AuthController extends Controller
             'password' => $request->password,
         ], $request->boolean('remember'))) {
             $request->session()->regenerate();
+            $role = Auth::user()->role;
+            if (in_array($role, ['admin', 'operation', 'accountant', 'driver'])) {
+                return redirect()->route('admin.dashboard')->with('success', 'ចូលគណនីបានជោគជ័យ!');
+            }
             return redirect()->intended('/')->with('success', 'ចូលគណនីបានជោគជ័យ!');
         }
 

@@ -16,6 +16,7 @@ class Booking extends Model
         'schedule_id',
         'truck_id',
         'customer_id',
+        'booked_by_user_id',
         'booking_type',
         'container_number',
         'container_size',
@@ -54,6 +55,11 @@ class Booking extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
+    }
+
+    public function bookedByUser()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'booked_by_user_id', 'user_id');
     }
 
     public function payments()

@@ -14,14 +14,15 @@ class CostSheetAdminController extends Controller
         $month = $request->input('month', now()->format('Y-m'));
         [$year, $monthNum] = explode('-', $month);
 
-        $query = Booking::with(['customer', 'truck', 'costSheet', 'extraCharges'])
+        $query = Booking::with(['customer', 'bookedByUser', 'truck', 'costSheet', 'extraCharges'])
             ->whereYear('booking_date', $year)
             ->whereMonth('booking_date', $monthNum);
 
         if ($request->filled('search')) {
-            $query->whereHas('customer', fn($c) =>
-                $c->where('full_name', 'like', '%' . $request->search . '%')
-            );
+            $raw = trim($request->search);
+            $numericId = str_contains($raw, '-') ? (int) substr($raw, strrpos($raw, '-') + 1) : (int) $raw;
+            // Exact match only — if input is not a valid ID, show nothing
+            $query->where('booking_id', $numericId > 0 ? $numericId : -1);
         }
 
         $bookings = $query->orderBy('booking_date')->paginate(20)->withQueryString();

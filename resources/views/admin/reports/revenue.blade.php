@@ -92,7 +92,7 @@
                         </span>
                     </td>
                     <td class="rpt-cell-text">
-                        {{ $b->customer->full_name ?? '—' }}
+                        {{ $b->customer?->full_name ?? $b->bookedByUser?->user_name ?? '—' }}
                     </td>
                     <td>{{ $typeLabel[$b->booking_type] ?? $b->booking_type }}</td>
                     <td>

@@ -29,7 +29,7 @@
 <div class="card">
     <div class="card-header">
         <h2><i class="fas fa-file-alt trk-hdr-icon"></i><span class="trk-title-text">ការតាមដានការកក់</span> <span class="trk-booking-id">{{ $booking->formatted_id }}</span></h2>
-        <p>{{ $booking->booking_date ? \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') : '' }} — {{ $booking->customer->full_name ?? '' }}</p>
+        <p>{{ $booking->booking_date ? \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') : '' }} — {{ $booking->customer?->full_name ?? $booking->bookedByUser?->user_name ?? '' }}</p>
     </div>
     <div class="card-body">
         <div class="info-grid">
@@ -195,9 +195,18 @@
     <div class="icon"><i class="fas fa-truck"></i></div>
     <div class="text">
         <h4>ការដឹកជញ្ជូនបានបញ្ចប់!</h4>
-        <p>Admin បានបញ្ចប់ការដឹកជញ្ជូន។ សូមបង់ប្រាក់ 50% ចុងក្រោយ។
+        <p>Admin បានបញ្ចប់ការដឹកជញ្ជូន។ សូមបង់ប្រាក់ចុងក្រោយ។
         @if($booking->total_price)
-            ចំនួន = <strong>${{ number_format($booking->total_price * 0.5, 2) }}</strong>
+            @php $finalAmt = $booking->final_payment_amount; @endphp
+            ចំនួន = <strong>${{ number_format($finalAmt, 2) }}</strong>
+            @if($booking->secondStageCharges->isNotEmpty())
+                <span style="display:block;font-size:0.82rem;color:#b45309;margin-top:4px;">
+                    (50% មូលដ្ឋាន ${{ number_format($booking->total_price * 0.5, 2) }}
+                    @foreach($booking->secondStageCharges as $sc)
+                        + {{ $sc->reason }} ${{ number_format($sc->amount, 2) }}
+                    @endforeach)
+                </span>
+            @endif
         @endif
         </p>
     </div>
@@ -278,8 +287,8 @@
 <div class="trk-pay-center">
     <a href="{{ route('booking.pay', ['id'=>$booking->booking_id,'token'=>$booking->access_token]) }}" class="pay-btn pay-btn-green">
         <i class="fas fa-check-circle"></i>
-        បង់ប្រាក់ 50% ចុងក្រោយ
-        @if($booking->total_price) — ${{ number_format($booking->total_price * 0.5, 2) }}@endif
+        បង់ប្រាក់ចុងក្រោយ
+        @if($booking->total_price) — ${{ number_format($booking->final_payment_amount, 2) }}@endif
     </a>
 </div>
 @elseif($booking->payment_status === 'fully_paid')

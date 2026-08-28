@@ -42,16 +42,22 @@
                                 តម្លៃ
                             </a>
                         </li>
-                        @if(session('my_booking_ids'))
+                        @php
+                            $sessionIds   = session('my_booking_ids', []);
+                            $realBookingCount = $sessionIds
+                                ? \App\Models\Booking::whereIn('booking_id', $sessionIds)->count()
+                                : 0;
+                            if ($realBookingCount === 0 && $sessionIds) {
+                                session()->forget('my_booking_ids');
+                            }
+                        @endphp
+                        @if($realBookingCount > 0)
                         <li>
                             <a href="{{ route('my.bookings') }}"
-                               class="{{ request()->routeIs('my.bookings') ? 'active' : '' }}"
-                               class="hdr-nav-booking">
+                               class="{{ request()->routeIs('my.bookings') ? 'active' : '' }} hdr-nav-booking">
                                 <i class="fas fa-receipt hdr-nav-booking-icon"></i>
                                 ការកក់
-                                <span class="hdr-booking-badge">
-                                    {{ count(session('my_booking_ids', [])) }}
-                                </span>
+                                <span class="hdr-booking-badge">{{ $realBookingCount }}</span>
                             </a>
                         </li>
                         @endif

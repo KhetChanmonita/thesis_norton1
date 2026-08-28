@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\PaymentAdminController;
 use App\Http\Controllers\Admin\ContactAdminController;
 use App\Http\Controllers\Admin\ExpenseAdminController;
 use App\Http\Controllers\Admin\CostSheetAdminController;
+use App\Http\Controllers\Admin\UserAdminController;
 use App\Models\Truck;
 
 // Main routes
@@ -91,68 +92,113 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-// ==================== ADMIN ROUTES ====================
+// ==================== ADMIN PANEL ROUTES ====================
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
-    Route::get('/',                [AdminController::class,    'dashboard'])->name('dashboard');
 
-    // Trucks
-    Route::get('/trucks',          [TruckAdminController::class,    'index'])->name('trucks.index');
-    Route::post('/trucks',         [TruckAdminController::class,    'store'])->name('trucks.store');
-    Route::put('/trucks/{truck}',         [TruckAdminController::class, 'update'])->name('trucks.update');
-    Route::patch('/trucks/{truck}/status',[TruckAdminController::class, 'updateStatus'])->name('trucks.status');
-    Route::delete('/trucks/{truck}',      [TruckAdminController::class, 'destroy'])->name('trucks.destroy');
+    // ── Dashboard (all panel roles) ──
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
-    // Drivers
-    Route::get('/drivers',           [DriverAdminController::class,   'index'])->name('drivers.index');
-    Route::post('/drivers',          [DriverAdminController::class,   'store'])->name('drivers.store');
-    Route::put('/drivers/{driver}',  [DriverAdminController::class,   'update'])->name('drivers.update');
-    Route::delete('/drivers/{driver}',[DriverAdminController::class,  'destroy'])->name('drivers.destroy');
+    // ── Admin only ──────────────────────────────────────────────────────────
+    Route::middleware('role:admin')->group(function () {
+        // Trucks (full CRUD)
+        Route::post('/trucks',                [TruckAdminController::class,    'store'])->name('trucks.store');
+        Route::put('/trucks/{truck}',         [TruckAdminController::class,    'update'])->name('trucks.update');
+        Route::patch('/trucks/{truck}/status',[TruckAdminController::class,    'updateStatus'])->name('trucks.status');
+        Route::delete('/trucks/{truck}',      [TruckAdminController::class,    'destroy'])->name('trucks.destroy');
 
-    // Schedules
-    Route::get('/schedules',              [ScheduleAdminController::class,  'index'])->name('schedules.index');
-    Route::post('/schedules',             [ScheduleAdminController::class,  'store'])->name('schedules.store');
-    Route::put('/schedules/{schedule}',   [ScheduleAdminController::class,  'update'])->name('schedules.update');
-    Route::delete('/schedules/{schedule}',[ScheduleAdminController::class,  'destroy'])->name('schedules.destroy');
+        // Drivers (full CRUD)
+        Route::post('/drivers',               [DriverAdminController::class,   'store'])->name('drivers.store');
+        Route::put('/drivers/{driver}',       [DriverAdminController::class,   'update'])->name('drivers.update');
+        Route::delete('/drivers/{driver}',    [DriverAdminController::class,   'destroy'])->name('drivers.destroy');
 
-    // Customers
-    Route::get('/customers',                      [CustomerAdminController::class, 'index'])->name('customers.index');
-    Route::get('/customers/{customer}/edit',      [CustomerAdminController::class, 'edit'])->name('customers.edit');
-    Route::put('/customers/{customer}',           [CustomerAdminController::class, 'update'])->name('customers.update');
-    Route::delete('/customers/{customer}',        [CustomerAdminController::class, 'destroy'])->name('customers.destroy');
+        // Schedules (full CRUD)
+        Route::post('/schedules',             [ScheduleAdminController::class, 'store'])->name('schedules.store');
+        Route::put('/schedules/{schedule}',   [ScheduleAdminController::class, 'update'])->name('schedules.update');
+        Route::delete('/schedules/{schedule}',[ScheduleAdminController::class, 'destroy'])->name('schedules.destroy');
 
-    // Bookings
-    Route::get('/bookings',                    [BookingAdminController::class, 'index'])->name('bookings.index');
-    Route::patch('/bookings/{booking}/status', [BookingAdminController::class, 'updateStatus'])->name('bookings.status');
-    Route::delete('/bookings/{booking}',       [BookingAdminController::class, 'destroy'])->name('bookings.destroy');
-    Route::post('/bookings/{booking}/extra-charges', [BookingAdminController::class, 'storeExtraCharge'])->name('bookings.extra-charge.store');
+        // Shipping Rates
+        Route::get('/shipping-rates',         [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'index'])->name('shipping.index');
+        Route::put('/shipping-rates/{rate}',  [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'update'])->name('shipping.update');
 
-    // Payments & History
-    Route::get('/payments',                          [PaymentAdminController::class, 'index'])->name('payments.index');
-    Route::post('/payments/{payment}/verify',        [PaymentAdminController::class, 'verify'])->name('payments.verify');
-    Route::post('/payments/{payment}/reject',        [PaymentAdminController::class, 'reject'])->name('payments.reject');
-    Route::delete('/payments/{payment}',             [PaymentAdminController::class, 'destroy'])->name('payments.destroy');
-    Route::get('/history',                           [PaymentAdminController::class, 'history'])->name('history.index');
+        // User Management
+        Route::get('/users',                  [UserAdminController::class, 'index'])->name('users.index');
+        Route::post('/users',                 [UserAdminController::class, 'store'])->name('users.store');
+        Route::put('/users/{user}',           [UserAdminController::class, 'update'])->name('users.update');
+        Route::delete('/users/{user}',        [UserAdminController::class, 'destroy'])->name('users.destroy');
 
-    // Shipping Rates
-    Route::get('/shipping-rates',        [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'index'])->name('shipping.index');
-    Route::put('/shipping-rates/{rate}', [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'update'])->name('shipping.update');
+        // Customer delete (admin only)
+        Route::delete('/customers/{customer}', [CustomerAdminController::class, 'destroy'])->name('customers.destroy');
 
-    // Contact Messages
-    Route::get('/messages',                  [ContactAdminController::class, 'index'])->name('messages.index');
-    Route::patch('/messages/{message}/status',[ContactAdminController::class, 'updateStatus'])->name('messages.status');
-    Route::delete('/messages/{message}',     [ContactAdminController::class, 'destroy'])->name('messages.destroy');
+        // Payment delete (admin only)
+        Route::delete('/payments/{payment}',   [PaymentAdminController::class, 'destroy'])->name('payments.destroy');
 
-    // Expense Report
-    Route::get('/reports',           [ExpenseAdminController::class, 'index'])->name('reports.index');
-    Route::get('/reports/revenue',   [ExpenseAdminController::class, 'revenue'])->name('reports.revenue');
-    Route::get('/reports/revenue/print', [ExpenseAdminController::class, 'revenuePrint'])->name('reports.revenue.print');
-    Route::get('/reports/profit',    [ExpenseAdminController::class, 'profit'])->name('reports.profit');
-    Route::get('/reports/profit/print', [ExpenseAdminController::class, 'profitPrint'])->name('reports.profit.print');
-    Route::get('/reports/cost-sheet',                      [CostSheetAdminController::class, 'index'])->name('reports.cost-sheet');
-    Route::post('/reports/cost-sheet/{booking}',           [CostSheetAdminController::class, 'update'])->name('reports.cost-sheet.update');
-    Route::get('/reports/cost-sheet/{booking}/invoice',    [CostSheetAdminController::class, 'invoice'])->name('reports.invoice');
-    Route::post('/reports',          [ExpenseAdminController::class, 'store'])->name('reports.store');
-    Route::put('/reports/{expense}', [ExpenseAdminController::class, 'update'])->name('reports.update');
-    Route::delete('/reports/{expense}', [ExpenseAdminController::class, 'destroy'])->name('reports.destroy');
+        // Expense management (admin only)
+        Route::post('/reports',               [ExpenseAdminController::class, 'store'])->name('reports.store');
+        Route::put('/reports/{expense}',      [ExpenseAdminController::class, 'update'])->name('reports.update');
+        Route::delete('/reports/{expense}',   [ExpenseAdminController::class, 'destroy'])->name('reports.destroy');
+    });
+
+    // ── Admin + Staff ────────────────────────────────────────────────────────
+    Route::middleware('role:admin,operation')->group(function () {
+        // Trucks (view)
+        Route::get('/trucks', [TruckAdminController::class, 'index'])->name('trucks.index');
+
+        // Drivers (view)
+        Route::get('/drivers', [DriverAdminController::class, 'index'])->name('drivers.index');
+
+        // Schedules (view)
+        Route::get('/schedules', [ScheduleAdminController::class, 'index'])->name('schedules.index');
+
+        // Customers
+        Route::get('/customers',                 [CustomerAdminController::class, 'index'])->name('customers.index');
+        Route::get('/customers/{customer}/edit', [CustomerAdminController::class, 'edit'])->name('customers.edit');
+        Route::put('/customers/{customer}',      [CustomerAdminController::class, 'update'])->name('customers.update');
+
+        // Bookings (full CRUD for staff)
+        Route::get('/bookings',                         [BookingAdminController::class, 'index'])->name('bookings.index');
+        Route::post('/bookings',                        [BookingAdminController::class, 'store'])->name('bookings.store');
+        Route::patch('/bookings/{booking}/status',      [BookingAdminController::class, 'updateStatus'])->name('bookings.status');
+        Route::delete('/bookings/{booking}',            [BookingAdminController::class, 'destroy'])->name('bookings.destroy');
+        Route::post('/bookings/{booking}/extra-charges',[BookingAdminController::class, 'storeExtraCharge'])->name('bookings.extra-charge.store');
+
+        // Payments (verify/reject — operation only)
+        Route::post('/payments/{payment}/verify',  [PaymentAdminController::class, 'verify'])->name('payments.verify');
+        Route::post('/payments/{payment}/reject',  [PaymentAdminController::class, 'reject'])->name('payments.reject');
+
+        // Messages
+        Route::get('/messages',                    [ContactAdminController::class, 'index'])->name('messages.index');
+        Route::patch('/messages/{message}/status', [ContactAdminController::class, 'updateStatus'])->name('messages.status');
+        Route::delete('/messages/{message}',       [ContactAdminController::class, 'destroy'])->name('messages.destroy');
+    });
+
+    // ── Admin + Accountant ───────────────────────────────────────────────────
+    Route::middleware('role:admin,accountant')->group(function () {
+        Route::get('/reports',                                     [ExpenseAdminController::class,  'index'])->name('reports.index');
+        Route::get('/reports/revenue',                             [ExpenseAdminController::class,  'revenue'])->name('reports.revenue');
+        Route::get('/reports/revenue/print',                       [ExpenseAdminController::class,  'revenuePrint'])->name('reports.revenue.print');
+        Route::get('/reports/profit',                              [ExpenseAdminController::class,  'profit'])->name('reports.profit');
+        Route::get('/reports/profit/print',                        [ExpenseAdminController::class,  'profitPrint'])->name('reports.profit.print');
+        Route::get('/reports/fuel',                                [ExpenseAdminController::class,  'fuelReport'])->name('reports.fuel');
+        Route::get('/reports/fuel/print',                          [ExpenseAdminController::class,  'fuelPrint'])->name('reports.fuel.print');
+        Route::get('/reports/truck-repair',                        [ExpenseAdminController::class,  'truckRepair'])->name('reports.truck-repair');
+        Route::get('/reports/truck-repair/print',                  [ExpenseAdminController::class,  'truckRepairPrint'])->name('reports.truck-repair.print');
+        Route::get('/reports/customer',                            [ExpenseAdminController::class,  'customerReport'])->name('reports.customer');
+        Route::get('/reports/customer/print',                      [ExpenseAdminController::class,  'customerReportPrint'])->name('reports.customer.print');
+        Route::get('/reports/cost-sheet',                          [CostSheetAdminController::class,'index'])->name('reports.cost-sheet');
+        Route::post('/reports/cost-sheet/{booking}',               [CostSheetAdminController::class,'update'])->name('reports.cost-sheet.update');
+        Route::get('/reports/cost-sheet/{booking}/invoice',        [CostSheetAdminController::class,'invoice'])->name('reports.invoice');
+
+    });
+
+    // ── Admin + Operation + Accountant (shared views) ─────────────────────────
+    Route::middleware('role:admin,operation,accountant')->group(function () {
+        Route::get('/payments', [PaymentAdminController::class, 'index'])->name('payments.index');
+        Route::get('/history',  [PaymentAdminController::class, 'history'])->name('history.index');
+    });
+
+    // ── Driver ───────────────────────────────────────────────────────────────
+    Route::middleware('role:driver')->group(function () {
+        Route::get('/my-trips', [AdminController::class, 'driverTrips'])->name('driver.trips');
+    });
 });
-// ==================== END ADMIN ROUTES ====================
+// ==================== END ADMIN PANEL ROUTES ====================

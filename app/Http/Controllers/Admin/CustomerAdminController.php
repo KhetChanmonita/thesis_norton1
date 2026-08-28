@@ -10,7 +10,8 @@ class CustomerAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Customer::withCount('bookings')->with('latestBooking.truck');
+        $query = Customer::withCount(['bookings' => fn($q) => $q->where('status', '!=', 'cancelled')])
+                         ->with('latestBooking.truck');
 
         if ($request->filled('search')) {
             $query->where('full_name', 'like', '%' . $request->search . '%');
@@ -20,7 +21,7 @@ class CustomerAdminController extends Controller
 
         $total         = Customer::count();
         $totalBusiness = Customer::whereNotNull('company_name')->where('company_name', '!=', '')->count();
-        $totalWithBookings = Customer::has('bookings')->count();
+        $totalWithBookings = Customer::whereHas('bookings', fn($q) => $q->where('status', '!=', 'cancelled'))->count();
         $totalNewThisMonth = Customer::whereMonth('created_at', now()->month)
                                       ->whereYear('created_at', now()->year)
                                       ->count();

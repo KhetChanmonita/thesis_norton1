@@ -381,7 +381,7 @@ class BookingController extends Controller
             $searchContainer = trim($request->container_number);
             $searched        = true;
 
-            $bookings = Booking::with(['customer', 'payments'])
+            $bookings = Booking::with(['customer', 'payments', 'extraCharges'])
                 ->where('container_number', $searchContainer)
                 ->latest()
                 ->get();
@@ -401,7 +401,7 @@ class BookingController extends Controller
             $searchPhone = trim($request->phone);
             $searched    = true;
 
-            $bookings = Booking::with(['customer', 'payments'])
+            $bookings = Booking::with(['customer', 'payments', 'extraCharges'])
                 ->whereHas('customer', fn($q) => $q->where('phone', $searchPhone))
                 ->latest()
                 ->get();
@@ -417,14 +417,20 @@ class BookingController extends Controller
                 }
             }
         } else {
-            // Fall back to session-stored IDs
+            // Fall back to session-stored IDs + any bookings created for the logged-in user
             $ids = array_unique(session('my_booking_ids', []));
-            if (!empty($ids)) {
-                $bookings = Booking::with(['customer', 'payments'])
-                    ->whereIn('booking_id', $ids)
-                    ->latest()
-                    ->get();
-            }
+            $bookings = Booking::with(['customer', 'bookedByUser', 'payments', 'extraCharges'])
+                ->where(function ($q) use ($ids) {
+                    if (!empty($ids)) {
+                        $q->whereIn('booking_id', $ids);
+                    }
+                    // Also show bookings created for this user via the admin panel
+                    if (auth()->check()) {
+                        $q->orWhere('booked_by_user_id', auth()->id());
+                    }
+                })
+                ->latest()
+                ->get();
         }
 
         $totalPaid    = $bookings->flatMap->payments->filter(fn($p) => $p->verification_status !== 'rejected')->sum('amount');

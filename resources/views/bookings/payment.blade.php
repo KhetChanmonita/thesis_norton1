@@ -25,7 +25,7 @@
             {{ $label }}
         </div>
         <div class="amount">${{ number_format($amount, 2) }}</div>
-        <div class="booking-ref">ការកក់ {{ $booking->formatted_id }} &nbsp;·&nbsp; {{ $booking->customer->full_name ?? '' }}</div>
+        <div class="booking-ref">ការកក់ {{ $booking->formatted_id }} &nbsp;·&nbsp; {{ $booking->customer?->full_name ?? $booking->bookedByUser?->user_name ?? '' }}</div>
     </div>
     <div class="pay-summary-pad">
         <div class="summary-row">

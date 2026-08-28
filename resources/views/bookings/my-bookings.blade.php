@@ -120,7 +120,9 @@
                 <div class="booking-date">
                     <i class="fas fa-calendar mybk-cal-icon"></i>
                     {{ $b->booking_date ? \Carbon\Carbon::parse($b->booking_date)->format('d/m/Y') : '—' }}
-                    @if($b->customer) &nbsp;·&nbsp; {{ $b->customer->full_name }} @endif
+                    @if($b->customer) &nbsp;·&nbsp; {{ $b->customer->full_name }}
+                    @elseif($b->bookedByUser) &nbsp;·&nbsp; {{ $b->bookedByUser->user_name }}
+                    @endif
                 </div>
             </div>
             <div class="badges">
@@ -196,23 +198,47 @@
                 @endif
             </div>
 
+            @php
+                $hasPendingFirst1  = $b->payments->where('payment_stage','first')->where('verification_status','pending')->isNotEmpty();
+                $hasPendingSecond1 = $b->payments->where('payment_stage','second')->where('verification_status','pending')->isNotEmpty();
+                $hasRejFirst1      = $b->payments->where('payment_stage','first')->where('verification_status','rejected')->isNotEmpty();
+                $firstPaid1        = in_array($b->payment_status, ['deposit_paid','fully_paid']);
+            @endphp
             <div class="booking-actions">
                 <a href="{{ route('booking.track', ['id'=>$b->booking_id,'token'=>$b->access_token]) }}"
                    class="btn-track">
                     <i class="fas fa-search"></i> តាមដាន
                 </a>
-                @if($b->payment_status === 'unpaid' && $b->status === 'confirmed')
+
+                {{-- State 1: confirmed, not yet paid and no pending payment → show pay 50% --}}
+                @if($b->status === 'confirmed' && $b->payment_status === 'unpaid' && !$hasPendingFirst1)
                 <a href="{{ route('booking.pay', ['id'=>$b->booking_id,'token'=>$b->access_token]) }}"
                    class="btn-pay-deposit">
                     <i class="fas fa-credit-card"></i>
-                    បង់ 50%@if($b->total_price) (${{ number_format($b->total_price*0.5,2) }})@endif
+                    បង់ 50%@if($b->total_price) &nbsp;(${{ number_format($b->total_price * 0.5, 2) }})@endif
                 </a>
-                @elseif($b->payment_status === 'deposit_paid' && $b->status === 'completed')
+
+                {{-- State 2: first payment submitted, waiting admin verify --}}
+                @elseif($b->payment_status === 'unpaid' && $hasPendingFirst1)
+                <div class="btn-pay-pending">
+                    <i class="fas fa-clock"></i> រង់ចាំផ្ទៀងផ្ទាត់ 50%
+                </div>
+
+                {{-- State 3: first paid, delivery completed, not yet paid final → show final pay --}}
+                @elseif($b->payment_status === 'deposit_paid' && $b->status === 'completed' && !$hasPendingSecond1)
                 <a href="{{ route('booking.pay', ['id'=>$b->booking_id,'token'=>$b->access_token]) }}"
                    class="btn-pay-final">
                     <i class="fas fa-check-circle"></i>
-                    បង់ 50% ចុង@if($b->total_price) (${{ number_format($b->total_price*0.5,2) }})@endif
+                    បង់ចុងក្រោយ &nbsp;(${{ number_format($b->final_payment_amount, 2) }})
                 </a>
+
+                {{-- State 4: final payment submitted, waiting admin verify --}}
+                @elseif($b->payment_status === 'deposit_paid' && $hasPendingSecond1)
+                <div class="btn-pay-pending">
+                    <i class="fas fa-clock"></i> រង់ចាំផ្ទៀងផ្ទាត់ចុងក្រោយ
+                </div>
+
+                {{-- State 5: fully paid --}}
                 @elseif($b->payment_status === 'fully_paid')
                 <div class="btn-paid">
                     <i class="fas fa-check-circle"></i> បានបង់ពេញ

@@ -22,7 +22,7 @@ class AuthApiController extends Controller
             'user_name' => $data['username'],
             'email'     => $data['email'],
             'password'  => Hash::make($data['password']),
-            'role'      => 'staff',
+            'role'      => 'operation',
         ]);
 
         $token = $user->createToken('mobile')->plainTextToken;

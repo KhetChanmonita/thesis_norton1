@@ -15,8 +15,10 @@ class Expense extends Model
     protected $fillable = [
         'truck_id',
         'driver_id',
+        'booking_id',
         'expense_type',
         'amount',
+        'driver_allowance',
         'expense_date',
         'description',
     ];
@@ -33,5 +35,10 @@ class Expense extends Model
     public function driver()
     {
         return $this->belongsTo(Driver::class, 'driver_id', 'driver_id');
+    }
+
+    public function booking()
+    {
+        return $this->belongsTo(Booking::class, 'booking_id', 'booking_id');
     }
 }

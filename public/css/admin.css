@@ -936,6 +936,123 @@ textarea.form-control {
 .nav-section + .nav-section { margin-top: 8px; }
 /* ── Admin logout form ── */
 #adminLogoutForm { margin: 0; }
+
+/* ── Nav dropdown ── */
+.nav-dropdown { position: relative; }
+
+.nav-dropdown-toggle {
+    width: 100%;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-align: left;
+    /* match .nav-item exactly */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    color: rgba(255,255,255,0.75);
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.4;
+    text-decoration: none;
+    transition: all 0.22s ease;
+    position: relative;
+    box-sizing: border-box;
+}
+.nav-dropdown-toggle:focus { outline: none; }
+.nav-dropdown-toggle:hover,
+.nav-dropdown.open .nav-dropdown-toggle {
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+}
+.nav-dropdown-toggle.active {
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+}
+.nav-dropdown-toggle.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: #fff;
+    border-radius: 0 3px 3px 0;
+}
+/* icon inside toggle — same as .nav-item i */
+.nav-dropdown-toggle > i:first-child {
+    width: 18px;
+    text-align: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+/* text label stretches to fill space */
+.nav-dropdown-toggle > span.nd-label { flex: 1; }
+/* badge stays before chevron */
+.nav-dropdown-toggle .nav-badge { margin-left: 0; }
+/* chevron pinned to right */
+.nav-chevron {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.55);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    margin-left: auto;
+}
+.nav-dropdown.open .nav-chevron { transform: rotate(180deg); color: rgba(255,255,255,0.9); }
+
+.nav-dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(0,0,0,0.15);
+}
+.nav-dropdown.open .nav-dropdown-menu {
+    max-height: 220px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.25) transparent;
+}
+.nav-dropdown.open .nav-dropdown-menu::-webkit-scrollbar {
+    width: 4px;
+}
+.nav-dropdown.open .nav-dropdown-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+.nav-dropdown.open .nav-dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.25);
+    border-radius: 4px;
+}
+.nav-dropdown.open .nav-dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.45);
+}
+
+.nav-sub-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px 8px 44px;
+    color: rgba(255,255,255,0.65);
+    font-family: var(--font);
+    font-size: 0.88rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+}
+.nav-sub-item:hover { color: #fff; background: rgba(255,255,255,0.1); }
+.nav-sub-item.active {
+    color: #fff;
+    background: rgba(255,255,255,0.18);
+}
+.nav-sub-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: #fff;
+    border-radius: 0 3px 3px 0;
+}
+.nav-sub-item i { width: 14px; text-align: center; font-size: 0.8rem; flex-shrink: 0; }
 /* ── Logout modal orange variant ── */
 .confirm-icon-circle-orange { background: #fff3e8; }
 .confirm-icon-circle-orange i { font-size: 1.6rem; color: #FF6B00; }

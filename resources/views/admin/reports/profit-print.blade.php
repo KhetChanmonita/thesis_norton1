@@ -64,7 +64,7 @@
             <tr>
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $pay->booking?->formatted_id ?? '#'.$pay->booking_id }}</td>
-                <td>{{ $pay->booking?->customer?->full_name ?? '—' }}</td>
+                <td>{{ $pay->booking?->customer?->full_name ?? $pay->booking?->bookedByUser?->user_name ?? '—' }}</td>
                 <td>{{ $pay->payment_stage === 'first' ? 'លើកទី១' : ($pay->payment_stage === 'second' ? 'លើកទី២' : '—') }}</td>
                 <td>${{ number_format($pay->amount, 2) }}</td>
                 <td>{{ $pay->payment_date ? \Carbon\Carbon::parse($pay->payment_date)->format('d/m/Y') : '—' }}</td>

@@ -65,7 +65,7 @@
             <tr>
                 <td>{{ $i + 1 }}</td>
                 <td>{{ $b->formatted_id }}</td>
-                <td>{{ $b->customer->full_name ?? '—' }}</td>
+                <td>{{ $b->customer?->full_name ?? $b->bookedByUser?->user_name ?? '—' }}</td>
                 <td>{{ $typeLabel[$b->booking_type] ?? $b->booking_type }}</td>
                 <td>{{ $b->total_price ? '$'.number_format($b->total_price, 2) : '—' }}</td>
                 <td>{{ $payLabel[$b->payment_status] ?? $b->payment_status }}</td>

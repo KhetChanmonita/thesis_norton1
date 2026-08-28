@@ -21,9 +21,9 @@
 <div class="rpt-toolbar">
     <form method="GET" class="rpt-filter-form">
         <div>
-            <label class="rpt-filter-label">ស្វែងរកអតិថិជន</label>
+            <label class="rpt-filter-label">ស្វែងរកវិក្កយបត្រ</label>
             <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="ឈ្មោះអតិថិជន" class="rpt-search-input">
+                   placeholder="ឧ. LS2608-1" class="rpt-search-input">
         </div>
         <div>
             <label class="rpt-filter-label">ខែ</label>
@@ -46,7 +46,7 @@
     <div class="card-header">
         <div class="card-title">
             <i class="fas fa-table"></i>
-            តារាងបញ្ជីប្រចាំខែ
+            តារាង​វិក្កយបត្រ
             <span class="rpt-count-badge">{{ $bookings->total() }}</span>
         </div>
     </div>
@@ -113,8 +113,8 @@
                 <tr data-booking-id="{{ $b->booking_id }}">
                     <td>{{ ($bookings->currentPage() - 1) * $bookings->perPage() + $i + 1 }}</td>
                     <td class="cs-readonly">{{ $b->formatted_id }}</td>
-                    <td class="cs-readonly">{{ $b->customer->full_name ?? '—' }}</td>
-                    <td class="cs-readonly cs-nowrap">{{ $b->customer->phone ?? '—' }}</td>
+                    <td class="cs-readonly">{{ $b->customer?->full_name ?? $b->bookedByUser?->user_name ?? '—' }}</td>
+                    <td class="cs-readonly cs-nowrap">{{ $b->customer?->phone ?? ($b->bookedByUser ? ucfirst($b->bookedByUser->role) : '—') }}</td>
                     <td class="cs-readonly">
                         @if($b->booking_type === 'import')
                             <span class="cs-badge cs-badge-import">នាំចូល</span>

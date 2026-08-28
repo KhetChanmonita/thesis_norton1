@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\Truck;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DriverAdminController extends Controller
 {
@@ -32,8 +33,12 @@ class DriverAdminController extends Controller
         $totalInactive = Driver::where('status', 'inactive')->count();
         $totalLeave    = Driver::where('status', 'on_leave')->count();
 
+        // truck_id → driver_id map for already-assigned trucks
+        $takenTruckIds = Driver::whereNotNull('assigned_truck')
+            ->pluck('driver_id', 'assigned_truck');
+
         return view('admin.drivers.index',
-            compact('drivers', 'trucks', 'total', 'totalActive', 'totalInactive', 'totalLeave')
+            compact('drivers', 'trucks', 'total', 'totalActive', 'totalInactive', 'totalLeave', 'takenTruckIds')
         );
     }
 
@@ -44,8 +49,10 @@ class DriverAdminController extends Controller
             'phone'          => 'nullable|string|max:20',
             'hire_date'      => 'nullable|date',
             'status'         => 'required|in:active,inactive,on_leave',
-            'assigned_truck' => 'nullable|exists:tbl_truck,truck_id',
+            'assigned_truck' => ['nullable', 'exists:tbl_truck,truck_id', Rule::unique('tbl_driver', 'assigned_truck')],
             'driver_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ], [
+            'assigned_truck.unique' => 'រថយន្តនេះត្រូវបានកំណត់ឱ្យអ្នកបើកបរផ្សេងរួចហើយ។',
         ]);
 
         $data = $request->only('full_name', 'phone', 'hire_date', 'status', 'assigned_truck');
@@ -69,8 +76,11 @@ class DriverAdminController extends Controller
             'phone'          => 'nullable|string|max:20',
             'hire_date'      => 'nullable|date',
             'status'         => 'required|in:active,inactive,on_leave',
-            'assigned_truck' => 'nullable|exists:tbl_truck,truck_id',
+            'assigned_truck' => ['nullable', 'exists:tbl_truck,truck_id',
+                Rule::unique('tbl_driver', 'assigned_truck')->ignore($driver->driver_id, 'driver_id')],
             'driver_picture' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ], [
+            'assigned_truck.unique' => 'រថយន្តនេះត្រូវបានកំណត់ឱ្យអ្នកបើកបរផ្សេងរួចហើយ។',
         ]);
 
         $data = $request->only('full_name', 'phone', 'hire_date', 'status', 'assigned_truck');

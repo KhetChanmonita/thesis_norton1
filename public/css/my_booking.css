@@ -283,6 +283,19 @@ body {
     border: 1.5px solid #a7f3d0;
 }
 
+.btn-pay-pending {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 9px;
+    background: #fef9c3;
+    color: #92400e;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 1.5px solid #fde68a;
+}
+
 /* ── Payment history table ── */
 .pay-table {
     width: 100%;

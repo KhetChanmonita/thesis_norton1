@@ -8,9 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminMiddleware
 {
-    public function handle(Request $request, Closure $next)
+    // Roles that can access the admin panel
+    const PANEL_ROLES = ['admin', 'operation', 'accountant', 'driver'];
+
+    public function handle(Request $request, Closure $next): mixed
     {
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
+        if (!Auth::check() || !in_array(Auth::user()->role, self::PANEL_ROLES)) {
             return redirect()->route('home')->with('error', 'អ្នកមិនមានសិទ្ធិចូលទំព័រនេះទេ។');
         }
         return $next($request);

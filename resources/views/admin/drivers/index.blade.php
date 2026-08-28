@@ -306,9 +306,12 @@
                         <select name="assigned_truck" class="form-control">
                             <option value="">-- មិនទាន់កំណត់ --</option>
                             @foreach($trucks as $tr)
-                            <option value="{{ $tr->truck_id }}">
+                            @php $taken = isset($takenTruckIds[$tr->truck_id]); @endphp
+                            <option value="{{ $tr->truck_id }}" {{ $taken ? 'disabled' : '' }}
+                                    style="{{ $taken ? 'color:#94a3b8;' : '' }}">
                                 {{ $tr->truck_name }} — {{ $tr->plate_number }}
                                 @if($tr->capacity_ton) ({{ $tr->capacity_ton }} t) @endif
+                                @if($taken) — បានកំណត់រួចហើយ @endif
                             </option>
                             @endforeach
                         </select>
@@ -391,8 +394,12 @@
                         <select name="assigned_truck" id="ed_truck" class="form-control">
                             <option value="">-- មិនទាន់កំណត់ --</option>
                             @foreach($trucks as $tr)
-                            <option value="{{ $tr->truck_id }}">
+                            @php $taken = isset($takenTruckIds[$tr->truck_id]); @endphp
+                            <option value="{{ $tr->truck_id }}"
+                                    data-taken-by="{{ $takenTruckIds[$tr->truck_id] ?? '' }}"
+                                    style="{{ $taken ? 'color:#94a3b8;' : '' }}">
                                 {{ $tr->truck_name }} — {{ $tr->plate_number }}
+                                @if($taken) — បានកំណត់រួចហើយ @endif
                             </option>
                             @endforeach
                         </select>
@@ -475,7 +482,21 @@ function openEditDriver(id, name, phone, hire_date, status, assigned_truck, driv
     document.getElementById('ed_phone').value  = phone  || '';
     document.getElementById('ed_hire').value   = hire_date || '';
     document.getElementById('ed_status').value = status || 'active';
-    document.getElementById('ed_truck').value  = assigned_truck || '';
+
+    // Enable own truck, disable trucks taken by other drivers
+    var truckSel = document.getElementById('ed_truck');
+    Array.from(truckSel.options).forEach(function(opt) {
+        if (!opt.value) return;
+        var takenBy = opt.dataset.takenBy;
+        if (!takenBy || takenBy == id) {
+            opt.disabled = false;
+            opt.style.color = '';
+        } else {
+            opt.disabled = true;
+            opt.style.color = '#94a3b8';
+        }
+    });
+    document.getElementById('ed_truck').value = assigned_truck || '';
 
     // Reset file input and filename label
     document.getElementById('editDriverImage').value = '';

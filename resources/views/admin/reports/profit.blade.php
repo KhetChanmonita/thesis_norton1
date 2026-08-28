@@ -98,7 +98,7 @@
                             {{ $pay->booking?->formatted_id ?? '#'.$pay->booking_id }}
                         </span>
                     </td>
-                    <td class="rpt-cell-text">{{ $pay->booking?->customer?->full_name ?? '—' }}</td>
+                    <td class="rpt-cell-text">{{ $pay->booking?->customer?->full_name ?? $pay->booking?->bookedByUser?->user_name ?? '—' }}</td>
                     <td>
                         {{ $pay->payment_stage === 'first' ? 'ការទូទាត់លើកទី១' : ($pay->payment_stage === 'second' ? 'ការទូទាត់លើកទី២' : '—') }}
                     </td>

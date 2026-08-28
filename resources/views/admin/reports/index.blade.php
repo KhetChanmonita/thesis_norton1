@@ -13,13 +13,11 @@
         'salary' => 'ប្រាក់ខែអ្នកបើកបរ',
         'fuel'   => 'ប្រេងឥន្ធនៈ',
         'repair' => 'ជួសជុលរថយន្ត',
-        'other'  => 'ផ្សេងៗ',
     ];
     $typeIcon = [
         'salary' => ['icon'=>'fa-money-check-alt','class'=>'blue'],
         'fuel'   => ['icon'=>'fa-gas-pump','class'=>'orange'],
         'repair' => ['icon'=>'fa-tools','class'=>'red'],
-        'other'  => ['icon'=>'fa-receipt','class'=>'purple'],
     ];
 @endphp
 
@@ -55,7 +53,12 @@
         </div>
     </a>
     @foreach($typeLabel as $key => $label)
-    <a href="{{ route('admin.reports.index', ['month' => $month, 'expense_type' => $key]) }}" class="stat-card rpt-stat-clickable">
+    @php
+        $cardHref = $key === 'fuel'
+            ? route('admin.reports.fuel', ['month' => $month])
+            : route('admin.reports.index', ['month' => $month, 'expense_type' => $key]);
+    @endphp
+    <a href="{{ $cardHref }}" class="stat-card rpt-stat-clickable">
         <div class="stat-icon {{ $typeIcon[$key]['class'] }}"><i class="fas {{ $typeIcon[$key]['icon'] }}"></i></div>
         <div class="stat-info">
             <div class="val rpt-stat-val">
@@ -127,7 +130,7 @@
     <div class="card-header">
         <div class="card-title">
             <i class="fas fa-file-invoice-dollar"></i>
-            បញ្ជីចំណាយ
+            បញ្ជីចំណាយជួសជុលរថយន្ត
             <span class="rpt-count-badge">
                 {{ $expenses->total() }}
             </span>
@@ -265,7 +268,7 @@
                     </div>
                     <div class="form-group" id="exp_driver_field">
                         <label class="form-label">អ្នកបើកបរ</label>
-                        <select name="driver_id" class="form-control">
+                        <select name="driver_id" id="exp_driver_id" class="form-control" onchange="onDriverChange('exp_driver_id','exp_truck_id')">
                             <option value="">-- ជ្រើសរើស --</option>
                             @foreach($drivers as $d)
                             <option value="{{ $d->driver_id }}">{{ $d->full_name }}</option>
@@ -274,12 +277,28 @@
                     </div>
                     <div class="form-group d-none" id="exp_truck_field">
                         <label class="form-label">រថយន្ត</label>
-                        <select name="truck_id" class="form-control">
+                        <select name="truck_id" id="exp_truck_id" class="form-control">
                             <option value="">-- ជ្រើសរើស --</option>
                             @foreach($trucks as $tr)
                             <option value="{{ $tr->truck_id }}">{{ $tr->truck_name }} — {{ $tr->plate_number }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="form-group d-none" id="exp_booking_field">
+                        <label class="form-label">ការកក់ (Booking)</label>
+                        <select name="booking_id" class="form-control">
+                            <option value="">— មិនភ្ជាប់ —</option>
+                            @foreach($bookings as $bk)
+                            @php $bl = 'LS'.$bk->booking_date->format('ym').'-'.$bk->booking_id; @endphp
+                            <option value="{{ $bk->booking_id }}">
+                                {{ $bl }}@if($bk->customer) — {{ $bk->customer->full_name }}@endif
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group d-none" id="exp_allowance_field">
+                        <label class="form-label">លុយជើងតៃកុង (USD)</label>
+                        <input type="number" name="driver_allowance" class="form-control" min="0" step="0.01" placeholder="ឧ. 30.00">
                     </div>
                     <div class="form-group form-full">
                         <label class="form-label">បរិយាយ</label>
@@ -333,7 +352,7 @@
                     </div>
                     <div class="form-group" id="edit_exp_driver_field">
                         <label class="form-label">អ្នកបើកបរ</label>
-                        <select name="driver_id" id="edit_exp_driver_id" class="form-control">
+                        <select name="driver_id" id="edit_exp_driver_id" class="form-control" onchange="onDriverChange('edit_exp_driver_id','edit_exp_truck_id')">
                             <option value="">-- ជ្រើសរើស --</option>
                             @foreach($drivers as $d)
                             <option value="{{ $d->driver_id }}">{{ $d->full_name }}</option>
@@ -400,12 +419,26 @@ function confirmDeleteExpense(id, label) {
     document.getElementById('deleteExpenseModal').classList.add('open');
 }
 
+var driverTruckMap = @json($drivers->mapWithKeys(fn($d) => [$d->driver_id => $d->assigned_truck]));
+
+function onDriverChange(driverSelId, truckSelId) {
+    var driverSel = document.getElementById(driverSelId);
+    var truckSel  = document.getElementById(truckSelId);
+    if (!driverSel || !truckSel) return;
+    var assignedTruck = driverTruckMap[driverSel.value] || '';
+    truckSel.value = assignedTruck;
+}
+
 function toggleExpenseFields(type, prefix) {
     prefix = prefix || '';
-    var driverField = document.getElementById(prefix + 'exp_driver_field');
-    var truckField  = document.getElementById(prefix + 'exp_truck_field');
-    driverField.style.display = (type === 'salary') ? 'block' : 'none';
-    truckField.style.display  = (type === 'fuel' || type === 'repair' || type === 'other') ? 'block' : 'none';
+    var driverField   = document.getElementById(prefix + 'exp_driver_field');
+    var truckField    = document.getElementById(prefix + 'exp_truck_field');
+    var bookingField  = document.getElementById(prefix + 'exp_booking_field');
+    var allowField    = document.getElementById(prefix + 'exp_allowance_field');
+    driverField.style.display  = (type === 'salary') ? 'block' : 'none';
+    truckField.style.display   = (type === 'salary' || type === 'fuel' || type === 'repair' || type === 'other') ? 'block' : 'none';
+    if (bookingField) bookingField.style.display  = (type === 'fuel') ? 'block' : 'none';
+    if (allowField)   allowField.style.display    = (type === 'fuel') ? 'block' : 'none';
 }
 
 var editExpenseUrlTemplate = @json(route('admin.reports.update', ['expense' => '__ID__']));

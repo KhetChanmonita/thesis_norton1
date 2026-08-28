@@ -53,7 +53,9 @@ class TruckController extends Controller
 
         $truckTypes = Truck::select('truck_name')->distinct()->pluck('truck_name')->filter()->values();
 
-        return view('trucks_section', compact('trucks', 'trucksJson', 'availableCount', 'provinces', 'truckTypes'));
+        $ratesJson = ShippingRate::all(['type', 'origin', 'province_name_km', 'base_price']);
+
+        return view('trucks_section', compact('trucks', 'trucksJson', 'availableCount', 'provinces', 'truckTypes', 'ratesJson'));
     }
 
     public function getAvailableTrucks(Request $request)

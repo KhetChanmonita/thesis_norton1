@@ -22,6 +22,7 @@
         </div>
     </div>
 
+    @php $userRole = Auth::user()->role; @endphp
     <nav class="sidebar-nav">
         <div class="nav-section">
             <div class="nav-section-label">ទូទៅ</div>
@@ -30,6 +31,16 @@
             <i class="fas fa-chart-pie"></i> ផ្ទាំងគ្រប់គ្រង
         </a>
 
+        {{-- Driver: only sees their trips --}}
+        @if($userRole === 'driver')
+        <div class="nav-section"><div class="nav-section-label">ការដឹក</div></div>
+        <a href="{{ route('admin.driver.trips') }}" class="nav-item {{ request()->routeIs('admin.driver.trips') ? 'active' : '' }}">
+            <i class="fas fa-route"></i> ដំណើររបស់ខ្ញុំ
+        </a>
+        @endif
+
+        {{-- Admin + Staff: management section --}}
+        @if(in_array($userRole, ['admin', 'operation']))
         <div class="nav-section">
             <div class="nav-section-label">ការគ្រប់គ្រង</div>
         </div>
@@ -52,33 +63,119 @@
                 <span class="nav-badge">{{ $newMsgCount }}</span>
             @endif
         </a>
+        @endif
 
+        {{-- Admin + Staff: bookings/payments --}}
+        @if(in_array($userRole, ['admin', 'operation']))
         <div class="nav-section">
             <div class="nav-section-label">ការដឹកជញ្ជូន</div>
         </div>
-        <a href="{{ route('admin.bookings.index') }}" class="nav-item {{ request()->routeIs('admin.bookings*') ? 'active' : '' }}">
-            <i class="fas fa-clipboard-list"></i> ការកក់
-            @php $pending = \App\Models\Booking::where('status','pending')->count(); @endphp
-            @if($pending > 0)
-                <span class="nav-badge">{{ $pending }}</span>
-            @endif
-        </a>
-        <a href="{{ route('admin.payments.index') }}" class="nav-item {{ request()->routeIs('admin.payments*') ? 'active' : '' }}">
+        @php
+            $transportOpen = request()->routeIs('admin.bookings*')
+                          || request()->routeIs('admin.payments*')
+                          || request()->routeIs('admin.history*')
+                          || request()->routeIs('admin.shipping*');
+            $pending = \App\Models\Booking::where('status','pending')->count();
+        @endphp
+        <div class="nav-dropdown {{ $transportOpen ? 'open' : '' }}">
+            <button type="button" class="nav-dropdown-toggle {{ $transportOpen ? 'active' : '' }}"
+                    onclick="toggleNavDropdown(this)">
+                <i class="fas fa-truck"></i>
+                <span class="nd-label">ការដឹកជញ្ជូន</span>
+                @if($pending > 0)<span class="nav-badge">{{ $pending }}</span>@endif
+                <i class="fas fa-chevron-down nav-chevron"></i>
+            </button>
+            <div class="nav-dropdown-menu">
+                <a href="{{ route('admin.bookings.index') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.bookings*') ? 'active' : '' }}">
+                    <i class="fas fa-clipboard-list"></i> ការកក់
+                    @if($pending > 0)<span class="nav-badge" style="margin-left:auto;">{{ $pending }}</span>@endif
+                </a>
+                <a href="{{ route('admin.payments.index') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.payments*') ? 'active' : '' }}">
+                    <i class="fas fa-money-bill-wave"></i> ការទូទាត់
+                    @php $pendingPayments = \App\Models\Payment::where('verification_status','pending')->count(); @endphp
+                    @if($pendingPayments > 0)<span class="nav-badge" style="margin-left:auto;">{{ $pendingPayments }}</span>@endif
+                </a>
+                <a href="{{ route('admin.history.index') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.history*') ? 'active' : '' }}">
+                    <i class="fas fa-history"></i> ប្រវត្តិការដឹក
+                </a>
+                @if($userRole === 'admin')
+                <a href="{{ route('admin.shipping.index') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.shipping*') ? 'active' : '' }}">
+                    <i class="fas fa-dollar-sign"></i> តម្លៃដឹកជញ្ជូន
+                </a>
+                @endif
+            </div>
+        </div>
+        @endif
+
+        {{-- Admin + Accountant: reports --}}
+        @if(in_array($userRole, ['admin', 'accountant']))
+        @php $reportsOpen = request()->routeIs('admin.reports*'); @endphp
+        <div class="nav-section"><div class="nav-section-label">របាយការណ៍</div></div>
+        <div class="nav-dropdown {{ $reportsOpen ? 'open' : '' }}">
+            <button type="button" class="nav-dropdown-toggle {{ $reportsOpen ? 'active' : '' }}"
+                    onclick="toggleNavDropdown(this)">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span class="nd-label">របាយការណ៍ទូទៅ</span>
+                <i class="fas fa-chevron-down nav-chevron"></i>
+            </button>
+            <div class="nav-dropdown-menu">
+                <a href="{{ route('admin.reports.index') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.reports.index') ? 'active' : '' }}">
+                    <i class="fas fa-chart-bar"></i> ចំណាយទូទៅ
+                </a>
+                <a href="{{ route('admin.reports.revenue') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.reports.revenue*') ? 'active' : '' }}">
+                    <i class="fas fa-dollar-sign"></i> ចំណូល
+                </a>
+                <a href="{{ route('admin.reports.profit') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.reports.profit*') ? 'active' : '' }}">
+                    <i class="fas fa-chart-line"></i> ចំណេញ/ខាត
+                </a>
+                <a href="{{ route('admin.reports.truck-repair') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.reports.truck-repair*') ? 'active' : '' }}">
+                    <i class="fas fa-tools"></i> ជួសជុលរថយន្ត
+                </a>
+                <a href="{{ route('admin.reports.customer') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.reports.customer*') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i> អតិថិជន
+                </a>
+                <a href="{{ route('admin.reports.fuel') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.reports.fuel*') ? 'active' : '' }}">
+                    <i class="fas fa-gas-pump"></i> ប្រេងឥន្ធនៈ
+                </a>
+                <a href="{{ route('admin.reports.cost-sheet') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.reports.cost-sheet*') || request()->routeIs('admin.reports.invoice*') ? 'active' : '' }}">
+                    <i class="fas fa-file-invoice"></i> វិក្កយបត្រ
+                </a>
+            </div>
+        </div>
+
+        {{-- Accountant: also show payments (view) --}}
+        @if($userRole === 'accountant')
+        <a href="{{ route('admin.payments.index') }}"
+           class="nav-item {{ request()->routeIs('admin.payments*') ? 'active' : '' }}">
             <i class="fas fa-money-bill-wave"></i> ការទូទាត់
         </a>
-        <a href="{{ route('admin.history.index') }}" class="nav-item {{ request()->routeIs('admin.history*') ? 'active' : '' }}">
-            <i class="fas fa-history"></i> ប្រវត្តិការដឹក
+        <a href="{{ route('admin.history.index') }}"
+           class="nav-item {{ request()->routeIs('admin.history*') ? 'active' : '' }}">
+            <i class="fas fa-history"></i> ប្រវត្តិការទូទាត់
         </a>
-        <a href="{{ route('admin.shipping.index') }}" class="nav-item {{ request()->routeIs('admin.shipping*') ? 'active' : '' }}">
-            <i class="fas fa-dollar-sign"></i> តម្លៃដឹកជញ្ជូន
-        </a>
-        <a href="{{ route('admin.reports.index') }}" class="nav-item {{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
-            <i class="fas fa-file-invoice-dollar"></i> របាយការណ៍ចំណាយ
-        </a>
+        @endif
+        @endif
 
-        <div class="nav-section">
-            <div class="nav-section-label">ប្រព័ន្ធ</div>
-        </div>
+        {{-- Admin only: user management --}}
+        @if($userRole === 'admin')
+        <div class="nav-section"><div class="nav-section-label">ប្រព័ន្ធ</div></div>
+        <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+            <i class="fas fa-user-cog"></i> គ្រប់គ្រងគណនី
+        </a>
+        @endif
+
+        <div class="nav-section"><div class="nav-section-label">ផ្សេងៗ</div></div>
         <a href="{{ route('home') }}" class="nav-item" target="_blank">
             <i class="fas fa-globe"></i> មើលវែបសាយ
         </a>
@@ -100,7 +197,15 @@
                 @else
                     <div class="ava">{{ strtoupper(substr(Auth::user()->user_name, 0, 2)) }}</div>
                 @endif
-                <span class="uname">{{ Auth::user()->user_name }}</span>
+                <div>
+                    <span class="uname">{{ Auth::user()->user_name }}</span>
+                    @php
+                        $roleBadgeColor = ['admin'=>'#7c3aed','operation'=>'#2563eb','accountant'=>'#059669','driver'=>'#d97706'][Auth::user()->role] ?? '#64748b';
+                    @endphp
+                    <span style="display:block;font-size:.65rem;font-weight:700;color:{{ $roleBadgeColor }};text-transform:uppercase;letter-spacing:.05em;">
+                        {{ Auth::user()->role }}
+                    </span>
+                </div>
             </a>
             <form id="adminLogoutForm" method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -155,6 +260,13 @@
 </div>
 
 @stack('scripts')
+
+<script>
+function toggleNavDropdown(btn) {
+    var wrap = btn.closest('.nav-dropdown');
+    wrap.classList.toggle('open');
+}
+</script>
 
 </body>
 </html>

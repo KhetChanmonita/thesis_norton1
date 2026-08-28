@@ -138,25 +138,32 @@
                         </span>
                     </td>
 
-                    {{-- Customer --}}
+                    {{-- Customer / Internal requester --}}
                     <td>
-                        @if($p->booking && $p->booking->customer)
+                        @php
+                            $pName  = $p->booking?->customer?->full_name
+                                   ?? $p->booking?->bookedByUser?->user_name;
+                            $pSub   = $p->booking?->customer?->phone
+                                   ?? ($p->booking?->bookedByUser
+                                       ? ucfirst($p->booking->bookedByUser->role)
+                                       : null);
+                            $pGrad  = $p->booking?->customer
+                                    ? 'linear-gradient(135deg,#667eea,#764ba2)'
+                                    : 'linear-gradient(135deg,#FF6B00,#ff9040)';
+                        @endphp
+                        @if($pName)
                             <div style="display:flex;align-items:center;gap:9px;">
                                 <div style="width:36px;height:36px;border-radius:50%;
-                                            background:linear-gradient(135deg,#667eea,#764ba2);
+                                            background:{{ $pGrad }};
                                             display:flex;align-items:center;justify-content:center;
-                                            font-family:'Montserrat',sans-serif;font-weight:400;
+                                            font-family:'Montserrat',sans-serif;font-weight:700;
                                             font-size:0.8rem;color:#fff;flex-shrink:0;">
-                                    {{ strtoupper(mb_substr($p->booking->customer->full_name, 0, 1)) }}
+                                    {{ strtoupper(mb_substr($pName, 0, 1)) }}
                                 </div>
                                 <div>
-                                    <div style="font-weight:400;color:#1e293b;font-size:0.88rem;">
-                                        {{ $p->booking->customer->full_name }}
-                                    </div>
-                                    @if($p->booking->customer->phone)
-                                    <div style="font-size:0.72rem;color:#94a3b8;">
-                                        {{ $p->booking->customer->phone }}
-                                    </div>
+                                    <div style="font-weight:600;color:#1e293b;font-size:0.88rem;">{{ $pName }}</div>
+                                    @if($pSub)
+                                    <div style="font-size:0.72rem;color:#94a3b8;">{{ $pSub }}</div>
                                     @endif
                                 </div>
                             </div>

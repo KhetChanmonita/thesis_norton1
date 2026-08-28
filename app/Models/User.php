@@ -21,7 +21,13 @@ class User extends Authenticatable
         'role',
         'phone',
         'profile_picture',
+        'driver_id',
     ];
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class, 'driver_id', 'driver_id');
+    }
 
     protected $hidden = [
         'password',
