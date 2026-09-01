@@ -69,10 +69,15 @@
         @endif
     </form>
 
-    <button class="btn btn-orange"
-            onclick="document.getElementById('addDriverModal').classList.add('open')">
-        <i class="fas fa-plus"></i> បន្ថែមអ្នកបើកបរ
-    </button>
+    <div style="display:flex;gap:10px;">
+        <a href="{{ route('admin.drivers.print') }}" target="_blank" class="btn btn-ghost">
+            <i class="fas fa-print"></i> បោះពុម្ពបញ្ជី
+        </a>
+        <button class="btn btn-orange"
+                onclick="document.getElementById('addDriverModal').classList.add('open')">
+            <i class="fas fa-plus"></i> បន្ថែមអ្នកបើកបរ
+        </button>
+    </div>
 </div>
 
 {{-- ── Table ── --}}

@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>របាយការណ៍ប្រេងឥន្ធនៈ — {{ \Carbon\Carbon::createFromFormat('Y-m', $month)->locale('km')->translatedFormat('F Y') }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Kantumruy Pro:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin_reports_print.css') }}">
     <style>
         .fuel-summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
@@ -12,7 +12,7 @@
         .fuel-sum-name { font-weight:700; font-size:.85rem; color:#1e293b; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
         .fuel-sum-row { display:flex; justify-content:space-between; font-size:.76rem; color:#64748b; padding:2px 0; border-bottom:1px solid #f8fafc; }
         .fuel-sum-row:last-child { border:none; font-weight:700; color:#1e293b; font-size:.8rem; }
-        .fuel-sum-val { font-family:'Montserrat',sans-serif; font-weight:700; }
+        .fuel-sum-val { font-family:'Kantumruy Pro',sans-serif; font-weight:700; }
         .fuel-sum-val.orange { color:#FF6B00; }
         .fuel-sum-val.blue   { color:#3b82f6; }
         .fuel-sum-val.green  { color:#059669; }
@@ -114,13 +114,13 @@
                     @endif
                 </td>
                 <td>{{ $f->driver?->full_name ?? '—' }}</td>
-                <td style="color:#FF6B00;font-family:'Montserrat',sans-serif;font-weight:700;">
+                <td style="color:#FF6B00;font-family:'Kantumruy Pro',sans-serif;font-weight:700;">
                     ${{ number_format($f->amount, 2) }}
                 </td>
-                <td style="color:#3b82f6;font-family:'Montserrat',sans-serif;font-weight:700;">
+                <td style="color:#3b82f6;font-family:'Kantumruy Pro',sans-serif;font-weight:700;">
                     {{ $f->driver_allowance > 0 ? '$'.number_format($f->driver_allowance, 2) : '—' }}
                 </td>
-                <td style="color:#059669;font-family:'Montserrat',sans-serif;font-weight:700;">
+                <td style="color:#059669;font-family:'Kantumruy Pro',sans-serif;font-weight:700;">
                     ${{ number_format($rowTotal, 2) }}
                 </td>
                 <td>{{ $f->expense_date ? $f->expense_date->format('d/m/Y') : '—' }}</td>
@@ -135,9 +135,9 @@
         <tfoot>
             <tr>
                 <td colspan="4" style="text-align:right;font-weight:700;">សរុប</td>
-                <td style="color:#FF6B00;font-family:'Montserrat',sans-serif;font-weight:700;">${{ number_format($grandFuel, 2) }}</td>
-                <td style="color:#3b82f6;font-family:'Montserrat',sans-serif;font-weight:700;">${{ number_format($grandAllowance, 2) }}</td>
-                <td style="color:#059669;font-family:'Montserrat',sans-serif;font-weight:700;">${{ number_format($grandTotal, 2) }}</td>
+                <td style="color:#FF6B00;font-family:'Kantumruy Pro',sans-serif;font-weight:700;">${{ number_format($grandFuel, 2) }}</td>
+                <td style="color:#3b82f6;font-family:'Kantumruy Pro',sans-serif;font-weight:700;">${{ number_format($grandAllowance, 2) }}</td>
+                <td style="color:#059669;font-family:'Kantumruy Pro',sans-serif;font-weight:700;">${{ number_format($grandTotal, 2) }}</td>
                 <td colspan="2"></td>
             </tr>
         </tfoot>

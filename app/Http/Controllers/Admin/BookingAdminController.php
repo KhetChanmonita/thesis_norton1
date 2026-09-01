@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\BookingStatusHistory;
 use App\Models\Customer;
 use App\Models\ExtraCharge;
+use App\Models\Payment;
 use App\Models\ShippingRate;
 use App\Models\Truck;
 use App\Models\User;
@@ -147,14 +148,24 @@ class BookingAdminController extends Controller
         }
 
         $bookings   = $query->latest()->paginate(10)->withQueryString();
-        $trucks     = Truck::where('status', 'available')->orderBy('truck_name')->get();
-        $trucksJson = $trucks->map(fn($t) => [
-            'id'  => $t->truck_id,
-            'name'=> $t->truck_name,
-            'plate'=> $t->plate_number,
-            'cap' => $t->capacity_ton,
-            'loc' => $t->truck_location ?? 'both',
-        ]);
+        $trucks     = Truck::with('schedule')->where('status', 'available')->orderBy('truck_name')->get();
+        $trucksJson = $trucks->map(function ($t) {
+            $raw = strtolower($t->schedule?->location_truck ?? '');
+            if (str_contains($raw, 'shv') || str_contains($raw, 'sihanoukville') || str_contains($raw, 'ព្រះសីហនុ')) {
+                $loc = 'shv';
+            } elseif (str_contains($raw, 'pp') || str_contains($raw, 'phnom') || str_contains($raw, 'ភ្នំពេញ')) {
+                $loc = 'pp';
+            } else {
+                $loc = 'both';
+            }
+            return [
+                'id'   => $t->truck_id,
+                'name' => $t->truck_name,
+                'plate'=> $t->plate_number,
+                'cap'  => $t->capacity_ton,
+                'loc'  => $loc,
+            ];
+        });
         $provinces = ShippingRate::provinces();
         $ratesJson = ShippingRate::all(['type', 'origin', 'province_name_km', 'base_price']);
         return view('admin.bookings.index', compact('bookings', 'trucks', 'trucksJson', 'provinces', 'ratesJson'));
@@ -162,7 +173,7 @@ class BookingAdminController extends Controller
 
     public function updateStatus(Request $request, Booking $booking)
     {
-        if (in_array($booking->status, ['completed', 'cancelled'])) {
+        if ($booking->status === 'cancelled' || ($booking->status === 'completed' && $booking->payment_status === 'fully_paid')) {
             return back()->with('error', 'ការកក់នេះបានបញ្ចប់ ឬបានលុបចោលរួចហើយ — មិនអាចផ្លាស់ប្ដូរស្ថានភាពបានទេ!');
         }
 
@@ -210,10 +221,11 @@ class BookingAdminController extends Controller
                 }
 
                 ExtraCharge::create([
-                    'booking_id' => $booking->booking_id,
-                    'stage'      => 'second',
-                    'amount'     => $chargeAmount,
-                    'reason'     => $reason,
+                    'booking_id'      => $booking->booking_id,
+                    'stage'           => 'second',
+                    'amount'          => $chargeAmount,
+                    'reason'          => $reason,
+                    'client_response' => $booking->booked_by_user_id ? 'Accepted' : 'Pending',
                     'date'       => now()->toDateString(),
                 ]);
                 // Do NOT add to total_price — second-stage charges are added in full to the final payment
@@ -237,6 +249,83 @@ class BookingAdminController extends Controller
         ];
 
         return back()->with('success', $msgs[$request->status] ?? 'ស្ថានភាពការកក់បានកែប្រែ!');
+    }
+
+    public function recordPayment(Request $request, Booking $booking)
+    {
+        $request->validate([
+            'payment_stage'         => 'required|in:first,second',
+            'amount'                => 'required|numeric|min:0.01',
+            'payment_method'        => 'required|string|max:50',
+            'transaction_reference' => 'nullable|string|max:100|unique:tbl_payment,transaction_reference',
+            'payment_date'          => 'required|date',
+            'proof_file'            => 'required|file|mimes:jpg,jpeg,png,gif,pdf|max:5120',
+        ], [
+            'transaction_reference.unique' => 'លេខយោងប្រតិបត្តិការនេះត្រូវបានប្រើរួចហើយ! សូមពិនិត្យឡើងវិញ។',
+        ]);
+
+        // Prevent double-submitting a pending or verified payment for the same stage
+        $alreadySubmitted = $booking->payments()
+            ->where('payment_stage', $request->payment_stage)
+            ->whereIn('verification_status', ['pending', 'verified'])
+            ->exists();
+
+        if ($alreadySubmitted) {
+            $label = $request->payment_stage === 'first' ? '50% ដំបូង' : '50% ចុងក្រោយ';
+            return back()->with('error', 'ការទូទាត់ ' . $label . ' ត្រូវបានដាក់ស្នើ ឬផ្ទៀងផ្ទាត់រួចហើយ!');
+        }
+
+        // Handle proof image upload
+        $proofPath = null;
+        if ($request->hasFile('proof_file')) {
+            $file     = $request->file('proof_file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/payment-proofs'), $filename);
+            $proofPath = 'uploads/payment-proofs/' . $filename;
+        }
+
+        Payment::create([
+            'booking_id'            => $booking->booking_id,
+            'amount'                => $request->amount,
+            'payment_method'        => $request->payment_method,
+            'payment_stage'         => $request->payment_stage,
+            'payment_date'          => $request->payment_date,
+            'transaction_reference' => $request->transaction_reference,
+            'proof_file'            => $proofPath,
+            'verification_status'   => 'pending',
+        ]);
+
+        // Mirror customer flow: update payment_status immediately on submission
+        if ($request->payment_stage === 'first') {
+            $booking->update(['payment_status' => 'deposit_paid']);
+            $msg = 'ការទូទាត់ 50% ដំបូង ($' . number_format($request->amount, 2) . ') សម្រាប់ ' . $booking->formatted_id . ' ត្រូវបានដាក់ស្នើ — រង់ចាំការផ្ទៀងផ្ទាត់!';
+        } else {
+            $msg = 'ការទូទាត់ 50% ចុងក្រោយ ($' . number_format($request->amount, 2) . ') សម្រាប់ ' . $booking->formatted_id . ' ត្រូវបានដាក់ស្នើ — រង់ចាំការផ្ទៀងផ្ទាត់!';
+        }
+
+        return redirect()->route('admin.bookings.index')->with('success', $msg);
+    }
+
+    public function calcPrice(Request $request)
+    {
+        $type    = $request->input('type');
+        $origin  = $request->input('origin');
+        $province = $request->input('province_km');
+
+        if (!$type || !$origin || !$province) {
+            return response()->json(['success' => false, 'base_price' => 0]);
+        }
+
+        $rate = ShippingRate::where('type', $type)
+            ->where('origin', $origin)
+            ->where('province_name_km', $province)
+            ->first();
+
+        if (!$rate) {
+            return response()->json(['success' => false, 'base_price' => 0]);
+        }
+
+        return response()->json(['success' => true, 'base_price' => (float) $rate->base_price]);
     }
 
     public function destroy(Booking $booking)
@@ -272,12 +361,16 @@ class BookingAdminController extends Controller
             ? 'second'
             : 'first';
 
+        // Admin-booked: customer already agreed on-site — auto-accept all charges
+        $clientResponse = $booking->booked_by_user_id ? 'Accepted' : 'Pending';
+
         ExtraCharge::create([
-            'booking_id' => $booking->booking_id,
-            'stage'      => $stage,
-            'amount'     => $amount,
-            'reason'     => $reason,
-            'date'       => now()->toDateString(),
+            'booking_id'      => $booking->booking_id,
+            'stage'           => $stage,
+            'amount'          => $amount,
+            'reason'          => $reason,
+            'date'            => now()->toDateString(),
+            'client_response' => $clientResponse,
         ]);
 
         if ($stage === 'first') {

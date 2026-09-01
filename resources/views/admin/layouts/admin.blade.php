@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Admin') — LS Trucking Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
     @stack('styles')
 </head>
@@ -74,7 +74,9 @@
             $transportOpen = request()->routeIs('admin.bookings*')
                           || request()->routeIs('admin.payments*')
                           || request()->routeIs('admin.history*')
-                          || request()->routeIs('admin.shipping*');
+                          || request()->routeIs('admin.shipping*')
+                          || request()->routeIs('admin.reports.cost-sheet*')
+                          || request()->routeIs('admin.reports.invoice*');
             $pending = \App\Models\Booking::where('status','pending')->count();
         @endphp
         <div class="nav-dropdown {{ $transportOpen ? 'open' : '' }}">
@@ -100,6 +102,10 @@
                 <a href="{{ route('admin.history.index') }}"
                    class="nav-sub-item {{ request()->routeIs('admin.history*') ? 'active' : '' }}">
                     <i class="fas fa-history"></i> ប្រវត្តិការដឹក
+                </a>
+                <a href="{{ route('admin.reports.cost-sheet') }}"
+                   class="nav-sub-item {{ request()->routeIs('admin.reports.cost-sheet*') || request()->routeIs('admin.reports.invoice*') ? 'active' : '' }}">
+                    <i class="fas fa-file-invoice"></i> វិក្កយបត្រ
                 </a>
                 @if($userRole === 'admin')
                 <a href="{{ route('admin.shipping.index') }}"
@@ -147,15 +153,18 @@
                    class="nav-sub-item {{ request()->routeIs('admin.reports.fuel*') ? 'active' : '' }}">
                     <i class="fas fa-gas-pump"></i> ប្រេងឥន្ធនៈ
                 </a>
-                <a href="{{ route('admin.reports.cost-sheet') }}"
-                   class="nav-sub-item {{ request()->routeIs('admin.reports.cost-sheet*') || request()->routeIs('admin.reports.invoice*') ? 'active' : '' }}">
-                    <i class="fas fa-file-invoice"></i> វិក្កយបត្រ
-                </a>
             </div>
         </div>
 
-        {{-- Accountant: also show payments (view) --}}
+        {{-- Accountant: bookings (view+create), payments, history, invoice --}}
         @if($userRole === 'accountant')
+        <div class="nav-section"><div class="nav-section-label">ការដឹកជញ្ជូន</div></div>
+        @php $accPending = \App\Models\Booking::where('status','pending')->count(); @endphp
+        <a href="{{ route('admin.bookings.index') }}"
+           class="nav-item {{ request()->routeIs('admin.bookings*') ? 'active' : '' }}">
+            <i class="fas fa-clipboard-list"></i> ការកក់
+            @if($accPending > 0)<span class="nav-badge">{{ $accPending }}</span>@endif
+        </a>
         <a href="{{ route('admin.payments.index') }}"
            class="nav-item {{ request()->routeIs('admin.payments*') ? 'active' : '' }}">
             <i class="fas fa-money-bill-wave"></i> ការទូទាត់
@@ -163,6 +172,10 @@
         <a href="{{ route('admin.history.index') }}"
            class="nav-item {{ request()->routeIs('admin.history*') ? 'active' : '' }}">
             <i class="fas fa-history"></i> ប្រវត្តិការទូទាត់
+        </a>
+        <a href="{{ route('admin.reports.cost-sheet') }}"
+           class="nav-item {{ request()->routeIs('admin.reports.cost-sheet*') || request()->routeIs('admin.reports.invoice*') ? 'active' : '' }}">
+            <i class="fas fa-file-invoice"></i> វិក្កយបត្រ
         </a>
         @endif
         @endif

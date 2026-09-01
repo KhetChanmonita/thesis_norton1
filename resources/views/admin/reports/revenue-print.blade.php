@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="km">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>របាយការណ៍ចំណូល — {{ \Carbon\Carbon::createFromFormat('Y-m', $month)->locale('km')->translatedFormat('F Y') }}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&family=Kantumruy Pro:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin_reports_print.css') }}">
 </head>
 <body>

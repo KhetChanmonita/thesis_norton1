@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/track.css') }}">
+    <style>
+    .trk-staff-badge {
+        display:inline-flex;align-items:center;gap:5px;margin-top:7px;
+        padding:4px 12px 4px 9px;border-radius:20px;font-size:.72rem;font-weight:600;
+        background:#eff6ff;border:1.5px solid #bfdbfe;color:#1e40af;
+        font-family:'Kantumruy Pro',sans-serif;
+    }
+    .trk-staff-badge i { font-size:.65rem; }
+    </style>
 </head>
 <body>
 @include('partials.header')
@@ -29,7 +38,19 @@
 <div class="card">
     <div class="card-header">
         <h2><i class="fas fa-file-alt trk-hdr-icon"></i><span class="trk-title-text">ការតាមដានការកក់</span> <span class="trk-booking-id">{{ $booking->formatted_id }}</span></h2>
-        <p>{{ $booking->booking_date ? \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') : '' }} — {{ $booking->customer?->full_name ?? $booking->bookedByUser?->user_name ?? '' }}</p>
+        <p>{{ $booking->booking_date ? \Carbon\Carbon::parse($booking->booking_date)->format('d/m/Y') : '' }}
+           @if($booking->customer) — {{ $booking->customer->full_name }} @endif
+        </p>
+        @if($booking->bookedByUser)
+        @php $roleLabel = ['admin'=>'Admin','operation'=>'បុគ្គលិក','accountant'=>'គណនី']; @endphp
+        <div>
+            <span class="trk-staff-badge">
+                <i class="fas fa-user-tie"></i>
+                កក់ដោយ: {{ $booking->bookedByUser->user_name }}
+                ({{ $roleLabel[$booking->bookedByUser->role] ?? ucfirst($booking->bookedByUser->role) }})
+            </span>
+        </div>
+        @endif
     </div>
     <div class="card-body">
         <div class="info-grid">
@@ -59,6 +80,18 @@
                 <label>ប្រភេទ</label>
                 <span>{{ $booking->booking_type === 'import' ? 'នាំចូល (Import)' : 'នាំចេញ (Export)' }}</span>
             </div>
+            @if($booking->customer)
+            <div class="info-item">
+                <label>អតិថិជន</label>
+                <span>
+                    <i class="fas fa-user" style="color:#FF6B00;margin-right:4px;font-size:.8rem;"></i>
+                    <strong>{{ $booking->customer->full_name }}</strong>
+                    @if($booking->customer->phone)
+                    &nbsp;·&nbsp; <i class="fas fa-phone" style="font-size:.75rem;color:#64748b;"></i> {{ $booking->customer->phone }}
+                    @endif
+                </span>
+            </div>
+            @endif
             <div class="info-item">
                 <label>ទីតាំងទទួល</label>
                 <span><i class="fas fa-map-marker-alt trk-pickup-icon"></i>{{ $booking->pickup_location ?? '—' }}</span>

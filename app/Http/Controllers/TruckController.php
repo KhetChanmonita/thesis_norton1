@@ -58,6 +58,28 @@ class TruckController extends Controller
         return view('trucks_section', compact('trucks', 'trucksJson', 'availableCount', 'provinces', 'truckTypes', 'ratesJson'));
     }
 
+    public function calcPrice(Request $request)
+    {
+        $type    = $request->input('type');
+        $origin  = $request->input('origin');
+        $province = $request->input('province_km');
+
+        if (!$type || !$origin || !$province) {
+            return response()->json(['success' => false, 'base_price' => 0]);
+        }
+
+        $rate = ShippingRate::where('type', $type)
+            ->where('origin', $origin)
+            ->where('province_name_km', $province)
+            ->first();
+
+        if (!$rate) {
+            return response()->json(['success' => false, 'base_price' => 0]);
+        }
+
+        return response()->json(['success' => true, 'base_price' => (float) $rate->base_price]);
+    }
+
     public function getAvailableTrucks(Request $request)
     {
         $trucks = Truck::where('status', 'available')->get();

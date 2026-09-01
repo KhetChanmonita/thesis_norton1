@@ -55,8 +55,8 @@
     --warning: #f59e0b;
     --danger: #ef4444;
     --info: #3b82f6;
-    --font: 'Kantumruy Pro', 'Poppins', sans-serif;
-    --font-head: 'Montserrat', 'Kantumruy Pro', sans-serif;
+    --font: 'Kantumruy Pro', sans-serif;
+    --font-head: 'Kantumruy Pro', sans-serif;
 }
 
 body {

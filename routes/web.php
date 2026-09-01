@@ -26,6 +26,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/service', [ServiceController::class, 'index'])->name('service');
 
 Route::get('/trucks_section', [TruckController::class, 'customerIndex'])->name('trucks_section');
+Route::post('/trucks_section/calc-price', [TruckController::class, 'calcPrice'])->name('trucks.calc-price');
 Route::get('/my-bookings',          [BookingController::class, 'myBookings'])->name('my.bookings');
 Route::get('/booking/{id}/status',  [BookingController::class, 'trackBooking'])->name('booking.track');
 Route::get('/booking/{id}/pay',     [BookingController::class, 'showPayment'])->name('booking.pay');
@@ -117,8 +118,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::delete('/schedules/{schedule}',[ScheduleAdminController::class, 'destroy'])->name('schedules.destroy');
 
         // Shipping Rates
-        Route::get('/shipping-rates',         [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'index'])->name('shipping.index');
-        Route::put('/shipping-rates/{rate}',  [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'update'])->name('shipping.update');
+        Route::get('/shipping-rates',                    [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'index'])->name('shipping.index');
+        Route::put('/shipping-rates/{rate}',             [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'update'])->name('shipping.update');
+        Route::post('/shipping-rates/reset-defaults',    [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'resetDefaults'])->name('shipping.reset');
+        Route::post('/shipping-rates/restore-backup',    [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'restoreBackup'])->name('shipping.restore-backup');
+        Route::post('/shipping-rates/bulk-adjust',       [\App\Http\Controllers\Admin\ShippingRateAdminController::class, 'bulkAdjust'])->name('shipping.bulk-adjust');
 
         // User Management
         Route::get('/users',                  [UserAdminController::class, 'index'])->name('users.index');
@@ -132,9 +136,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         // Payment delete (admin only)
         Route::delete('/payments/{payment}',   [PaymentAdminController::class, 'destroy'])->name('payments.destroy');
 
-        // Expense management (admin only)
-        Route::post('/reports',               [ExpenseAdminController::class, 'store'])->name('reports.store');
-        Route::put('/reports/{expense}',      [ExpenseAdminController::class, 'update'])->name('reports.update');
+        // Expense delete (admin only)
         Route::delete('/reports/{expense}',   [ExpenseAdminController::class, 'destroy'])->name('reports.destroy');
     });
 
@@ -145,6 +147,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
         // Drivers (view)
         Route::get('/drivers', [DriverAdminController::class, 'index'])->name('drivers.index');
+        Route::get('/drivers/print', [DriverAdminController::class, 'print'])->name('drivers.print');
 
         // Schedules (view)
         Route::get('/schedules', [ScheduleAdminController::class, 'index'])->name('schedules.index');
@@ -154,9 +157,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::get('/customers/{customer}/edit', [CustomerAdminController::class, 'edit'])->name('customers.edit');
         Route::put('/customers/{customer}',      [CustomerAdminController::class, 'update'])->name('customers.update');
 
-        // Bookings (full CRUD for staff)
-        Route::get('/bookings',                         [BookingAdminController::class, 'index'])->name('bookings.index');
-        Route::post('/bookings',                        [BookingAdminController::class, 'store'])->name('bookings.store');
+        // Bookings (operation-level actions: status change, delete, extra charges, record payment)
+        Route::post('/bookings/{booking}/record-payment',[BookingAdminController::class, 'recordPayment'])->name('bookings.record-payment');
         Route::patch('/bookings/{booking}/status',      [BookingAdminController::class, 'updateStatus'])->name('bookings.status');
         Route::delete('/bookings/{booking}',            [BookingAdminController::class, 'destroy'])->name('bookings.destroy');
         Route::post('/bookings/{booking}/extra-charges',[BookingAdminController::class, 'storeExtraCharge'])->name('bookings.extra-charge.store');
@@ -171,9 +173,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::delete('/messages/{message}',       [ContactAdminController::class, 'destroy'])->name('messages.destroy');
     });
 
+    // ── Admin + Operation + Accountant: bookings (view + create) ────────────
+    Route::middleware('role:admin,operation,accountant')->group(function () {
+        Route::get('/bookings',             [BookingAdminController::class, 'index'])->name('bookings.index');
+        Route::post('/bookings',            [BookingAdminController::class, 'store'])->name('bookings.store');
+        Route::post('/bookings/calc-price', [BookingAdminController::class, 'calcPrice'])->name('bookings.calc-price');
+    });
+
     // ── Admin + Accountant ───────────────────────────────────────────────────
     Route::middleware('role:admin,accountant')->group(function () {
         Route::get('/reports',                                     [ExpenseAdminController::class,  'index'])->name('reports.index');
+        Route::post('/reports',                                    [ExpenseAdminController::class,  'store'])->name('reports.store');
+        Route::put('/reports/{expense}',                           [ExpenseAdminController::class,  'update'])->name('reports.update');
         Route::get('/reports/revenue',                             [ExpenseAdminController::class,  'revenue'])->name('reports.revenue');
         Route::get('/reports/revenue/print',                       [ExpenseAdminController::class,  'revenuePrint'])->name('reports.revenue.print');
         Route::get('/reports/profit',                              [ExpenseAdminController::class,  'profit'])->name('reports.profit');
@@ -184,10 +195,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::get('/reports/truck-repair/print',                  [ExpenseAdminController::class,  'truckRepairPrint'])->name('reports.truck-repair.print');
         Route::get('/reports/customer',                            [ExpenseAdminController::class,  'customerReport'])->name('reports.customer');
         Route::get('/reports/customer/print',                      [ExpenseAdminController::class,  'customerReportPrint'])->name('reports.customer.print');
+    });
+
+    // ── Admin + Operation + Accountant: cost-sheet & invoice ────────────────
+    Route::middleware('role:admin,operation,accountant')->group(function () {
         Route::get('/reports/cost-sheet',                          [CostSheetAdminController::class,'index'])->name('reports.cost-sheet');
         Route::post('/reports/cost-sheet/{booking}',               [CostSheetAdminController::class,'update'])->name('reports.cost-sheet.update');
         Route::get('/reports/cost-sheet/{booking}/invoice',        [CostSheetAdminController::class,'invoice'])->name('reports.invoice');
-
     });
 
     // ── Admin + Operation + Accountant (shared views) ─────────────────────────
@@ -198,7 +212,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     // ── Driver ───────────────────────────────────────────────────────────────
     Route::middleware('role:driver')->group(function () {
-        Route::get('/my-trips', [AdminController::class, 'driverTrips'])->name('driver.trips');
+        Route::get('/my-trips',                                    [AdminController::class, 'driverTrips'])->name('driver.trips');
+        Route::post('/my-trips/{booking}/arrived',                 [AdminController::class, 'markArrived'])->name('driver.arrived');
     });
 });
 // ==================== END ADMIN PANEL ROUTES ====================

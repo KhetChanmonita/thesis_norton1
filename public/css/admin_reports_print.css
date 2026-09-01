@@ -60,11 +60,11 @@ body {
 
 .print-brand { display: flex; align-items: center; gap: 12px; }
 .print-brand img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
-.print-brand-name { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; color: #1e293b; }
+.print-brand-name { font-family: 'Kantumruy Pro', sans-serif; font-size: 1.1rem; font-weight: 800; color: #1e293b; }
 .print-brand-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; max-width: 280px; }
 
 .print-meta { text-align: right; }
-.print-title { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; font-weight: 800; color: #FF6B00; }
+.print-title { font-family: 'Kantumruy Pro', sans-serif; font-size: 1.2rem; font-weight: 800; color: #FF6B00; }
 .print-month { font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-top: 2px; }
 .print-generated { font-size: 0.72rem; color: #94a3b8; margin-top: 4px; }
 
@@ -86,7 +86,7 @@ body {
 }
 
 .print-summary-item .lbl { font-size: 0.78rem; color: #64748b; font-weight: 600; }
-.print-summary-item .val { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
+.print-summary-item .val { font-family: 'Kantumruy Pro', sans-serif; font-size: 1.3rem; font-weight: 800; color: #1e293b; }
 
 .print-table {
     width: 100%;
@@ -144,5 +144,5 @@ body {
 .print-tfoot-val-bold { font-weight: 800; }
 .print-val-green   { color: #059669; }
 .print-val-red     { color: #dc2626; }
-.print-section-h3  { font-family: 'Montserrat', sans-serif; font-size: 0.95rem; font-weight: 800; color: #1e293b; margin-bottom: 10px; }
+.print-section-h3  { font-family: 'Kantumruy Pro', sans-serif; font-size: 0.95rem; font-weight: 800; color: #1e293b; margin-bottom: 10px; }
 .print-table-mb    { margin-bottom: 28px; }

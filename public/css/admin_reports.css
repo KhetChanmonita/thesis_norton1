@@ -4,7 +4,7 @@
     margin-bottom: 24px;
 }
 .rpt-stat-val {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-size: 1.1rem;
     min-width: 100px;
     overflow: hidden;
@@ -52,7 +52,7 @@
     padding: 9px 14px;
     border: 1.5px solid #e2e8f0;
     border-radius: 9px;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-size: 0.85rem;
     outline: none;
 }
@@ -82,7 +82,7 @@
 
 /* ── Table ── */
 .rpt-count-badge {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-size: 0.78rem;
     font-weight: 700;
     background: #f1f5f9;
@@ -92,10 +92,10 @@
     margin-left: 4px;
 }
 .rpt-col-center { text-align: center; }
-.rpt-row-num { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #64748b; }
+.rpt-row-num { font-family: 'Kantumruy Pro', sans-serif; font-weight: 700; color: #64748b; }
 .rpt-type-cell { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 600; color: #1e293b; }
 .rpt-type-icon { color: #FF6B00; }
-.rpt-amount { font-family: 'Montserrat', sans-serif; color: #ef4444; font-size: 0.95rem; }
+.rpt-amount { font-family: 'Kantumruy Pro', sans-serif; color: #ef4444; font-size: 0.95rem; }
 .rpt-cell-text { font-size: 0.83rem; color: #475569; }
 .rpt-driver-icon { color: #3b82f6; font-size: 0.7rem; }
 .rpt-truck-icon { color: #FF6B00; font-size: 0.7rem; }
@@ -126,12 +126,12 @@
 
 /* ── Revenue page ── */
 .rpt-rev-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-.rpt-id-badge { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.83rem; color: #FF6B00; background: #fff3e8; padding: 3px 10px; border-radius: 6px; }
+.rpt-id-badge { font-family: 'Kantumruy Pro', sans-serif; font-weight: 700; font-size: 0.83rem; color: #FF6B00; background: #fff3e8; padding: 3px 10px; border-radius: 6px; }
 .rpt-amount-green { color: #059669; }
 
 /* ── Profit / tfoot ── */
 .rpt-card-mb { margin-bottom: 24px; }
 .rpt-tfoot-label { text-align: right; font-weight: 700; padding: 12px 8px; }
 .rpt-tfoot-val { padding: 12px 8px; }
-.rpt-total-green { color: #059669; font-family: 'Montserrat', sans-serif; }
-.rpt-total-red   { color: #dc2626; font-family: 'Montserrat', sans-serif; }
+.rpt-total-green { color: #059669; font-family: 'Kantumruy Pro', sans-serif; }
+.rpt-total-red   { color: #dc2626; font-family: 'Kantumruy Pro', sans-serif; }

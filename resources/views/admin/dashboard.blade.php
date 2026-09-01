@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin')
+﻿@extends('admin.layouts.admin')
 
 @section('title', 'Dashboard')
 @section('page-title')<span>ផ្ទាំង</span>គ្រប់គ្រង@endsection
@@ -35,7 +35,7 @@
     box-shadow: 0 4px 14px rgba(0,0,0,.18);
 }
 .acc-stat-num {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-size: 1.6rem; font-weight: 800; line-height: 1;
     margin-bottom: 4px; font-variant-numeric: tabular-nums;
 }
@@ -74,7 +74,7 @@
 
 /* ── Month label ── */
 .acc-month-label {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-size: .7rem; font-weight: 700;
     color: #94a3b8; text-transform: uppercase;
     letter-spacing: .08em; margin-bottom: 14px;
@@ -91,6 +91,39 @@
      ADMIN / STAFF DASHBOARD
 ═══════════════════════════════════════════ --}}
 @if(in_array($userRole, ['admin', 'operation']))
+
+{{-- Driver arrived alerts --}}
+@php
+    $arrivedBookings = \App\Models\Booking::whereNotNull('driver_arrived_at')
+        ->where('status', 'in_progress')
+        ->with(['truck.drivers'])
+        ->orderByDesc('driver_arrived_at')
+        ->get();
+@endphp
+@if($arrivedBookings->count() > 0)
+<div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1.5px solid #6ee7b7;border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;">
+    <div style="width:44px;height:44px;background:#059669;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i class="fas fa-map-marker-alt" style="color:#fff;font-size:1.1rem;"></i>
+    </div>
+    <div style="flex:1;">
+        <div style="font-weight:800;color:#065f46;font-size:.95rem;margin-bottom:6px;">
+            <i class="fas fa-bell"></i> អ្នកបើកបរបានដល់ទីតាំងហើយ! ({{ $arrivedBookings->count() }})
+        </div>
+        @foreach($arrivedBookings as $ab)
+        <div style="font-size:.82rem;color:#047857;margin-bottom:3px;">
+            <i class="fas fa-truck" style="margin-right:4px;"></i>
+            <strong>{{ $ab->truck?->drivers?->first()?->full_name ?? '—' }}</strong>
+            ({{ $ab->truck?->plate_number ?? '—' }})
+            &nbsp;·&nbsp; {{ $ab->pickup_location ?? '—' }}
+            &nbsp;·&nbsp; <span style="color:#94a3b8;font-size:.75rem;">{{ $ab->driver_arrived_at->diffForHumans() }}</span>
+        </div>
+        @endforeach
+    </div>
+    <a href="{{ route('admin.bookings.index') }}" style="background:#059669;color:#fff;text-decoration:none;padding:8px 16px;border-radius:8px;font-size:.8rem;font-weight:700;white-space:nowrap;">
+        <i class="fas fa-external-link-alt"></i> មើលការកក់
+    </a>
+</div>
+@endif
 
 {{-- Stats Grid --}}
 <div class="stats-grid">
@@ -186,7 +219,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>#ID</th>
+                        <th>ID</th>
                         <th>អតិថិជន</th>
                         <th>ប្រភេទ</th>
                         <th>ទំហំទំនិញ</th>
@@ -201,7 +234,14 @@
                         <td>{{ $b->customer?->full_name ?? $b->bookedByUser?->user_name ?? '—' }}</td>
                         <td>{{ $b->booking_type === 'import' ? 'នាំចូល' : 'នាំចេញ' }}</td>
                         <td>{{ $b->cargo_weight ? number_format($b->cargo_weight).' kg' : '—' }}</td>
-                        <td><span class="badge badge-{{ $b->status }}">{{ $b->status }}</span></td>
+                        <td>
+                            <span class="badge badge-{{ $b->status }}">{{ $b->status }}</span>
+                            @if($b->driver_arrived_at)
+                                <span style="display:inline-flex;align-items:center;gap:3px;background:#dcfce7;color:#059669;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:4px;">
+                                    <i class="fas fa-map-marker-alt"></i> ដល់ហើយ
+                                </span>
+                            @endif
+                        </td>
                         <td>{{ $b->booking_date ? \Carbon\Carbon::parse($b->booking_date)->format('d/m/Y') : '—' }}</td>
                     </tr>
                     @empty
@@ -293,7 +333,7 @@
 
 {{-- Summary stat cards --}}
 <div class="acc-month-label">
-    <i class="fas fa-calendar"></i> សង្ខេបខែ {{ now()->locale('km')->translatedFormat('F Y') }}
+    <i class="fas fa-calendar"></i> សង្ខេបខែ {{ $accountantStats['stat_month_label'] }}
 </div>
 <div class="acc-stats">
     {{-- Revenue this month --}}
@@ -438,16 +478,198 @@
      DRIVER DASHBOARD
 ═══════════════════════════════════════════ --}}
 @if($userRole === 'driver')
-<div style="text-align:center;padding:60px 20px;">
-    <div style="font-size:3rem;margin-bottom:16px;color:#FF6B00;"><i class="fas fa-route"></i></div>
-    <div style="font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:700;color:#1e293b;margin-bottom:8px;">
-        សូមស្វាគមន៍, {{ Auth::user()->user_name }}!
+<style>
+.drv-hero {
+    background: linear-gradient(135deg,#FF6B00,#ff9040);
+    border-radius: 16px; padding: 24px 28px; color: #fff;
+    display: flex; align-items: center; gap: 20px; margin-bottom: 22px;
+}
+.drv-hero-avatar {
+    width: 70px; height: 70px; border-radius: 50%;
+    background: rgba(255,255,255,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.9rem; flex-shrink: 0; overflow: hidden;
+}
+.drv-hero-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.drv-hero-name  { font-size: 1.3rem; font-weight: 800; line-height: 1.2; }
+.drv-hero-sub   { font-size: .82rem; opacity: .88; margin-top: 4px; }
+.drv-truck-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.22); border-radius: 20px;
+    padding: 4px 13px; font-size: .78rem; font-weight: 700; margin-top: 8px;
+}
+.drv-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-bottom: 22px; }
+.drv-stat-card {
+    background: #fff; border-radius: 14px; padding: 18px 20px;
+    border: 1.5px solid #f1f5f9; box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    display: flex; align-items: center; gap: 14px;
+}
+.drv-stat-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+}
+.drv-stat-icon.orange { background:#fff3e8; color:#FF6B00; }
+.drv-stat-icon.green  { background:#dcfce7; color:#059669; }
+.drv-stat-icon.blue   { background:#dbeafe; color:#2563eb; }
+.drv-stat-icon.gray   { background:#f1f5f9; color:#64748b; }
+.drv-stat-num  { font-size: 1.6rem; font-weight: 800; color: #1e293b; line-height: 1; }
+.drv-stat-lbl  { font-size: .75rem; color: #64748b; margin-top: 3px; }
+
+.drv-upcoming { background:#fff; border-radius:14px; border:1.5px solid #f1f5f9; box-shadow:0 2px 8px rgba(0,0,0,.05); overflow:hidden; }
+.drv-upcoming-hd { padding:16px 20px; border-bottom:1px solid #f1f5f9; display:flex; align-items:center; justify-content:space-between; }
+.drv-upcoming-title { font-size:.92rem; font-weight:700; color:#1e293b; display:flex; align-items:center; gap:8px; }
+.drv-trip-row { display:flex; align-items:center; gap:16px; padding:14px 20px; border-bottom:1px solid #f8fafc; }
+.drv-trip-row:last-child { border-bottom:none; }
+.drv-trip-num { width:36px; height:36px; border-radius:50%; background:#fff3e8; color:#FF6B00; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.85rem; flex-shrink:0; }
+.drv-trip-body { flex:1; }
+.drv-trip-date { font-weight:700; color:#1e293b; font-size:.88rem; }
+.drv-trip-loc  { font-size:.78rem; color:#64748b; margin-top:2px; }
+.drv-trip-truck{ font-size:.75rem; color:#FF6B00; font-weight:600; margin-top:2px; }
+.drv-today-badge { background:#FF6B00; color:#fff; font-size:.65rem; font-weight:700; padding:2px 8px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+.drv-empty { text-align:center; padding:40px 20px; color:#94a3b8; }
+</style>
+
+{{-- Hero card --}}
+@if($driverStats && $driverStats['driver'])
+@php $drv = $driverStats['driver']; @endphp
+<div class="drv-hero">
+    <div class="drv-hero-avatar">
+        @if($drv->driver_picture)
+            <img src="{{ asset($drv->driver_picture) }}" alt="{{ $drv->full_name }}">
+        @else
+            <i class="fas fa-id-badge"></i>
+        @endif
     </div>
-    <p style="color:#64748b;margin-bottom:24px;">ចូលទៅកាន់ ដំណើររបស់ខ្ញុំ ដើម្បីមើលកាលវិភាគការដឹករបស់អ្នក។</p>
-    <a href="{{ route('admin.driver.trips') }}" class="btn btn-orange" style="text-decoration:none;">
-        <i class="fas fa-route"></i> មើលដំណើររបស់ខ្ញុំ
+    <div style="flex:1;">
+        <div class="drv-hero-name">សូមស្វាគមន៍, {{ $drv->full_name }}!</div>
+        <div class="drv-hero-sub">
+            @if($drv->phone)<i class="fas fa-phone" style="margin-right:4px;"></i>{{ $drv->phone }} &nbsp;·&nbsp; @endif
+            <i class="fas fa-calendar-alt" style="margin-right:4px;"></i>ចូលធ្វើការ: {{ $drv->hire_date ? \Carbon\Carbon::parse($drv->hire_date)->format('d/m/Y') : '—' }}
+        </div>
+        @if($drv->truck)
+        <div class="drv-truck-pill">
+            <i class="fas fa-truck"></i>
+            {{ $drv->truck->truck_name }} — {{ $drv->truck->plate_number }}
+            @if($drv->truck->capacity_ton) ({{ $drv->truck->capacity_ton }}T) @endif
+        </div>
+        @endif
+    </div>
+    <a href="{{ route('admin.driver.trips') }}" class="btn" style="background:rgba(255,255,255,.22);color:#fff;border:1.5px solid rgba(255,255,255,.4);text-decoration:none;white-space:nowrap;">
+        <i class="fas fa-route"></i> ដំណើររបស់ខ្ញុំ
     </a>
 </div>
+
+{{-- Stats --}}
+<div class="drv-stats">
+    <div class="drv-stat-card">
+        <div class="drv-stat-icon orange"><i class="fas fa-route"></i></div>
+        <div>
+            <div class="drv-stat-num">{{ $driverStats['total'] }}</div>
+            <div class="drv-stat-lbl">ដំណើរសរុប</div>
+        </div>
+    </div>
+    <div class="drv-stat-card">
+        <div class="drv-stat-icon blue"><i class="fas fa-calendar-day"></i></div>
+        <div>
+            <div class="drv-stat-num" style="color:#FF6B00;">{{ $driverStats['today'] }}</div>
+            <div class="drv-stat-lbl">ដំណើរថ្ងៃនេះ</div>
+        </div>
+    </div>
+</div>
+
+{{-- Payment / Expense summary --}}
+<div class="drv-stats" style="margin-bottom:22px;">
+    <div class="drv-stat-card" style="border-color:#fde68a;">
+        <div class="drv-stat-icon" style="background:#fef9c3;color:#ca8a04;"><i class="fas fa-gas-pump"></i></div>
+        <div>
+            <div class="drv-stat-num" style="color:#ca8a04;font-size:1.25rem;">${{ number_format($driverStats['total_fuel'],2) }}</div>
+            <div class="drv-stat-lbl">ប្រេងឥន្ធនៈ</div>
+        </div>
+    </div>
+    <div class="drv-stat-card" style="border-color:#d9f99d;">
+        <div class="drv-stat-icon" style="background:#f0fdf4;color:#16a34a;"><i class="fas fa-wallet"></i></div>
+        <div>
+            <div class="drv-stat-num" style="color:#16a34a;font-size:1.25rem;">${{ number_format($driverStats['total_allowance'],2) }}</div>
+            <div class="drv-stat-lbl">លុយជើងតៃកុង</div>
+        </div>
+    </div>
+    <div class="drv-stat-card" style="grid-column:span 2;">
+        <div class="drv-stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="fas fa-receipt"></i></div>
+        <div>
+            <div class="drv-stat-num" style="color:#7c3aed;">{{ $driverStats['expense_count'] }}</div>
+            <div class="drv-stat-lbl">កំណត់ត្រាចំណាយ</div>
+        </div>
+        <a href="{{ route('admin.driver.trips') }}" style="margin-left:auto;font-size:.8rem;color:#7c3aed;text-decoration:none;font-weight:600;white-space:nowrap;">
+            មើលទាំងអស់ →
+        </a>
+    </div>
+</div>
+
+{{-- Upcoming trips preview --}}
+<div class="drv-upcoming">
+    <div class="drv-upcoming-hd">
+        <div class="drv-upcoming-title"><i class="fas fa-calendar-check" style="color:#FF6B00;"></i> ដំណើរខាងមុខ</div>
+        <a href="{{ route('admin.driver.trips') }}" style="font-size:.8rem;color:#FF6B00;text-decoration:none;font-weight:600;">មើលទាំងអស់ →</a>
+    </div>
+    @forelse($driverStats['nextBookings'] as $i => $b)
+    @php $isToday = $b->pick_up_date && $b->pick_up_date->toDateString() === now()->toDateString(); @endphp
+    <div class="drv-trip-row">
+        <div class="drv-trip-num">{{ $i + 1 }}</div>
+        <div class="drv-trip-body">
+            <div class="drv-trip-date">
+                <i class="fas fa-calendar-alt" style="color:#FF6B00;font-size:.8rem;"></i>
+                {{ $b->pick_up_date ? \Carbon\Carbon::parse($b->pick_up_date)->format('d/m/Y') : '—' }}
+                @if($isToday)<span class="drv-today-badge">ថ្ងៃនេះ</span>@endif
+            </div>
+            @if($b->pickup_location || $b->dropoff_location)
+            <div class="drv-trip-loc">
+                <i class="fas fa-circle" style="font-size:.45rem;color:#FF6B00;"></i>
+                {{ $b->pickup_location ?? '—' }}
+                <i class="fas fa-arrow-right" style="margin:0 4px;font-size:.65rem;color:#94a3b8;"></i>
+                {{ $b->dropoff_location ?? '—' }}
+            </div>
+            @endif
+            @if($b->customer)
+            <div class="drv-trip-truck"><i class="fas fa-user" style="margin-right:3px;"></i>{{ $b->customer->company_name ?? $b->customer->name }}</div>
+            @endif
+        </div>
+        <div>
+            @php
+                $bColor = match($b->status) {
+                    'confirmed'   => 'background:#dbeafe;color:#2563eb;',
+                    'in_progress' => 'background:#fff3e8;color:#FF6B00;',
+                    'completed'   => 'background:#dcfce7;color:#059669;',
+                    'cancelled'   => 'background:#fee2e2;color:#dc2626;',
+                    default       => 'background:#fef3c7;color:#d97706;',
+                };
+                $bLabel = match($b->status) {
+                    'confirmed'   => 'បានបញ្ជាក់',
+                    'in_progress' => 'កំពុងដំណើរការ',
+                    'completed'   => 'បានបញ្ចប់',
+                    'cancelled'   => 'បានលុប',
+                    default       => 'កំពុងរង់ចាំ',
+                };
+            @endphp
+            <span style="padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;{{ $bColor }}">{{ $bLabel }}</span>
+        </div>
+    </div>
+    @empty
+    <div class="drv-empty">
+        <i class="fas fa-calendar-times" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
+        មិនមានដំណើរខាងមុខ
+    </div>
+    @endforelse
+</div>
+
+@else
+{{-- Driver not linked yet --}}
+<div style="text-align:center;padding:60px 20px;">
+    <div style="font-size:3rem;margin-bottom:16px;color:#FF6B00;"><i class="fas fa-route"></i></div>
+    <div style="font-size:1.1rem;font-weight:700;color:#1e293b;margin-bottom:8px;">សូមស្វាគមន៍, {{ Auth::user()->user_name }}!</div>
+    <p style="color:#64748b;margin-bottom:20px;">គណនីរបស់អ្នកមិនទាន់ត្រូវបានភ្ជាប់ជាមួយប្រវត្តិអ្នកបើកបរ។ សូមទំនាក់ទំនងអ្នកគ្រប់គ្រង។</p>
+</div>
+@endif
 @endif
 
 @endsection

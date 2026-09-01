@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" href="{{ asset('images/trucking-logo.png') }}">
     <title>អំពីឡាន | Trucking System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
@@ -836,19 +837,36 @@
     }
 
     function abLookupPrice() {
-        const type     = document.getElementById('bookingTypeSelect').value;
-        const portSel  = document.getElementById('pickupLocationSelect');
-        const portOpt  = portSel.options[portSel.selectedIndex];
-        const portKey  = portOpt ? (portOpt.dataset.key || '') : '';
+        const type    = document.getElementById('bookingTypeSelect').value;
+        const portSel = document.getElementById('pickupLocationSelect');
+        const portOpt = portSel ? portSel.options[portSel.selectedIndex] : null;
+        const portKey = portOpt ? (portOpt.dataset.key || '') : '';
         const province = document.getElementById('dropoffProvinceSelect').value;
 
-        const rate = abRates.find(r =>
-            r.type === type &&
-            r.origin === portKey &&
-            r.province_name_km === province
-        );
-        abBasePrice = (type && portKey && province && rate) ? parseFloat(rate.base_price) : 0;
-        abRefreshTotal();
+        if (!type || !portKey || !province) {
+            abBasePrice = 0;
+            abRefreshTotal();
+            return;
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        fetch('{{ route("trucks.calc-price") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken ? csrfToken.content : ''
+            },
+            body: JSON.stringify({ type: type, origin: portKey, province_km: province })
+        })
+        .then(r => r.json())
+        .then(data => {
+            abBasePrice = data.success ? parseFloat(data.base_price) : 0;
+            abRefreshTotal();
+        })
+        .catch(() => {
+            abBasePrice = 0;
+            abRefreshTotal();
+        });
     }
 
     function abOnContainerChange() {

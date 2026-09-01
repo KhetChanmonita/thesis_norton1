@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin')
+﻿@extends('admin.layouts.admin')
 @section('title', 'របាយការណ៍ប្រេងឥន្ធនៈ')
 @section('page-title')<span>របាយការណ៍</span>ប្រេងឥន្ធនៈ@endsection
 
@@ -12,7 +12,7 @@
         .fuel-stat-icon.blue   { background:#eff6ff; color:#3b82f6; }
         .fuel-stat-icon.green  { background:#f0fdf4; color:#059669; }
         .fuel-stat-icon.teal   { background:#f0fdfa; color:#0d9488; }
-        .fuel-stat-val { font-family:'Montserrat',sans-serif; font-size:1.25rem; font-weight:800; color:#1e293b; }
+        .fuel-stat-val { font-family:'Kantumruy Pro',sans-serif; font-size:1.25rem; font-weight:800; color:#1e293b; }
         .fuel-stat-lbl { font-size:.75rem; color:#64748b; margin-top:2px; }
 
         .fuel-toolbar { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
@@ -27,15 +27,15 @@
         .truck-sum-row { display:flex; justify-content:space-between; font-size:.78rem; color:#64748b; padding:3px 0; border-bottom:1px solid #f8fafc; }
         .truck-sum-row:last-child { border:none; font-weight:700; color:#1e293b; font-size:.82rem; }
         .fuel-card-hidden { display:none; }
-        .truck-sum-val { font-family:'Montserrat',sans-serif; font-weight:700; }
+        .truck-sum-val { font-family:'Kantumruy Pro',sans-serif; font-weight:700; }
         .truck-sum-val.orange { color:#FF6B00; }
         .truck-sum-val.blue   { color:#3b82f6; }
         .truck-sum-val.green  { color:#059669; }
 
         .fuel-table th, .fuel-table td { vertical-align:middle; }
-        .fuel-booking-chip { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; background:#fff3e8; color:#c2410c; border-radius:20px; font-size:.72rem; font-weight:700; font-family:'Montserrat',sans-serif; }
+        .fuel-booking-chip { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; background:#fff3e8; color:#c2410c; border-radius:20px; font-size:.72rem; font-weight:700; font-family:'Kantumruy Pro',sans-serif; }
         .fuel-no-booking { font-size:.75rem; color:#94a3b8; }
-        .fuel-amount-col { font-family:'Montserrat',sans-serif; font-weight:700; }
+        .fuel-amount-col { font-family:'Kantumruy Pro',sans-serif; font-weight:700; }
         .fuel-amount-col.orange { color:#FF6B00; }
         .fuel-amount-col.blue   { color:#3b82f6; }
         .fuel-amount-col.green  { color:#059669; }
@@ -327,10 +327,17 @@
                         <select name="booking_id" class="form-control" id="add_fuel_booking">
                             <option value="">— មិនភ្ជាប់ការកក់ —</option>
                             @foreach($availableBookings as $bk)
-                            @php $bl = 'LS'.$bk->booking_date->format('ym').'-'.$bk->booking_id; @endphp
+                            @php
+                                $bl = 'LS'.$bk->booking_date->format('ym').'-'.$bk->booking_id;
+                                $autoDriver    = $truckDriverMap[$bk->truck_id] ?? '';
+                                $autoFuel      = $truckLastFuelMap[$bk->truck_id]['amount']    ?? '';
+                                $autoAllowance = $truckLastFuelMap[$bk->truck_id]['allowance'] ?? '';
+                            @endphp
                             <option value="{{ $bk->booking_id }}"
                                     data-truck="{{ $bk->truck_id }}"
-                                    data-driver="{{ $bk->driver_id ?? '' }}">
+                                    data-driver="{{ $autoDriver }}"
+                                    data-fuel="{{ $autoFuel }}"
+                                    data-allowance="{{ $autoAllowance }}">
                                 {{ $bl }}
                                 @if($bk->customer || $bk->bookedByUser) — {{ $bk->customer?->full_name ?? $bk->bookedByUser?->user_name }}@endif
                                 @if($bk->truck) | {{ $bk->truck->truck_name }}@endif
@@ -358,11 +365,11 @@
                     </div>
                     <div class="form-group">
                         <label class="form-label">ចំណាយប្រេង (USD)</label>
-                        <input type="number" name="amount" class="form-control" min="0" step="0.01" placeholder="ឧ. 80.00" required>
+                        <input type="number" name="amount" id="add_fuel_amount" class="form-control" min="0" step="0.01" placeholder="ឧ. 80.00" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">លុយជើងតៃកុង (USD)</label>
-                        <input type="number" name="driver_allowance" class="form-control" min="0" step="0.01" placeholder="ឧ. 30.00">
+                        <input type="number" name="driver_allowance" id="add_fuel_allowance" class="form-control" min="0" step="0.01" placeholder="ឧ. 30.00">
                     </div>
                     <div class="form-group">
                         <label class="form-label">កាលបរិច្ឆេទ</label>
@@ -493,15 +500,15 @@
             <div id="bkd_fuel_banner" style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:center;background:#fffbf5;border-bottom:1px solid #fed7aa;padding:14px 0;">
                 <div>
                     <div style="font-size:.7rem;color:#94a3b8;margin-bottom:3px;">ចំណាយប្រេង</div>
-                    <div id="bkd_fuel" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:#FF6B00;"></div>
+                    <div id="bkd_fuel" style="font-family:'Kantumruy Pro',sans-serif;font-size:1.1rem;font-weight:800;color:#FF6B00;"></div>
                 </div>
                 <div style="border-left:1px solid #fed7aa;border-right:1px solid #fed7aa;">
                     <div style="font-size:.7rem;color:#94a3b8;margin-bottom:3px;">លុយជើងតៃកុង</div>
-                    <div id="bkd_allowance" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:#3b82f6;"></div>
+                    <div id="bkd_allowance" style="font-family:'Kantumruy Pro',sans-serif;font-size:1.1rem;font-weight:800;color:#3b82f6;"></div>
                 </div>
                 <div>
                     <div style="font-size:.7rem;color:#94a3b8;margin-bottom:3px;">សរុបប្រេង+អ្នកបើក</div>
-                    <div id="bkd_total_fuel" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;font-weight:800;color:#059669;"></div>
+                    <div id="bkd_total_fuel" style="font-family:'Kantumruy Pro',sans-serif;font-size:1.1rem;font-weight:800;color:#059669;"></div>
                 </div>
             </div>
 
@@ -525,7 +532,7 @@
                 <div class="bkd-row"><span class="bkd-lbl"><i class="fas fa-calendar-times"></i> ថ្ងៃដឹកទៅ</span><span id="bkd_dropoff_date" class="bkd-val"></span></div>
                 <div class="bkd-row" style="border-bottom:none;">
                     <span class="bkd-lbl"><i class="fas fa-dollar-sign"></i> តម្លៃសរុបការដឹក</span>
-                    <span id="bkd_total_price" class="bkd-val" style="font-family:'Montserrat',sans-serif;font-weight:800;color:#FF6B00;font-size:1rem;"></span>
+                    <span id="bkd_total_price" class="bkd-val" style="font-family:'Kantumruy Pro',sans-serif;font-weight:800;color:#FF6B00;font-size:1rem;"></span>
                 </div>
             </div>
         </div>
@@ -602,11 +609,24 @@ var fuelBookingMap = @json($fuels->whereNotNull('booking_id')->mapWithKeys(fn($f
                    . ($f->booking?->customer ? ' — '.$f->booking->customer->full_name : ($f->booking?->bookedByUser ? ' — '.$f->booking->bookedByUser->user_name : ''))
 ]));
 
-// When booking is selected in Add modal, auto-fill truck
+// When booking is selected in Add modal, auto-fill truck, driver, fuel & allowance
 document.getElementById('add_fuel_booking').addEventListener('change', function() {
     var opt = this.options[this.selectedIndex];
-    if (opt.dataset.truck) document.getElementById('add_fuel_truck').value = opt.dataset.truck;
-    if (opt.dataset.driver) document.getElementById('add_fuel_driver').value = opt.dataset.driver;
+    document.getElementById('add_fuel_truck').value     = opt.dataset.truck     || '';
+    document.getElementById('add_fuel_driver').value    = opt.dataset.driver    || '';
+    document.getElementById('add_fuel_amount').value    = opt.dataset.fuel      || '';
+    document.getElementById('add_fuel_allowance').value = opt.dataset.allowance || '';
+    // Visual hint: highlight auto-filled fields
+    ['add_fuel_truck','add_fuel_driver','add_fuel_amount','add_fuel_allowance'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && el.value) {
+            el.style.borderColor = '#FF6B00';
+            el.style.background  = '#fff8f3';
+        } else {
+            el.style.borderColor = '';
+            el.style.background  = '';
+        }
+    });
 });
 
 function openEditFuel(id, amount, allowance, date, driverId, truckId, bookingId, desc) {

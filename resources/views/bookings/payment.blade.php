@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/booking_payment.css') }}">
+    <style>
+    .pay-staff-badge {
+        display:inline-flex;align-items:center;gap:5px;margin-top:6px;
+        padding:3px 11px 3px 8px;border-radius:20px;font-size:.7rem;font-weight:600;
+        background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.5);color:#fff;
+        font-family:'Kantumruy Pro',sans-serif;
+    }
+    .pay-staff-badge i { font-size:.62rem; }
+    </style>
 </head>
 <body>
 @include('partials.header')
@@ -25,7 +34,18 @@
             {{ $label }}
         </div>
         <div class="amount">${{ number_format($amount, 2) }}</div>
-        <div class="booking-ref">ការកក់ {{ $booking->formatted_id }} &nbsp;·&nbsp; {{ $booking->customer?->full_name ?? $booking->bookedByUser?->user_name ?? '' }}</div>
+        <div class="booking-ref">
+            ការកក់ {{ $booking->formatted_id }}
+            @if($booking->customer) &nbsp;·&nbsp; {{ $booking->customer->full_name }} @endif
+            @if($booking->bookedByUser)
+            @php $roleLabel = ['admin'=>'Admin','operation'=>'បុគ្គលិក','accountant'=>'គណនី']; @endphp
+            <br><span class="pay-staff-badge">
+                <i class="fas fa-user-tie"></i>
+                កក់ដោយ: {{ $booking->bookedByUser->user_name }}
+                ({{ $roleLabel[$booking->bookedByUser->role] ?? ucfirst($booking->bookedByUser->role) }})
+            </span>
+            @endif
+        </div>
     </div>
     <div class="pay-summary-pad">
         <div class="summary-row">

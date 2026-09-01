@@ -46,7 +46,7 @@
 
 <div class="print-header">
     <div>
-        <div class="company-name">&#128666; Trucking Service</div>
+        <div class="company-name">🚚 LS Trucking Service</div>
         <div class="report-title">របាយការណ៍អតិថិជន</div>
         <div class="report-meta">
             ខែ: {{ $month }}

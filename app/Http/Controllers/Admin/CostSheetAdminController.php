@@ -12,6 +12,17 @@ class CostSheetAdminController extends Controller
     public function index(Request $request)
     {
         $month = $request->input('month', now()->format('Y-m'));
+
+        if (!$request->filled('month') && !$request->filled('search')) {
+            [$cy, $cm] = explode('-', $month);
+            if (!Booking::whereYear('booking_date', $cy)->whereMonth('booking_date', $cm)->exists()) {
+                $last = Booking::latest('booking_date')->value('booking_date');
+                if ($last) {
+                    $month = \Carbon\Carbon::parse($last)->format('Y-m');
+                }
+            }
+        }
+
         [$year, $monthNum] = explode('-', $month);
 
         $query = Booking::with(['customer', 'bookedByUser', 'truck', 'costSheet', 'extraCharges'])

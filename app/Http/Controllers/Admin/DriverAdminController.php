@@ -108,4 +108,14 @@ class DriverAdminController extends Controller
         $driver->delete();
         return back()->with('success', 'អ្នកបើកបរត្រូវបានលុបចោល!');
     }
+
+    public function print()
+    {
+        $drivers       = Driver::with('truck')->latest()->get();
+        $total         = $drivers->count();
+        $totalActive   = $drivers->where('status', 'active')->count();
+        $totalInactive = $drivers->where('status', 'inactive')->count();
+        $totalLeave    = $drivers->where('status', 'on_leave')->count();
+        return view('admin.drivers.print', compact('drivers', 'total', 'totalActive', 'totalInactive', 'totalLeave'));
+    }
 }

@@ -68,6 +68,15 @@
         </div>
     </a>
     @endforeach
+    <div class="stat-card">
+        <div class="stat-icon purple"><i class="fas fa-user-tie"></i></div>
+        <div class="stat-info">
+            <div class="val rpt-stat-val">
+                ${{ number_format($driverAllowanceSum, 2) }}
+            </div>
+            <div class="lbl">លុយជើងតៃកុងឡាន</div>
+        </div>
+    </div>
 </div>
 
 {{-- ── Analysis Charts ── --}}
@@ -193,10 +202,12 @@
                                     onclick="openEditExpense({{ $e->expense_id }}, '{{ $e->expense_type }}', {{ $e->amount }}, '{{ $e->expense_date ? $e->expense_date->format('Y-m-d') : '' }}', {{ $e->driver_id ?? 'null' }}, {{ $e->truck_id ?? 'null' }}, {{ json_encode($e->description) }})">
                                 <i class="fas fa-edit"></i>
                             </button>
+                            @if(Auth::user()->role === 'admin')
                             <button class="btn btn-danger btn-sm" title="លុប"
                                     onclick="confirmDeleteExpense({{ $e->expense_id }}, {{ json_encode(($typeLabel[$e->expense_type] ?? $e->expense_type).' — $'.number_format($e->amount, 2)) }})">
                                 <i class="fas fa-trash"></i>
                             </button>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -387,7 +398,8 @@
     </div>
 </div>
 
-{{-- Delete Confirm Modal --}}
+{{-- Delete Confirm Modal (admin only) --}}
+@if(Auth::user()->role === 'admin')
 <div class="modal-overlay confirm-overlay" id="deleteExpenseModal">
     <div class="modal-box confirm-modal-box">
         <form id="deleteExpenseForm" method="POST">
@@ -408,6 +420,7 @@
         </form>
     </div>
 </div>
+@endif
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -462,23 +475,28 @@ document.addEventListener('DOMContentLoaded', function () {
     var typeKeys   = @json(array_keys($typeLabel));
     var typeTotals = @json(collect($typeLabel)->keys()->map(fn($k) => (float)($totals[$k] ?? 0))->values());
     var typeColors = {
-        salary: '#3b82f6',
-        fuel:   '#FF6B00',
-        repair: '#ef4444',
-        other:  '#8b5cf6',
+        salary:    '#3b82f6',
+        fuel:      '#FF6B00',
+        repair:    '#ef4444',
+        other:     '#8b5cf6',
+        allowance: '#0d9488',
     };
     var bgColors = typeKeys.map(function (k) { return typeColors[k]; });
 
-    var typeGrandTotal = typeTotals.reduce(function (a, b) { return a + b; }, 0);
+    // Append driver-allowance segment to donut
+    var donutLabels  = typeLabels.concat(['លុយជើងតៃកុង']);
+    var donutTotals  = typeTotals.concat([{{ (float)$driverAllowanceSum }}]);
+    var donutColors  = bgColors.concat([typeColors.allowance]);
+    var typeGrandTotal = donutTotals.reduce(function (a, b) { return a + b; }, 0);
 
     new Chart(document.getElementById('expenseTypeChart'), {
         type: 'doughnut',
         plugins: [ChartDataLabels],
         data: {
-            labels: typeLabels,
+            labels: donutLabels,
             datasets: [{
-                data: typeTotals,
-                backgroundColor: bgColors,
+                data: donutTotals,
+                backgroundColor: donutColors,
                 borderWidth: 0,
             }]
         },
@@ -512,10 +530,11 @@ document.addEventListener('DOMContentLoaded', function () {
         data: {
             labels: trendData.map(function (d) { return d.label; }),
             datasets: [
-                { type: 'bar', label: typeLabels[0], data: trendData.map(d => d.salary), backgroundColor: typeColors.salary, stack: 'expenses' },
-                { type: 'bar', label: typeLabels[1], data: trendData.map(d => d.fuel),   backgroundColor: typeColors.fuel,   stack: 'expenses' },
-                { type: 'bar', label: typeLabels[2], data: trendData.map(d => d.repair), backgroundColor: typeColors.repair, stack: 'expenses' },
-                { type: 'bar', label: typeLabels[3], data: trendData.map(d => d.other),  backgroundColor: typeColors.other,  stack: 'expenses' },
+                { type: 'bar', label: typeLabels[0],      data: trendData.map(d => d.salary),    backgroundColor: typeColors.salary,    stack: 'expenses' },
+                { type: 'bar', label: typeLabels[1],      data: trendData.map(d => d.fuel),      backgroundColor: typeColors.fuel,      stack: 'expenses' },
+                { type: 'bar', label: typeLabels[2],      data: trendData.map(d => d.repair),    backgroundColor: typeColors.repair,    stack: 'expenses' },
+                { type: 'bar', label: typeLabels[3],      data: trendData.map(d => d.other),     backgroundColor: typeColors.other,     stack: 'expenses' },
+                { type: 'bar', label: 'លុយជើងតៃកុង', data: trendData.map(d => d.allowance), backgroundColor: typeColors.allowance, stack: 'expenses' },
                 { type: 'line', label: 'ប្រាក់ចំណេញ', data: trendData.map(d => d.profit),
                   borderColor: '#059669', backgroundColor: '#059669', tension: 0.3,
                   borderWidth: 2.5, pointRadius: 4, pointBackgroundColor: '#059669', fill: false },

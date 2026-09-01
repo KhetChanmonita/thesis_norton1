@@ -16,7 +16,7 @@ class ExpenseAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $month = $request->input('month', now()->format('Y-m'));
+        $month = $this->resolveMonth($request);
         [$year, $monthNum] = explode('-', $month);
 
         $query = Expense::with(['truck', 'driver'])
@@ -42,6 +42,7 @@ class ExpenseAdminController extends Controller
 
         $monthlyRevenue = Payment::whereYear('payment_date', $year)
             ->whereMonth('payment_date', $monthNum)
+            ->where('verification_status', 'verified')
             ->sum('amount');
         $monthlyProfit  = $monthlyRevenue - $grandTotal;
 
@@ -58,6 +59,7 @@ class ExpenseAdminController extends Controller
 
             $revenue = Payment::whereYear('payment_date', $m->year)
                 ->whereMonth('payment_date', $m->month)
+                ->where('verification_status', 'verified')
                 ->sum('amount');
 
             $trendAllowance = (float) Expense::whereYear('expense_date', $m->year)
@@ -65,13 +67,14 @@ class ExpenseAdminController extends Controller
                 ->sum('driver_allowance');
 
             $trendData[] = [
-                'label'   => $m->format('m/Y'),
-                'salary'  => (float) ($sums['salary'] ?? 0),
-                'fuel'    => (float) ($sums['fuel'] ?? 0) + $trendAllowance,
-                'repair'  => (float) ($sums['repair'] ?? 0),
-                'other'   => (float) ($sums['other'] ?? 0),
-                'revenue' => (float) $revenue,
-                'profit'  => (float) $revenue - $sums->sum() - $trendAllowance,
+                'label'     => $m->format('m/Y'),
+                'salary'    => (float) ($sums['salary'] ?? 0),
+                'fuel'      => (float) ($sums['fuel'] ?? 0),
+                'repair'    => (float) ($sums['repair'] ?? 0),
+                'other'     => (float) ($sums['other'] ?? 0),
+                'allowance' => $trendAllowance,
+                'revenue'   => (float) $revenue,
+                'profit'    => (float) $revenue - $sums->sum() - $trendAllowance,
             ];
         }
 
@@ -80,14 +83,14 @@ class ExpenseAdminController extends Controller
         $bookings = Booking::with(['customer', 'truck'])->orderByDesc('booking_date')->get();
 
         return view('admin.reports.index', compact(
-            'expenses', 'month', 'totals', 'grandTotal', 'drivers', 'trucks', 'trendData',
+            'expenses', 'month', 'totals', 'grandTotal', 'driverAllowanceSum', 'drivers', 'trucks', 'trendData',
             'monthlyRevenue', 'monthlyProfit', 'bookings'
         ));
     }
 
     public function revenue(Request $request)
     {
-        $month = $request->input('month', now()->format('Y-m'));
+        $month = $this->resolveMonth($request);
         [$year, $monthNum] = explode('-', $month);
 
         $bookings = Booking::with(['customer', 'bookedByUser', 'truck'])
@@ -130,14 +133,46 @@ class ExpenseAdminController extends Controller
 
     public function profit(Request $request)
     {
-        $data = $this->buildProfitData($request->input('month', now()->format('Y-m')));
+        $data = $this->buildProfitData($this->resolveMonth($request));
         return view('admin.reports.profit', $data);
     }
 
     public function profitPrint(Request $request)
     {
-        $data = $this->buildProfitData($request->input('month', now()->format('Y-m')));
+        $data = $this->buildProfitData($this->resolveMonth($request));
         return view('admin.reports.profit-print', $data);
+    }
+
+    /**
+     * Resolve which month to display.
+     * If the user didn't pick a month and the current month has no data,
+     * fall back to the most recent month that has bookings, payments, or expenses.
+     */
+    private function resolveMonth(Request $request): string
+    {
+        $month = $request->input('month', now()->format('Y-m'));
+
+        if ($request->filled('month')) {
+            return $month;
+        }
+
+        [$cy, $cm] = explode('-', $month);
+        $hasData = Booking::whereYear('booking_date', $cy)->whereMonth('booking_date', $cm)->exists()
+                || Payment::whereYear('payment_date',  $cy)->whereMonth('payment_date',  $cm)->exists()
+                || Expense::whereYear('expense_date',  $cy)->whereMonth('expense_date',  $cm)->exists();
+
+        if ($hasData) {
+            return $month;
+        }
+
+        $lastBooking = Booking::latest('booking_date')->value('booking_date');
+        $lastPayment = Payment::latest('payment_date')->value('payment_date');
+        $lastExpense = Expense::latest('expense_date')->value('expense_date');
+        $candidates  = array_filter([$lastBooking, $lastPayment, $lastExpense]);
+
+        return $candidates
+            ? \Carbon\Carbon::parse(max($candidates))->format('Y-m')
+            : $month;
     }
 
     /**
@@ -156,6 +191,7 @@ class ExpenseAdminController extends Controller
         $payments = Payment::with(['booking.customer', 'booking.bookedByUser'])
             ->whereYear('payment_date', $year)
             ->whereMonth('payment_date', $monthNum)
+            ->where('verification_status', 'verified')
             ->orderBy('payment_date')
             ->get();
 
@@ -214,7 +250,7 @@ class ExpenseAdminController extends Controller
 
     public function fuelReport(Request $request)
     {
-        $month   = $request->input('month', now()->format('Y-m'));
+        $month   = $this->resolveMonth($request);
         $truckId = $request->input('truck_id');
         [$year, $monthNum] = explode('-', $month);
 
@@ -257,15 +293,33 @@ class ExpenseAdminController extends Controller
         $grandTotal       = $grandFuel + $grandAllowance;
         $selectedTruck    = $truckId ? Truck::find($truckId) : null;
 
+        // truck_id → driver_id (first assigned driver per truck)
+        $truckDriverMap = Driver::whereNotNull('assigned_truck')
+            ->orderBy('driver_id')
+            ->pluck('driver_id', 'assigned_truck');
+
+        // truck_id → { amount, allowance } from the most recent fuel expense per truck
+        $truckLastFuelMap = Expense::where('expense_type', 'fuel')
+            ->whereNotNull('truck_id')
+            ->latest('expense_date')
+            ->get()
+            ->unique('truck_id')
+            ->keyBy('truck_id')
+            ->map(fn($e) => [
+                'amount'    => (float) $e->amount,
+                'allowance' => (float) ($e->driver_allowance ?? 0),
+            ]);
+
         return view('admin.reports.fuel', compact(
             'fuels', 'month', 'trucks', 'truckId', 'truckSummary',
-            'grandFuel', 'grandAllowance', 'grandTotal', 'selectedTruck', 'availableBookings'
+            'grandFuel', 'grandAllowance', 'grandTotal', 'selectedTruck',
+            'availableBookings', 'truckDriverMap', 'truckLastFuelMap'
         ));
     }
 
     public function truckRepair(Request $request)
     {
-        $month    = $request->input('month', now()->format('Y-m'));
+        $month    = $this->resolveMonth($request);
         $truckId  = $request->input('truck_id');
         [$year, $monthNum] = explode('-', $month);
 
@@ -329,7 +383,7 @@ class ExpenseAdminController extends Controller
 
     public function customerReport(Request $request)
     {
-        $month      = $request->input('month', now()->format('Y-m'));
+        $month      = $this->resolveMonth($request);
         $filterKey  = $request->input('filter_key'); // format: "c_5" or "u_3"
         [$year, $monthNum] = explode('-', $month);
 

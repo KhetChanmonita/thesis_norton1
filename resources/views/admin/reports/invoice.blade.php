@@ -14,31 +14,40 @@
 
 @php
     $cs   = $booking->costSheet;
-    $rows = [
-        ['label_km' => 'តម្លៃដឹកជញ្ជូន',       'label_en' => 'Freight Price',    'field' => 'price'],
-        ['label_km' => 'LoLo',                  'label_en' => 'LoLo Charge',      'field' => 'lolo'],
-        ['label_km' => 'ទំងន់លើស',               'label_en' => 'Over Weight',      'field' => 'over_weight'],
-        ['label_km' => 'ផ្លូវល្បឿនលឿន',          'label_en' => 'Express Way',      'field' => 'express_way'],
-        ['label_km' => 'ថ្លៃបន្ថែម',              'label_en' => 'Extra Charge',     'field' => 'extra'],
-        ['label_km' => 'ត្រឡប់ទទេ',              'label_en' => 'Empty Return',     'field' => 'empty_return'],
-        ['label_km' => 'រថយន្តរង់ចាំ',            'label_en' => 'Standby Truck',   'field' => 'standby_truck'],
-        ['label_km' => 'ជួសជុល',                 'label_en' => 'Repair',          'field' => 'repair'],
+
+    /* Extra charges — first-stage amounts are baked into booking->total_price */
+    $extraCharges     = $booking->extraCharges ?? collect();
+    $firstExtraTotal  = (float) $extraCharges->where('stage', 'first')->sum('amount');
+    $secondExtraTotal = (float) $extraCharges->where('stage', 'second')->sum('amount');
+
+    /*
+     * Base freight = total_price minus first-stage extras.
+     * cost_sheet->price sometimes stores total_price verbatim (admin copy-paste),
+     * so we always derive the pure base this way to avoid double-counting.
+     */
+    $baseFreight = max(0, (float)($booking->total_price ?? 0) - $firstExtraTotal);
+
+    /* Other cost-sheet add-ons (lolo, overweight, etc.) — exclude 'price' which is handled above */
+    $addOnRows = [
+        ['label_km' => 'LoLo',           'label_en' => 'LoLo Charge',    'field' => 'lolo'],
+        ['label_km' => 'ទំងន់លើស',        'label_en' => 'Over Weight',    'field' => 'over_weight'],
+        ['label_km' => 'ផ្លូវល្បឿនលឿន',   'label_en' => 'Express Way',    'field' => 'express_way'],
+        ['label_km' => 'ថ្លៃបន្ថែម',       'label_en' => 'Extra',          'field' => 'extra'],
+        ['label_km' => 'ត្រឡប់ទទេ',       'label_en' => 'Empty Return',   'field' => 'empty_return'],
+        ['label_km' => 'រថយន្តរង់ចាំ',     'label_en' => 'Standby Truck',  'field' => 'standby_truck'],
+        ['label_km' => 'ជួសជុល',          'label_en' => 'Repair',         'field' => 'repair'],
     ];
-    $vals = [];
-    foreach ($rows as $row) {
-        $raw = $cs ? (float)($cs->{$row['field']} ?? 0) : 0;
-        if ($row['field'] === 'price' && $raw == 0) {
-            $raw = (float)($booking->total_price ?? 0);
-        }
-        $vals[$row['field']] = $raw;
+    $addOnVals = [];
+    foreach ($addOnRows as $row) {
+        $addOnVals[$row['field']] = $cs ? (float)($cs->{$row['field']} ?? 0) : 0;
     }
+    $addOnTotal = array_sum($addOnVals);
+
     /* Route: fall back to booking pickup→dropoff when cost sheet has none */
     $invRoute = $cs?->route ?: collect(array_filter([$booking->pickup_location, $booking->dropoff_location]))->implode(' → ');
 
-    /* Extra charges from tbl_extra_charge — second-stage are NOT in total_price so add to total */
-    $extraCharges     = $booking->extraCharges ?? collect();
-    $secondExtraTotal = $extraCharges->where('stage', 'second')->sum('amount');
-    $total            = array_sum($vals) + $secondExtraTotal;
+    /* Total = base freight + add-ons + all extra charges */
+    $total = $baseFreight + $addOnTotal + $firstExtraTotal + $secondExtraTotal;
 @endphp
 
 {{-- Toolbar --}}
@@ -170,8 +179,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($rows as $ri => $row)
-                @php $val = $vals[$row['field']]; @endphp
+                {{-- Base freight row --}}
+                @if($baseFreight > 0)
+                <tr>
+                    <td>
+                        <div class="inv-row-label">
+                            <div class="inv-row-dot"></div>
+                            <div>
+                                <div style="font-weight:600;color:#1e293b;font-family:'Kantumruy Pro',sans-serif;">តម្លៃដឹកជញ្ជូន</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${{ number_format($baseFreight, 2) }}</td>
+                </tr>
+                @endif
+
+                {{-- Other cost-sheet add-ons (lolo, over-weight, etc.) --}}
+                @foreach($addOnRows as $row)
+                @php $val = $addOnVals[$row['field']]; @endphp
                 @if($val > 0)
                 <tr>
                     <td>

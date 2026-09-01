@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin')
+﻿@extends('admin.layouts.admin')
 @section('title','គ្រប់គ្រងគណនី')
 @section('page-title')<span>គ្រប់គ្រង</span>គណនីប្រព័ន្ធ@endsection
 
@@ -25,7 +25,7 @@
     width: 38px; height: 38px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-weight: 700; font-size: .8rem; flex-shrink: 0;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     letter-spacing: .02em;
 }
 .usr-ava-admin       { background: #ede9fe; color: #6d28d9; }

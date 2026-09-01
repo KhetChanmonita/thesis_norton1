@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin')
+﻿@extends('admin.layouts.admin')
 @section('title','ការកក់')
 @section('page-title')<span>គ្រប់គ្រង</span>ការកក់@endsection
 
@@ -139,12 +139,17 @@ $statCancelled = \App\Models\Booking::where('status','cancelled')->count();
                             {{ $b->formatted_id }}
                         </span>
                     </td>
-                    <td>
+                    <td class="bkg-customer-cell">
                         @if($b->customer)
-                            <strong>{{ $b->customer->full_name }}</strong><br>
+                            <strong title="{{ $b->customer->full_name }}">{{ $b->customer->full_name }}</strong>
                             <small class="bkg-phone">{{ $b->customer->phone ?? '' }}</small>
+                            @if($b->bookedByUser)
+                            <small style="display:inline-flex;align-items:center;gap:3px;margin-top:2px;color:#1e40af;font-size:.67rem;font-weight:600;">
+                                <i class="fas fa-user-tie"></i> {{ $b->bookedByUser->user_name }}
+                            </small>
+                            @endif
                         @elseif($b->bookedByUser)
-                            <strong>{{ $b->bookedByUser->user_name }}</strong><br>
+                            <strong title="{{ $b->bookedByUser->user_name }}">{{ $b->bookedByUser->user_name }}</strong>
                             <small class="bkg-phone" style="color:#FF6B00;">{{ ucfirst($b->bookedByUser->role) }}</small>
                         @else
                             <span>—</span>
@@ -159,14 +164,14 @@ $statCancelled = \App\Models\Booking::where('status','cancelled')->count();
                         <div class="bks-loc">
                             <div class="bks-loc-row bks-loc-from">
                                 <i class="fas fa-circle"></i>
-                                {{ Str::limit($b->pickup_location, 22) }}
+                                <span title="{{ $b->pickup_location }}">{{ $b->pickup_location }}</span>
                             </div>
                             <div class="bks-loc-arrow"><i class="fas fa-long-arrow-alt-down"></i></div>
                             <div class="bks-loc-row bks-loc-to">
                                 <i class="fas fa-map-marker-alt"></i>
-                                {{ Str::limit($b->dropoff_location, 22) }}
+                                <span title="{{ $b->dropoff_location }}">{{ $b->dropoff_location }}</span>
                                 @if($b->dropoff_location_link)
-                                    <a href="{{ $b->dropoff_location_link }}" target="_blank" rel="noopener" class="bkg-map-link" title="Google Maps">
+                                    <a href="{{ $b->dropoff_location_link }}" target="_blank" rel="noopener" class="bkg-map-link" title="Google Maps" style="flex-shrink:0;">
                                         <i class="fas fa-external-link-alt"></i>
                                     </a>
                                 @endif
@@ -199,34 +204,53 @@ $statCancelled = \App\Models\Booking::where('status','cancelled')->count();
                             <span class="bks-dash">—</span>
                         @endif
                     </td>
-                    <td><span class="badge badge-{{ $b->status }}">{{ ['pending'=>'រង់ចាំ','confirmed'=>'បានអនុម័ត','in_progress'=>'កំពុងដឹក','completed'=>'បានបញ្ចប់','cancelled'=>'បានលុប'][$b->status] ?? $b->status }}</span></td>
+                    <td>
+                        <span class="badge badge-{{ $b->status }}">{{ ['pending'=>'រង់ចាំ','confirmed'=>'បានអនុម័ត','in_progress'=>'កំពុងដឹក','completed'=>'បានបញ្ចប់','cancelled'=>'បានលុប'][$b->status] ?? $b->status }}</span>
+                        @if($b->driver_arrived_at)
+                        <br><span style="display:inline-flex;align-items:center;gap:3px;background:#dcfce7;color:#059669;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:8px;margin-top:3px;white-space:nowrap;">
+                            <i class="fas fa-map-marker-alt"></i> ដល់ហើយ {{ $b->driver_arrived_at->format('H:i') }}
+                        </span>
+                        @endif
+                    </td>
                     <td>
                         <div class="bkg-action-btns">
                             <button class="btn btn-ghost btn-sm" onclick='showBookingDetail(@json($b))' title="មើលលម្អិត">
                                 <i class="fas fa-eye"></i>
                             </button>
-                            @if(in_array($b->status, ['completed', 'cancelled']))
-                            <button class="btn btn-ghost btn-sm bkg-btn-disabled" disabled title="ស្ថានភាពនេះជាស្ថានភាពចុងក្រោយ — មិនអាចផ្លាស់ប្ដូរបានទេ">
-                                <i class="fas fa-lock"></i>
-                            </button>
-                            @else
-                            <button class="btn btn-ghost btn-sm" onclick="changeStatus({{ $b->booking_id }}, '{{ $b->status }}', {{ $b->total_price ?? 0 }}, '{{ $b->payment_status }}')" title="ប្ដូរស្ថានភាព">
-                                <i class="fas fa-exchange-alt"></i>
-                            </button>
+                            @php
+                                $isLocked    = $b->status === 'cancelled' || $b->payment_status === 'fully_paid';
+                                $canOperate  = in_array(Auth::user()->role, ['admin','operation']);
+                            @endphp
+                            @if($canOperate)
+                                @if($isLocked)
+                                <button class="btn btn-ghost btn-sm bkg-btn-disabled" disabled
+                                        title="{{ $b->status === 'cancelled' ? 'ការកក់ត្រូវបានលុបចោល' : 'ការទូទាត់ពេញលេញ — ការកក់បានបញ្ចប់ទាំងស្រុង' }}">
+                                    <i class="fas fa-lock"></i>
+                                </button>
+                                <button class="btn btn-ghost btn-sm bkg-btn-disabled" disabled
+                                        title="{{ $b->status === 'cancelled' ? 'ការកក់ត្រូវបានលុបចោល' : 'ការទូទាត់ពេញលេញ — ការកក់បានបញ្ចប់ទាំងស្រុង' }}">
+                                    <i class="fas fa-lock"></i>
+                                </button>
+                                @else
+                                <button class="btn btn-ghost btn-sm" onclick="changeStatus({{ $b->booking_id }}, '{{ $b->status }}', {{ $b->total_price ?? 0 }}, '{{ $b->payment_status }}')" title="ប្ដូរស្ថានភាព">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>
+                                <button class="btn btn-ghost btn-sm" onclick="openExtraChargeModal({{ $b->booking_id }})" title="ការគិតប្រាក់បន្ថែម">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </button>
+                                @endif
+                                @if(!$isLocked && in_array($b->status, ['confirmed','in_progress','completed']) && $b->payment_status !== 'fully_paid')
+                                <button class="btn btn-ghost btn-sm" style="color:#059669;"
+                                        onclick="openRecordPaymentModal({{ $b->booking_id }}, '{{ $b->payment_status }}', {{ $b->total_price ?? 0 }})"
+                                        title="{{ $b->payment_status === 'unpaid' ? 'កត់ត្រាការទូទាត់ 50% ដំបូង' : 'កត់ត្រាការទូទាត់ 50% ចុងក្រោយ' }}">
+                                    <i class="fas fa-credit-card"></i>
+                                </button>
+                                @endif
+                                <button class="btn btn-danger btn-sm" title="លុប"
+                                        onclick="confirmDeleteBooking({{ $b->booking_id }})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             @endif
-                            @if(in_array($b->status, ['completed', 'cancelled']))
-                            <button class="btn btn-ghost btn-sm bkg-btn-disabled" disabled title="{{ $b->status === 'cancelled' ? 'ការកក់ត្រូវបានលុបចោល' : 'ការកក់បានបញ្ចប់ — មិនអាចបន្ថែមការគិតប្រាក់បន្ថែមទៀតបានទេ' }}">
-                                <i class="fas fa-lock"></i>
-                            </button>
-                            @else
-                            <button class="btn btn-ghost btn-sm" onclick="openExtraChargeModal({{ $b->booking_id }})" title="ការគិតប្រាក់បន្ថែម">
-                                <i class="fas fa-money-bill-wave"></i>
-                            </button>
-                            @endif
-                            <button class="btn btn-danger btn-sm" title="លុប"
-                                    onclick="confirmDeleteBooking({{ $b->booking_id }})">
-                                <i class="fas fa-trash"></i>
-                            </button>
                         </div>
                     </td>
                 </tr>
@@ -257,6 +281,11 @@ $statCancelled = \App\Models\Booking::where('status','cancelled')->count();
                     <div><span class="bkg-detail-lbl">ឈ្មោះ</span><span class="bkg-detail-val" id="bd_name"></span></div>
                     <div><span class="bkg-detail-lbl" id="bd_phone_lbl">ទូរស័ព្ទ</span><span class="bkg-detail-val" id="bd_phone"></span></div>
                     <div><span class="bkg-detail-lbl" id="bd_email_lbl">អ៊ីមែល</span><span class="bkg-detail-val" id="bd_email"></span></div>
+                </div>
+                <div id="bd_staff_row" style="display:none;margin-top:10px;padding:7px 12px;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:8px;display:none;align-items:center;gap:7px;font-size:.77rem;">
+                    <i class="fas fa-user-tie" style="color:#1e40af;"></i>
+                    <span style="color:#64748b;font-weight:500;">កក់ដោយ:</span>
+                    <span style="color:#1e40af;font-weight:700;" id="bd_staff_name"></span>
                 </div>
             </div>
 
@@ -451,6 +480,99 @@ $statCancelled = \App\Models\Booking::where('status','cancelled')->count();
     </div>
 </div>
 
+{{-- Record Payment Modal --}}
+<div class="modal-overlay" id="recordPaymentModal">
+    <div class="modal-box bkg-modal-md">
+        <div class="modal-header">
+            <h3><i class="fas fa-credit-card"></i> កត់ត្រាការទូទាត់</h3>
+            <button class="modal-close" onclick="document.getElementById('recordPaymentModal').classList.remove('open')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="recordPaymentForm" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="payment_stage" id="rp_stage">
+            <div class="modal-body">
+
+                {{-- Stage banner --}}
+                <div id="rp_stage_banner"
+                     style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;
+                            margin-bottom:18px;font-size:.82rem;font-weight:600;">
+                    <i class="fas fa-info-circle"></i>
+                    <span id="rp_stage_label"></span>
+                </div>
+
+                <div class="form-group bkg-modal-form-group">
+                    <label class="form-label">ចំនួនទឹកប្រាក់ (USD) <span style="color:#ef4444;">*</span></label>
+                    <div class="bkg-price-input-wrap">
+                        <span class="bkg-price-prefix">$</span>
+                        <input type="number" name="amount" id="rp_amount"
+                               class="form-control bkg-price-input-pl"
+                               placeholder="ឧ. 250.00" min="0.01" step="0.01" required>
+                    </div>
+                </div>
+
+                <div class="form-group bkg-modal-form-group">
+                    <label class="form-label">វិធីទូទាត់ <span style="color:#ef4444;">*</span></label>
+                    <select name="payment_method" id="rp_method" class="form-control"
+                            style="font-family:'Kantumruy Pro',sans-serif;" required>
+                        <option value="">— ជ្រើសរើស —</option>
+                        <option value="ABA">ABA Bank</option>
+                        <option value="ACLEDA">ACLEDA Bank</option>
+                        <option value="Wing">Wing</option>
+                        <option value="Bakong">Bakong</option>
+                        <option value="Cash">ទឹកប្រាក់សុទ្ធ (Cash)</option>
+                        <option value="Other">ផ្សេងទៀត</option>
+                    </select>
+                </div>
+
+                <div class="form-group bkg-modal-form-group">
+                    <label class="form-label">លេខយោងប្រតិបត្តិការ <span style="color:#94a3b8;font-size:.8em;">(ស្រេចចិត្ត — តែត្រូវតែផ្សេងគ្នា)</span></label>
+                    <input type="text" name="transaction_reference" id="rp_txn" class="form-control"
+                           placeholder="ឧ. TXN-20250830-001">
+                </div>
+
+                <div class="form-group bkg-modal-form-group">
+                    <label class="form-label">កាលបរិច្ឆេទទូទាត់ <span style="color:#ef4444;">*</span></label>
+                    <input type="date" name="payment_date" id="rp_date" class="form-control" required>
+                </div>
+
+                <div class="form-group bkg-modal-form-group" style="margin-bottom:0;">
+                    <label class="form-label">
+                        រូបភាពប្រតិបត្តិការ / ភស្តុតាងការទូទាត់ <span style="color:#ef4444;">*</span>
+                    </label>
+                    <label id="rp_proof_label" for="rp_proof"
+                           style="display:flex;align-items:center;gap:10px;padding:10px 14px;
+                                  border:2px dashed #e2e8f0;border-radius:10px;cursor:pointer;
+                                  background:#f8fafc;transition:border-color .15s;"
+                           onmouseover="this.style.borderColor='#FF6B00'"
+                           onmouseout="this.style.borderColor='#e2e8f0'">
+                        <i class="fas fa-cloud-upload-alt" style="color:#FF6B00;font-size:1.2rem;flex-shrink:0;"></i>
+                        <span id="rp_proof_name" style="font-size:.8rem;color:#64748b;">ចុចដើម្បីជ្រើសរើសរូបភាព (JPG, PNG, PDF)</span>
+                        <input type="file" id="rp_proof" name="proof_file"
+                               accept="image/jpeg,image/png,image/gif,application/pdf"
+                               style="display:none;"
+                               onchange="rpProofChanged(this);">
+                    </label>
+                    <div id="rp_proof_err" style="display:none;margin-top:5px;color:#ef4444;font-size:.75rem;">
+                        <i class="fas fa-exclamation-circle"></i> សូមជ្រើសរើសរូបភាព ឬឯកសារភស្តុតាង
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost"
+                        onclick="document.getElementById('recordPaymentModal').classList.remove('open')">
+                    បោះបង់
+                </button>
+                <button type="submit" class="btn btn-orange">
+                    <i class="fas fa-paper-plane"></i> ដាក់ស្នើ &amp; ផ្ញើផ្ទៀងផ្ទាត់
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {{-- Add Extra Charge Modal --}}
 <div class="modal-overlay" id="extraChargeModal">
     <div class="modal-box bkg-modal-md">
@@ -577,17 +699,36 @@ var paymentStatusLabel = {
 
 function showBookingDetail(b) {
     document.getElementById('bd_id').textContent       = b.formatted_id;
-    // Customer info: external customer OR internal staff user
-    var isInternal = !b.customer && b.booked_by_user;
-    document.getElementById('bd_section_label').textContent = isInternal ? 'ព័ត៌មានអ្នកស្នើ (បុគ្គលិក)' : 'ព័ត៌មានអតិថិជន';
-    document.getElementById('bd_name').textContent  = b.customer ? (b.customer.full_name || '—')
-                                                    : (b.booked_by_user ? b.booked_by_user.user_name : '—');
-    document.getElementById('bd_phone_lbl').textContent = isInternal ? 'សិទ្ធិ' : 'ទូរស័ព្ទ';
-    document.getElementById('bd_phone').textContent = b.customer ? (b.customer.phone || '—')
-                                                    : (b.booked_by_user ? b.booked_by_user.role : '—');
-    document.getElementById('bd_email_lbl').textContent = isInternal ? 'អ៊ីម៉ែល' : 'អ៊ីមែល';
-    document.getElementById('bd_email').textContent = b.customer ? (b.customer.email || '—')
-                                                    : (b.booked_by_user ? (b.booked_by_user.email || '—') : '—');
+    // Customer section — show customer if present, then staff badge if booked on their behalf
+    var staffRow = document.getElementById('bd_staff_row');
+    if (b.customer) {
+        document.getElementById('bd_section_label').textContent = 'ព័ត៌មានអតិថិជន';
+        document.getElementById('bd_name').textContent  = b.customer.full_name || '—';
+        document.getElementById('bd_phone_lbl').textContent = 'ទូរស័ព្ទ';
+        document.getElementById('bd_phone').textContent = b.customer.phone || '—';
+        document.getElementById('bd_email_lbl').textContent = 'អ៊ីមែល';
+        document.getElementById('bd_email').textContent = b.customer.email || '—';
+        if (b.booked_by_user) {
+            var roleMap = {admin:'Admin',operation:'បុគ្គលិក',accountant:'គណនី'};
+            document.getElementById('bd_staff_name').textContent =
+                b.booked_by_user.user_name + ' (' + (roleMap[b.booked_by_user.role] || b.booked_by_user.role) + ')';
+            staffRow.style.display = 'flex';
+        } else { staffRow.style.display = 'none'; }
+    } else if (b.booked_by_user) {
+        document.getElementById('bd_section_label').textContent = 'ព័ត៌មានអ្នកស្នើ (បុគ្គលិក)';
+        document.getElementById('bd_name').textContent  = b.booked_by_user.user_name || '—';
+        document.getElementById('bd_phone_lbl').textContent = 'សិទ្ធិ';
+        document.getElementById('bd_phone').textContent = b.booked_by_user.role || '—';
+        document.getElementById('bd_email_lbl').textContent = 'អ៊ីមែល';
+        document.getElementById('bd_email').textContent = b.booked_by_user.email || '—';
+        staffRow.style.display = 'none';
+    } else {
+        document.getElementById('bd_section_label').textContent = 'ព័ត៌មានអតិថិជន';
+        document.getElementById('bd_name').textContent  = '—';
+        document.getElementById('bd_phone').textContent = '—';
+        document.getElementById('bd_email').textContent = '—';
+        staffRow.style.display = 'none';
+    }
     document.getElementById('bd_type').textContent      = b.booking_type === 'import' ? 'នាំចូល' : 'នាំចេញ';
     document.getElementById('bd_container').textContent = b.container_number || '—';
     document.getElementById('bd_truck').textContent     = b.truck ? (b.truck.truck_name + ' — ' + b.truck.plate_number) : '—';
@@ -628,21 +769,41 @@ function showBookingDetail(b) {
     document.getElementById('bd_bookdate').textContent  = b.booking_date ? new Date(b.booking_date).toLocaleDateString('en-GB') : '—';
 
     var chargeRespLabel = { 'Pending': 'រង់ចាំការឆ្លើយតប', 'Accepted': 'យល់ព្រម', 'Rejected': 'បដិសេធ' };
-    var chargeRespColor = { 'Pending': '#92400e', 'Accepted': '#065f46', 'Rejected': '#991b1b' };
+    var chargeRespBadge = {
+        'Pending':  'background:#fef3c7;color:#92400e;border:1.5px solid #fde68a;',
+        'Accepted': 'background:#d1fae5;color:#065f46;border:1.5px solid #6ee7b7;',
+        'Rejected': 'background:#fee2e2;color:#991b1b;border:1.5px solid #fca5a5;',
+    };
+    var chargeRespIcon = { 'Pending': 'fa-clock', 'Accepted': 'fa-check-circle', 'Rejected': 'fa-times-circle' };
     var chargesEl = document.getElementById('bd_charges_list');
     var charges = b.extra_charges || [];
     if (charges.length === 0) {
-        chargesEl.innerHTML = '<span class="bkg-detail-val bkg-phone">មិនមានការគិតប្រាក់បន្ថែម</span>';
+        chargesEl.innerHTML = '<div style="padding:10px 0;color:#94a3b8;font-size:.8rem;font-style:italic;">មិនមានការគិតប្រាក់បន្ថែម</div>';
     } else {
         chargesEl.innerHTML = charges.map(function (c) {
-            var color = chargeRespColor[c.client_response] || '#64748b';
-            var label = chargeRespLabel[c.client_response] || c.client_response;
-            return '<div class="bkg-charge-row">' +
-                   '<span class="bkg-charge-reason">' + c.reason + '</span>' +
-                   '<span class="bkg-charge-meta">' +
-                   '<strong class="bkg-charge-amount">$' + Number(c.amount).toLocaleString(undefined,{minimumFractionDigits:2}) + '</strong>' +
-                   '<span class="bkg-charge-resp" style="color:' + color + ';">' + label + '</span>' +
-                   '</span></div>';
+            var badgeStyle = chargeRespBadge[c.client_response] || 'background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;';
+            var label      = chargeRespLabel[c.client_response] || c.client_response;
+            var icon       = chargeRespIcon[c.client_response] || 'fa-circle';
+            return '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;' +
+                              'padding:10px 14px;border:1.5px solid #f1f5f9;border-radius:10px;' +
+                              'background:#fafafa;margin-bottom:8px;">' +
+                     '<div style="display:flex;align-items:center;gap:8px;">' +
+                       '<div style="width:32px;height:32px;border-radius:8px;background:#fff7ed;' +
+                                  'display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+                         '<i class="fas fa-money-bill-wave" style="color:#FF6B00;font-size:.75rem;"></i>' +
+                       '</div>' +
+                       '<span style="font-size:.82rem;font-weight:600;color:#374151;">' + c.reason + '</span>' +
+                     '</div>' +
+                     '<div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">' +
+                       '<strong style="font-family:Kantumruy Pro,sans-serif;font-size:.9rem;color:#FF6B00;">' +
+                         '$' + Number(c.amount).toLocaleString(undefined,{minimumFractionDigits:2}) +
+                       '</strong>' +
+                       '<span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;' +
+                                   'border-radius:20px;font-size:.72rem;font-weight:600;' + badgeStyle + '">' +
+                         '<i class="fas ' + icon + '" style="font-size:.62rem;"></i>' + label +
+                       '</span>' +
+                     '</div>' +
+                   '</div>';
         }).join('');
     }
 
@@ -653,18 +814,21 @@ function changeStatus(id, currentStatus, bookingPrice, paymentStatus) {
     document.getElementById('statusForm').action = '/admin/bookings/' + id + '/status';
     document.getElementById('statusSelect').value = currentStatus;
 
-    // "in_progress" and "completed" only available after customer pays first 50%
+    // "in_progress" only available after customer pays first 50%
+    // "completed" available after first 50% or when fully paid
     var firstPaid = (paymentStatus === 'deposit_paid' || paymentStatus === 'fully_paid');
-    [
-        { val: 'in_progress', label: 'កំពុងដឹក — In Progress' },
-        { val: 'completed',   label: 'បានបញ្ចប់ — Completed'  },
-    ].forEach(function(o) {
-        var opt = document.querySelector('#statusSelect option[value="' + o.val + '"]');
-        if (!opt) return;
-        opt.disabled = !firstPaid;
-        opt.style.display = firstPaid ? '' : 'none';
-        opt.textContent = firstPaid ? o.label : o.label + ' (រង់ចាំ 50% ដំបូង)';
-    });
+    var opt_ip = document.querySelector('#statusSelect option[value="in_progress"]');
+    if (opt_ip) {
+        opt_ip.disabled = !firstPaid;
+        opt_ip.style.display = firstPaid ? '' : 'none';
+        opt_ip.textContent = firstPaid ? 'កំពុងដឹក — In Progress' : 'កំពុងដឹក — In Progress (រង់ចាំ 50% ដំបូង)';
+    }
+    var opt_done = document.querySelector('#statusSelect option[value="completed"]');
+    if (opt_done) {
+        opt_done.disabled = false;
+        opt_done.style.display = '';
+        opt_done.textContent = 'បានបញ្ចប់ — Completed';
+    }
 
     // Auto-fill price from customer booking
     var price = parseFloat(bookingPrice) || 0;
@@ -688,6 +852,88 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
     var half = parseFloat(this.value || 0) / 2;
     document.getElementById('halfPrice').textContent = half.toFixed(2);
 });
+
+function rpProofChanged(input) {
+    var name = input.files[0] ? input.files[0].name : 'ចុចដើម្បីជ្រើសរើសរូបភាព (JPG, PNG, PDF)';
+    document.getElementById('rp_proof_name').textContent = name;
+    var label = document.getElementById('rp_proof_label');
+    var err   = document.getElementById('rp_proof_err');
+    if (input.files[0]) {
+        label.style.borderColor = '#22c55e';
+        err.style.display = 'none';
+    } else {
+        label.style.borderColor = '#e2e8f0';
+    }
+}
+
+document.getElementById('recordPaymentForm').addEventListener('submit', function(e) {
+    var method = document.getElementById('rp_method').value;
+    var txn    = document.getElementById('rp_txn').value.trim();
+    var proof  = document.getElementById('rp_proof').files.length;
+    var valid  = true;
+
+    if (!method) {
+        document.getElementById('rp_method').style.borderColor = '#ef4444';
+        if (valid) document.getElementById('rp_method').focus();
+        valid = false;
+    } else {
+        document.getElementById('rp_method').style.borderColor = '';
+    }
+
+    if (!txn) {
+        document.getElementById('rp_txn').style.borderColor = '#ef4444';
+        if (valid) document.getElementById('rp_txn').focus();
+        valid = false;
+    } else {
+        document.getElementById('rp_txn').style.borderColor = '';
+    }
+
+    if (!proof) {
+        document.getElementById('rp_proof_label').style.borderColor = '#ef4444';
+        document.getElementById('rp_proof_err').style.display = 'block';
+        valid = false;
+    } else {
+        document.getElementById('rp_proof_err').style.display = 'none';
+    }
+
+    if (!valid) e.preventDefault();
+});
+
+function openRecordPaymentModal(bookingId, paymentStatus, totalPrice) {
+    var isFirst  = (paymentStatus === 'unpaid');
+    var stage    = isFirst ? 'first' : 'second';
+    var half     = (parseFloat(totalPrice) || 0) / 2;
+
+    document.getElementById('rp_stage').value        = stage;
+    document.getElementById('rp_amount').value       = half > 0 ? half.toFixed(2) : '';
+    document.getElementById('rp_date').value         = new Date().toISOString().split('T')[0];
+    document.getElementById('rp_method').value       = '';
+    document.getElementById('rp_method').style.borderColor = '';
+    document.getElementById('rp_txn').value          = '';
+    document.getElementById('rp_txn').style.borderColor = '';
+    document.getElementById('rp_proof').value        = '';
+    document.getElementById('rp_proof_name').textContent = 'ចុចដើម្បីជ្រើសរើសរូបភាព (JPG, PNG, PDF)';
+    document.getElementById('rp_proof_label').style.borderColor = '#e2e8f0';
+    document.getElementById('rp_proof_err').style.display = 'none';
+
+    var banner = document.getElementById('rp_stage_banner');
+    var label  = document.getElementById('rp_stage_label');
+    if (isFirst) {
+        banner.style.background = '#f0fdf4';
+        banner.style.border     = '1.5px solid #6ee7b7';
+        banner.style.color      = '#065f46';
+        label.textContent       = 'ការទូទាត់ 50% ដំបូង (Deposit) — ក្រោយបញ្ជាក់ ស្ថានភាពការកក់នឹងផ្លាស់ប្ដូរទៅ «កំពុងដឹក»';
+    } else {
+        banner.style.background = '#fff7ed';
+        banner.style.border     = '1.5px solid #fed7aa';
+        banner.style.color      = '#92400e';
+        label.textContent       = 'ការទូទាត់ 50% ចុងក្រោយ (Final) — ក្រោយបញ្ជាក់ ការទូទាត់នឹងត្រូវបានបញ្ចប់';
+    }
+
+    var base = '{{ url("/admin/bookings") }}/' + bookingId + '/record-payment';
+    document.getElementById('recordPaymentForm').action = base;
+    document.getElementById('recordPaymentModal').classList.add('open');
+}
 </script>
 @endpush
 
@@ -821,6 +1067,32 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
 }
 .ab-price-hint { font-size:.73rem;color:#94a3b8;margin-top:5px; }
 
+/* ── Auto price summary panel ── */
+.ab-price-summary {
+    margin-top:14px;border-radius:12px;overflow:hidden;
+    border:1.5px solid #e2e8f0;font-family:var(--font);
+}
+.ab-ps-header {
+    display:flex;align-items:center;gap:8px;
+    padding:9px 14px;background:linear-gradient(135deg,#FF6B00 0%,#ff8c38 100%);
+    color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.03em;
+}
+.ab-ps-row {
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 14px;font-size:.78rem;color:#475569;
+    border-bottom:1px solid #f1f5f9;background:#fff;
+}
+.ab-ps-row.ab-ps-ow { color:#92400e;background:#fffbeb;border-bottom-color:#fde68a; }
+.ab-ps-total {
+    background:#fff7ed;color:#7c2d12;font-weight:700;font-size:.82rem;
+    border-top:2px solid #FF6B00 !important;border-bottom:none;
+}
+.ab-ps-total span:last-child { color:#FF6B00;font-size:.88rem; }
+.ab-ps-deposit {
+    background:#f8fafc;color:#64748b;font-size:.74rem;border-bottom:none;
+    font-style:italic;
+}
+
 /* ── File upload zone ── */
 .ab-upload-zone {
     display:flex;align-items:center;gap:16px;
@@ -876,23 +1148,50 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
 .ab-btn-save:hover  { opacity:.9;transform:translateY(-1px); }
 .ab-btn-save:active { transform:translateY(0); }
 
-/* ── Container weight badge & overweight alert (reused from trucks_section) ── */
+/* ── Container weight badge ── */
 .ts-container-weight-badge {
-    display:inline-flex;align-items:center;gap:6px;
-    margin-top:6px;padding:4px 10px;
-    font-family:var(--font);font-size:.75rem;font-weight:600;
-    color:#1d4ed8;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;
+    display:inline-flex;align-items:center;gap:5px;
+    margin-top:7px;padding:4px 12px 4px 9px;
+    font-family:var(--font);font-size:.72rem;font-weight:600;
+    color:#1d4ed8;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:20px;
+    letter-spacing:.01em;
 }
+
+/* ── Overweight / OK alert card ── */
 .ts-ow-alert {
-    display:flex;align-items:flex-start;gap:7px;
-    margin-top:8px;padding:8px 12px;
-    font-family:var(--font);font-size:.78rem;border-radius:8px;line-height:1.5;
+    display:flex;flex-direction:column;
+    margin-top:10px;font-family:var(--font);font-size:.78rem;
+    border-radius:10px;overflow:hidden;line-height:1.5;
 }
-.ts-ow-alert i { flex-shrink:0;margin-top:2px;font-size:.85rem; }
-.ts-ow-ok  { color:#065f46;background:#d1fae5;border:1px solid #6ee7b7; }
-.ts-ow-ok i  { color:#059669; }
-.ts-ow-warn { color:#7c2d12;background:#fff7ed;border:1px solid #fed7aa; }
-.ts-ow-warn i { color:#ea580c; }
+.ts-ow-head {
+    display:flex;align-items:center;gap:7px;
+    padding:8px 13px;font-weight:700;
+}
+.ts-ow-head i { font-size:.82rem;flex-shrink:0; }
+.ts-ow-body {
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:7px 13px;flex-wrap:wrap;font-size:.75rem;
+}
+.ts-ow-chip {
+    margin-left:auto;padding:2px 9px;border-radius:12px;
+    font-size:.67rem;font-weight:700;letter-spacing:.03em;white-space:nowrap;
+}
+.ts-ow-ok { border:1.5px solid #6ee7b7;background:#ecfdf5;color:#065f46; }
+.ts-ow-ok .ts-ow-head { background:#d1fae5; }
+.ts-ow-ok .ts-ow-head i { color:#059669; }
+.ts-ow-ok .ts-ow-chip { background:rgba(5,150,105,.15);color:#047857; }
+.ts-ow-warn { border:1.5px solid #FF6B00; }
+.ts-ow-warn .ts-ow-head { background:#FF6B00;color:#fff; }
+.ts-ow-warn .ts-ow-head i { color:rgba(255,255,255,.9); }
+.ts-ow-warn .ts-ow-chip { background:rgba(255,255,255,.25);color:#fff; }
+.ts-ow-warn .ts-ow-body { background:#fff7ed;color:#7c2d12;border-top:1px solid #fed7aa; }
+/* 45-ton absolute limit */
+.ts-ow-limit { border:2px solid #dc2626;animation:ts-ow-pulse .6s ease-in-out; }
+.ts-ow-limit .ts-ow-head { background:#dc2626;color:#fff;font-size:.82rem; }
+.ts-ow-limit .ts-ow-head i { color:#fecaca; }
+.ts-ow-limit .ts-ow-chip { background:rgba(255,255,255,.2);color:#fff;font-size:.72rem; }
+.ts-ow-limit .ts-ow-body { background:#fef2f2;color:#991b1b;border-top:1px solid #fca5a5;font-weight:600; }
+@keyframes ts-ow-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0);} 50%{box-shadow:0 0 0 5px rgba(220,38,38,.2);} }
 </style>
 
 <div class="ab-overlay" id="adminBookingModal" onclick="if(event.target===this)closeAdminBooking()">
@@ -1033,6 +1332,34 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                     </div>
                 </div>
 
+                {{-- Dates (Section 2) --}}
+                <div class="ab-row" style="margin-top:3px;">
+                    <div class="ab-group half">
+                        <label class="ab-label"><span id="ab_pickupDateLabel">កាលបរិច្ឆេទថ្ងៃដឹក</span></label>
+                        <input type="date" name="pick_up_date" id="ab_pickUpDate"
+                               value="{{ old('pick_up_date', now()->toDateString()) }}"
+                               class="ab-input {{ $errors->has('pick_up_date') ? 'is-err' : '' }}"
+                               required
+                               onchange="document.getElementById('ab_dropOffDate').min = this.value;">
+                        @error('pick_up_date')<div class="ab-err-msg">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="ab-group half">
+                        <label class="ab-label"><span id="ab_dropoffDateLabel">កាលបរិច្ឆេទថ្ងៃទម្លាក់</span></label>
+                        <input type="date" name="drop_off_date" id="ab_dropOffDate"
+                               value="{{ old('drop_off_date') }}"
+                               class="ab-input {{ $errors->has('drop_off_date') ? 'is-err' : '' }}"
+                               required>
+                        @error('drop_off_date')<div class="ab-err-msg">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+
+                {{-- Section 3: Shipping Price --}}
+                <div class="ab-step">
+                    <div class="ab-step-num">3</div>
+                    <div class="ab-step-title"><i class="fas fa-dollar-sign" style="color:#FF6B00;margin-right:6px;"></i>តម្លៃដឹកជញ្ជូន</div>
+                    <div class="ab-step-rule"></div>
+                </div>
+
                 {{-- Locations --}}
                 <div class="ab-row" style="margin-top:3px;">
                     <div class="ab-group half" id="ab_pickupField">
@@ -1043,7 +1370,7 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                                placeholder="ឧ. កំពង់ផែស្វ័យយ័តភ្នំពេញ" required>
                         <select name="pickup_location" id="ab_pickupSelect"
                                 class="ab-select {{ $errors->has('pickup_location') ? 'is-err' : '' }}"
-                                style="display:none;" disabled onchange="abAdminLookupPrice(); abFilterTrucks(this.value);">
+                                style="display:none;" disabled onchange="abAdminLookupPrice(); if(document.getElementById('ab_bookingType').value==='import') abFilterTrucks(this.value);">
                             <option value="">-- ជ្រើសរើសកំពង់ផែ --</option>
                             <option value="កំពង់ផែស្វ័យយ័តព្រះសីហនុ" data-key="sihanoukville" {{ old('pickup_location')=='កំពង់ផែស្វ័យយ័តព្រះសីហនុ'?'selected':'' }}>
                                 កំពង់ផែស្វ័យយ័តព្រះសីហនុ (SHV Port)
@@ -1081,28 +1408,7 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                     </div>
                 </div>
 
-                {{-- Dates --}}
-                <div class="ab-row" style="margin-top:3px;">
-                    <div class="ab-group half">
-                        <label class="ab-label"><span id="ab_pickupDateLabel">កាលបរិច្ឆេទថ្ងៃដឹក</span></label>
-                        <input type="date" name="pick_up_date" id="ab_pickUpDate"
-                               value="{{ old('pick_up_date', now()->toDateString()) }}"
-                               class="ab-input {{ $errors->has('pick_up_date') ? 'is-err' : '' }}"
-                               required
-                               onchange="document.getElementById('ab_dropOffDate').min = this.value;">
-                        @error('pick_up_date')<div class="ab-err-msg">{{ $message }}</div>@enderror
-                    </div>
-                    <div class="ab-group half">
-                        <label class="ab-label"><span id="ab_dropoffDateLabel">កាលបរិច្ឆេទថ្ងៃទម្លាក់</span></label>
-                        <input type="date" name="drop_off_date" id="ab_dropOffDate"
-                               value="{{ old('drop_off_date') }}"
-                               class="ab-input {{ $errors->has('drop_off_date') ? 'is-err' : '' }}"
-                               required>
-                        @error('drop_off_date')<div class="ab-err-msg">{{ $message }}</div>@enderror
-                    </div>
-                </div>
-
-                {{-- Cargo & Price --}}
+                {{-- Cargo weight + auto price --}}
                 <div class="ab-row" style="margin-top:3px;">
                     <div class="ab-group half">
                         <label class="ab-label">ទម្ងន់ទំនិញ (គីឡូក្រាម)</label>
@@ -1114,9 +1420,7 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                         @error('cargo_weight')<div class="ab-err-msg">{{ $message }}</div>@enderror
                     </div>
                     <div class="ab-group half">
-                        <label class="ab-label">
-                            តម្លៃដឹកជញ្ជូន ($)
-                        </label>
+                        <label class="ab-label">តម្លៃដឹកជញ្ជូន ($)</label>
                         <input type="number" name="total_price" step="0.01" min="0"
                                value="{{ old('total_price') }}"
                                class="ab-input"
@@ -1128,9 +1432,34 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                     </div>
                 </div>
 
-                {{-- Section 3: Cargo File Upload --}}
+                {{-- Price Summary Panel --}}
+                <div id="ab_priceSummary" style="display:none;">
+                    <div class="ab-price-summary">
+                        <div class="ab-ps-header">
+                            <i class="fas fa-calculator"></i> សង្ខេបតម្លៃ
+                        </div>
+                        <div class="ab-ps-row">
+                            <span>ថ្លៃដឹកជញ្ជូនមូលដ្ឋាន</span>
+                            <span id="ab_ps_base">$0.00</span>
+                        </div>
+                        <div class="ab-ps-row ab-ps-ow" id="ab_ps_owRow" style="display:none;">
+                            <span><i class="fas fa-weight-hanging" style="margin-right:4px;"></i>ថ្លៃបន្ថែមទម្ងន់លើស</span>
+                            <span id="ab_ps_ow">$0.00</span>
+                        </div>
+                        <div class="ab-ps-row ab-ps-total">
+                            <span>តម្លៃសរុប</span>
+                            <span id="ab_ps_total">$0.00</span>
+                        </div>
+                        <div class="ab-ps-row ab-ps-deposit">
+                            <span>50% ប្រាក់កក់ (បង់ជាមុន)</span>
+                            <span id="ab_ps_deposit">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Section 4: Cargo File Upload --}}
                 <div class="ab-step">
-                    <div class="ab-step-num">3</div>
+                    <div class="ab-step-num">4</div>
                     <div class="ab-step-title"><i class="fas fa-file-upload" style="color:#FF6B00;margin-right:6px;"></i>ឯកសារ / បញ្ជីទំនិញ</div>
                     <div class="ab-step-rule"></div>
                 </div>
@@ -1154,9 +1483,9 @@ document.getElementById('totalPriceInput').addEventListener('input', function ()
                     </div>
                 </div>
 
-                {{-- Section 4: Truck Selection (last) --}}
+                {{-- Section 5: Truck Selection (last) --}}
                 <div class="ab-step">
-                    <div class="ab-step-num">4</div>
+                    <div class="ab-step-num">5</div>
                     <div class="ab-step-title"><i class="fas fa-truck" style="color:#FF6B00;margin-right:6px;"></i>ជ្រើសរើសរថយន្ត</div>
                     <div class="ab-step-rule"></div>
                 </div>
@@ -1216,7 +1545,10 @@ function closeAdminBooking() {
 
 function updateHalf() {
     var v = parseFloat(document.getElementById('ab_total_price').value || 0);
-    document.getElementById('ab_half').textContent = (v / 2).toFixed(2);
+    var half = (v / 2).toFixed(2);
+    document.getElementById('ab_half').textContent = half;
+    var dep = document.getElementById('ab_ps_deposit');
+    if (dep) dep.textContent = '$' + half;
 }
 
 function abUpdateCargoName(input) {
@@ -1243,7 +1575,7 @@ function abToggleType(type) {
         pickupSelect.style.display = 'block';
         pickupSelect.disabled      = false;
         pickupSelect.required      = true;
-        abFilterTrucks(pickupSelect.value);
+        abFilterTrucks(pickupSelect.value); // import: filter by port
     } else if (type === 'export') {
         pickupLabel.textContent  = 'ទីតាំងទម្លាក់ទំនិញ';
         dropoffLabel.textContent = 'ទីតាំងច្រកទំនិញ';
@@ -1255,7 +1587,7 @@ function abToggleType(type) {
         pickupSelect.style.display = 'block';
         pickupSelect.disabled      = false;
         pickupSelect.required      = true;
-        abFilterTrucks(pickupSelect.value);
+        abFilterTrucks(''); // export: truck starts at factory, show all trucks
     } else {
         pickupLabel.textContent  = 'ទីតាំងទទួល';
         dropoffLabel.textContent = 'ទីតាំងដឹកទៅ';
@@ -1272,6 +1604,8 @@ function abToggleType(type) {
 }
 
 // ===== Truck location filtering =====
+var abAllTrucks = @json($trucksJson);
+
 function abFilterTrucks(portValue) {
     var sel   = document.getElementById('ab_truckSelect');
     var hint  = document.getElementById('ab_truckPortHint');
@@ -1283,29 +1617,27 @@ function abFilterTrucks(portValue) {
         'កំពង់ផែស្វ័យយ័តភ្នំពេញ':    'pp',
     };
     var filter = locMap[portValue] || '';
+    var prevVal = sel.value;
 
-    var opts       = sel.options;
-    var prevVal    = sel.value;
-    var firstValid = '';
+    // Rebuild options from JS data (cross-browser: option.hidden fails in Firefox)
+    sel.innerHTML = '<option value="">-- ជ្រើសរើសរថយន្ត --</option>';
+    abAllTrucks.forEach(function(t) {
+        var loc = t.loc || 'both';
+        if (filter && loc !== filter && loc !== 'both') return;
+        var opt     = document.createElement('option');
+        opt.value   = t.id;
+        opt.dataset.loc = loc;
+        var lbl = t.name + ' — ' + t.plate;
+        if (t.cap)           lbl += ' (' + t.cap + 'T)';
+        if (loc !== 'both')  lbl += ' [' + loc.toUpperCase() + ']';
+        opt.textContent = lbl;
+        if (String(t.id) === String(prevVal)) opt.selected = true;
+        sel.appendChild(opt);
+    });
 
-    for (var i = 0; i < opts.length; i++) {
-        if (i === 0) continue; // keep placeholder
-        var loc  = opts[i].dataset.loc || 'both';
-        var show = !filter || loc === filter || loc === 'both';
-        opts[i].hidden   = !show;
-        opts[i].disabled = !show;
-        if (show && !firstValid) firstValid = opts[i].value;
-    }
-
-    // Reset selection if current choice is now hidden
-    if (prevVal && sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].hidden) {
-        sel.value = '';
-    }
-
-    // Show/hide filter hint badge
+    // Update filter hint badge
     if (filter) {
-        var portLabel = filter === 'shv' ? 'SHV Port — តម្រងរថយន្ត' : 'PP Port — តម្រងរថយន្ត';
-        label.textContent = portLabel;
+        label.textContent  = filter === 'shv' ? 'SHV Port — តម្រងរថយន្ត' : 'PP Port — តម្រងរថយន្ត';
         hint.style.display = 'inline';
     } else {
         hint.style.display = 'none';
@@ -1354,23 +1686,75 @@ function abAdminRefreshTotal() {
         updateHalf();
     }
 
-    var alertEl = document.getElementById('ab_overweightAlert');
+    // Update price summary panel
+    var panel = document.getElementById('ab_priceSummary');
+    if (panel) {
+        if (abAdminBasePrice > 0 || ow.charge > 0) {
+            document.getElementById('ab_ps_base').textContent    = '$' + abAdminBasePrice.toFixed(2);
+            document.getElementById('ab_ps_total').textContent   = '$' + total.toFixed(2);
+            document.getElementById('ab_ps_deposit').textContent = '$' + (total * 0.5).toFixed(2);
+            var owRow = document.getElementById('ab_ps_owRow');
+            if (ow.charge > 0) {
+                document.getElementById('ab_ps_ow').textContent = '+$' + ow.charge.toFixed(2);
+                owRow.style.display = '';
+            } else {
+                owRow.style.display = 'none';
+            }
+            panel.style.display = '';
+        } else {
+            panel.style.display = 'none';
+        }
+    }
+
+    var alertEl    = document.getElementById('ab_overweightAlert');
+    var weightInput = document.getElementById('ab_cargoWeight');
     if (!alertEl) return;
     if (cargoWeight <= 0 && !size) { alertEl.style.display = 'none'; return; }
+
+    // 45-ton absolute limit check (cargo weight alone)
+    var MAX_CARGO_KG = 45000;
+    if (cargoWeight > MAX_CARGO_KG) {
+        alertEl.className    = 'ts-ow-alert ts-ow-limit';
+        alertEl.style.display = '';
+        alertEl.innerHTML =
+            '<div class="ts-ow-head">' +
+                '<i class="fas fa-ban"></i>' +
+                ' ទម្ងន់ទំនិញលើសសំណន់អតិបរមា' +
+                '<span class="ts-ow-chip">' + (cargoWeight / 1000).toFixed(1) + 'T</span>' +
+            '</div>' +
+            '<div class="ts-ow-body">' +
+                '<i class="fas fa-exclamation-circle" style="margin-right:5px;"></i>' +
+                'រថយន្តដឹកបាន 45 តោនចុះក្រោម — សូមកែតម្លៃទម្ងន់' +
+            '</div>';
+        if (weightInput) weightInput.style.borderColor = '#dc2626';
+        return;
+    }
+    if (weightInput) weightInput.style.borderColor = '';
 
     if (ow.charge > 0) {
         alertEl.className = 'ts-ow-alert ts-ow-warn';
         alertEl.style.display = '';
-        alertEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>' +
-            ' ទម្ងន់សរុប <strong>' + (ow.totalWeight/1000).toFixed(2) + ' T</strong>' +
-            ' (លើស <strong>' + (ow.overKg/1000).toFixed(2) + ' T</strong>) —' +
-            ' ថ្លៃដឹក <strong>$' + abAdminBasePrice.toFixed(2) + '</strong>' +
-            ' + ថ្លៃលើសសំណន់ <strong>$' + ow.charge + '</strong>' +
-            ' = <strong style="color:#c2410c;">$' + total.toFixed(2) + '</strong>';
+        alertEl.innerHTML =
+            '<div class="ts-ow-head">' +
+                '<i class="fas fa-exclamation-triangle"></i>' +
+                ' ទម្ងន់លើសសំណន់' +
+                '<span class="ts-ow-chip">+$' + ow.charge + '</span>' +
+            '</div>' +
+            '<div class="ts-ow-body">' +
+                '<span>សរុប <strong>' + (ow.totalWeight/1000).toFixed(2) + ' T</strong>' +
+                ' · លើស <strong>' + (ow.overKg/1000).toFixed(2) + ' T</strong></span>' +
+                '<span>$' + abAdminBasePrice.toFixed(2) + ' + $' + ow.charge +
+                ' = <strong style="color:#c2410c;">$' + total.toFixed(2) + '</strong></span>' +
+            '</div>';
     } else if (ow.totalWeight > 0) {
         alertEl.className = 'ts-ow-alert ts-ow-ok';
         alertEl.style.display = '';
-        alertEl.innerHTML = '<i class="fas fa-check-circle"></i> ទម្ងន់សរុប <strong>' + (ow.totalWeight/1000).toFixed(2) + ' T</strong> — ស្ថិតក្នុងដែន 40T';
+        alertEl.innerHTML =
+            '<div class="ts-ow-head">' +
+                '<i class="fas fa-check-circle"></i>' +
+                ' ទម្ងន់សរុប <strong style="margin:0 3px;">' + (ow.totalWeight/1000).toFixed(2) + ' T</strong> — ក្នុងដែន 40T' +
+                '<span class="ts-ow-chip">✓ OK</span>' +
+            '</div>';
     } else {
         alertEl.style.display = 'none';
     }
@@ -1382,11 +1766,31 @@ function abAdminLookupPrice() {
     var portOpt  = portSel ? portSel.options[portSel.selectedIndex] : null;
     var portKey  = portOpt ? (portOpt.dataset.key || '') : '';
     var province = document.getElementById('ab_dropoffProvince') ? document.getElementById('ab_dropoffProvince').value : '';
-    var rate     = (type && portKey && province) ? abRatesAdmin.find(function(r) {
-        return r.type === type && r.origin === portKey && r.province_name_km === province;
-    }) : null;
-    abAdminBasePrice = rate ? parseFloat(rate.base_price) : 0;
-    abAdminRefreshTotal();
+
+    if (!type || !portKey || !province) {
+        abAdminBasePrice = 0;
+        abAdminRefreshTotal();
+        return;
+    }
+
+    var csrfToken = document.querySelector('meta[name="csrf-token"]');
+    fetch('{{ route("admin.bookings.calc-price") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken ? csrfToken.content : ''
+        },
+        body: JSON.stringify({ type: type, origin: portKey, province_km: province })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        abAdminBasePrice = data.success ? parseFloat(data.base_price) : 0;
+        abAdminRefreshTotal();
+    })
+    .catch(function() {
+        abAdminBasePrice = 0;
+        abAdminRefreshTotal();
+    });
 }
 
 function abAdminOnContainerChange() {
@@ -1407,6 +1811,24 @@ function abAdminOnContainerChange() {
 function abAdminUpdateOverweight() {
     abAdminRefreshTotal();
 }
+
+// Block form submission if cargo weight exceeds 45 tons
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('adminBookingForm');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+        var cargoWeight = parseFloat((document.getElementById('ab_cargoWeight') || {}).value) || 0;
+        if (cargoWeight > 45000) {
+            e.preventDefault();
+            document.getElementById('ab_cargoWeight').focus();
+            document.getElementById('ab_cargoWeight').style.borderColor = '#dc2626';
+            // Ensure alert is visible
+            abAdminRefreshTotal();
+            // Scroll into view
+            document.getElementById('ab_overweightAlert').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+});
 
 // Re-open modal if validation failed (sentinel field confirms it came from this form)
 @if($errors->any() && old('_from_admin_booking'))

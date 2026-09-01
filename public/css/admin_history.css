@@ -22,7 +22,7 @@
 
 /* ── Table header badge ── */
 .his-count-badge {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-size: 0.78rem;
     font-weight: 700;
     background: #f1f5f9;
@@ -34,13 +34,13 @@
 
 /* ── Table rows ── */
 .his-row-num {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-weight: 700;
     color: #64748b;
 }
 .his-phone  { color: #94a3b8; }
 .his-container-badge {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Kantumruy Pro', sans-serif;
     font-size: 0.78rem;
     color: #475569;
     background: #f8fafc;

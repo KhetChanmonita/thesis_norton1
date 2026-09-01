@@ -381,7 +381,7 @@ class BookingController extends Controller
             $searchContainer = trim($request->container_number);
             $searched        = true;
 
-            $bookings = Booking::with(['customer', 'payments', 'extraCharges'])
+            $bookings = Booking::with(['customer', 'bookedByUser', 'payments', 'extraCharges'])
                 ->where('container_number', $searchContainer)
                 ->latest()
                 ->get();
@@ -401,7 +401,7 @@ class BookingController extends Controller
             $searchPhone = trim($request->phone);
             $searched    = true;
 
-            $bookings = Booking::with(['customer', 'payments', 'extraCharges'])
+            $bookings = Booking::with(['customer', 'bookedByUser', 'payments', 'extraCharges'])
                 ->whereHas('customer', fn($q) => $q->where('phone', $searchPhone))
                 ->latest()
                 ->get();
@@ -445,7 +445,7 @@ class BookingController extends Controller
     // ── Booking tracking ───────────────────────────────────────────────────
     public function trackBooking(Request $request, $id)
     {
-        $booking   = Booking::with(['customer', 'extraCharges', 'payments'])->findOrFail($id);
+        $booking   = Booking::with(['customer', 'bookedByUser', 'extraCharges', 'payments'])->findOrFail($id);
         $token     = $request->query('token') ?? session('booking_token_' . $id);
         $inSession = in_array((int)$id, session('my_booking_ids', []));
 
@@ -492,7 +492,7 @@ class BookingController extends Controller
     // ── Show payment form ──────────────────────────────────────────────────
     public function showPayment(Request $request, $id)
     {
-        $booking   = Booking::with(['customer', 'secondStageCharges'])->findOrFail($id);
+        $booking   = Booking::with(['customer', 'bookedByUser', 'secondStageCharges'])->findOrFail($id);
         $token     = $request->query('token') ?? session('booking_token_' . $id);
         $inSession = in_array((int)$id, session('my_booking_ids', []));
 

@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/my_booking.css') }}">
+    <style>
+    .badge-staff-booked {
+        display:inline-flex;align-items:center;gap:5px;
+        padding:3px 10px 3px 8px;border-radius:20px;font-size:.7rem;font-weight:600;
+        background:#eff6ff;border:1.5px solid #bfdbfe;color:#1e40af;
+        font-family:var(--font,'Kantumruy Pro',sans-serif);letter-spacing:.01em;
+        white-space:nowrap;
+    }
+    .badge-staff-booked i { font-size:.65rem; }
+    </style>
 </head>
 <body>
 @include('partials.header')
@@ -135,6 +145,14 @@
                     <i class="fas fa-{{ $b->payment_status === 'fully_paid' ? 'check-circle' : ($b->payment_status === 'deposit_paid' ? 'circle-half-stroke' : 'times-circle') }} mybk-pay-icon"></i>
                     {{ $payLabel[$b->payment_status] ?? $b->payment_status }}
                 </span>
+                @if($b->bookedByUser)
+                <span class="badge badge-staff-booked">
+                    <i class="fas fa-user-tie"></i>
+                    កក់ដោយ: {{ $b->bookedByUser->user_name }}
+                    @php $roleLabel = ['admin'=>'Admin','operation'=>'បុគ្គលិក','accountant'=>'គណនី']; @endphp
+                    ({{ $roleLabel[$b->bookedByUser->role] ?? ucfirst($b->bookedByUser->role) }})
+                </span>
+                @endif
             </div>
         </div>
 

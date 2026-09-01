@@ -1,4 +1,4 @@
-@extends('admin.layouts.admin')
+﻿@extends('admin.layouts.admin')
 @section('title', 'ការបង់ប្រាក់')
 @section('page-title')<span>គ្រប់គ្រង</span>ការបង់ប្រាក់@endsection
 
@@ -9,7 +9,7 @@
     <div class="stat-card">
         <div class="stat-icon green"><i class="fas fa-dollar-sign"></i></div>
         <div class="stat-info">
-            <div class="val" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;">
+            <div class="val" style="font-family:'Kantumruy Pro',sans-serif;font-size:1.1rem;">
                 ${{ number_format($totalRevenue, 2) }}
             </div>
             <div class="lbl">ចំណូលសរុប</div>
@@ -18,7 +18,7 @@
     <div class="stat-card">
         <div class="stat-icon orange"><i class="fas fa-calendar-day"></i></div>
         <div class="stat-info">
-            <div class="val" style="font-family:'Montserrat',sans-serif;font-size:1.1rem;">
+            <div class="val" style="font-family:'Kantumruy Pro',sans-serif;font-size:1.1rem;">
                 ${{ number_format($todayRevenue, 2) }}
             </div>
             <div class="lbl">ចំណូលថ្ងៃនេះ</div>
@@ -105,7 +105,7 @@
         <div class="card-title">
             <i class="fas fa-receipt"></i>
             បញ្ជីការបង់ប្រាក់
-            <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:400;
+            <span style="font-family:'Kantumruy Pro',sans-serif;font-size:0.78rem;font-weight:400;
                          background:#f1f5f9;color:#64748b;padding:2px 10px;border-radius:50px;margin-left:4px;">
                 {{ $payments->total() }}
             </span>
@@ -132,7 +132,7 @@
                 @forelse($payments as $p)
                 <tr>
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-weight:400;
+                        <span style="font-family:'Kantumruy Pro',sans-serif;font-weight:400;
                                      color:#94a3b8;font-size:0.82rem;">
                             {{ ($payments->currentPage() - 1) * $payments->perPage() + $loop->iteration }}
                         </span>
@@ -156,7 +156,7 @@
                                 <div style="width:36px;height:36px;border-radius:50%;
                                             background:{{ $pGrad }};
                                             display:flex;align-items:center;justify-content:center;
-                                            font-family:'Montserrat',sans-serif;font-weight:700;
+                                            font-family:'Kantumruy Pro',sans-serif;font-weight:700;
                                             font-size:0.8rem;color:#fff;flex-shrink:0;">
                                     {{ strtoupper(mb_substr($pName, 0, 1)) }}
                                 </div>
@@ -174,7 +174,7 @@
 
                     {{-- Booking ID --}}
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-weight:400;
+                        <span style="font-family:'Kantumruy Pro',sans-serif;font-weight:400;
                                      font-size:0.83rem;color:#1e293b;">
                             {{ $p->booking?->formatted_id ?? '#'.$p->booking_id }}
                         </span>
@@ -197,7 +197,7 @@
 
                     {{-- Amount --}}
                     <td>
-                        <span style="font-family:'Montserrat',sans-serif;font-weight:400;
+                        <span style="font-family:'Kantumruy Pro',sans-serif;font-weight:400;
                                      font-size:1rem;color:#10b981;">
                             ${{ number_format($p->amount, 2) }}
                         </span>

@@ -59,12 +59,26 @@ class PaymentAdminController extends Controller
         $booking = $payment->booking;
         if ($booking) {
             if ($payment->payment_stage === 'first') {
-                $booking->update(['status' => 'in_progress']);
+                $booking->update([
+                    'payment_status' => 'deposit_paid',
+                    'status'         => 'in_progress',
+                ]);
                 if ($booking->truck) {
                     $booking->truck->update(['status' => 'delivering']);
                 }
             } elseif ($payment->payment_stage === 'second') {
-                $booking->update(['payment_status' => 'fully_paid']);
+                $booking->update([
+                    'payment_status' => 'fully_paid',
+                    'status'         => 'completed',
+                ]);
+                if ($booking->truck) {
+                    $booking->truck->update(['status' => 'available']);
+                }
+                \App\Models\BookingStatusHistory::create([
+                    'booking_id'     => $booking->booking_id,
+                    'total_price'    => $booking->total_price,
+                    'completed_date' => now()->toDateString(),
+                ]);
             }
         }
 

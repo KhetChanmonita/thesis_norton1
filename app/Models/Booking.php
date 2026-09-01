@@ -28,6 +28,7 @@ class Booking extends Model
         'cargo_weight',
         'booking_date',
         'status',
+        'driver_arrived_at',
         'total_price',
         'cargo_list_file',
         'payment_status',
@@ -35,9 +36,10 @@ class Booking extends Model
     ];
 
     protected $casts = [
-        'pick_up_date'  => 'date',
-        'drop_off_date' => 'date',
-        'booking_date'  => 'date',
+        'pick_up_date'      => 'date',
+        'drop_off_date'     => 'date',
+        'booking_date'      => 'date',
+        'driver_arrived_at' => 'datetime',
     ];
 
     protected $appends = ['formatted_id'];

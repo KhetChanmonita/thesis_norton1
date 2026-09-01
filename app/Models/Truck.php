@@ -28,6 +28,11 @@ class Truck extends Model
         return $this->hasMany(Driver::class, 'assigned_truck', 'truck_id');
     }
 
+    public function schedule()
+    {
+        return $this->hasOne(Schedule::class, 'truck_id', 'truck_id');
+    }
+
     public function schedules()
     {
         return $this->hasMany(Schedule::class, 'truck_id', 'truck_id');
